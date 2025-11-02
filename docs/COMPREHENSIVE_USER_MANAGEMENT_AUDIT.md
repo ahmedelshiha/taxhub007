@@ -91,7 +91,7 @@ The admin user management system consists of **three interconnected subsystems**
 │        USER MANAGEMENT SYSTEM (3 Subsystems)        │
 ├─────────────────────────────────────────────────────┤
 │                                                     │
-│  ┌──────────────────────────────────────────────┐  │
+│  ┌──────────────────���───────────────────────────┐  │
 │  │ 1. RBAC/PERMISSIONS MODAL SYSTEM              │  │
 │  │    (UnifiedPermissionModal + PermissionEngine)│  │
 │  │    Status: ✅ 90% Complete                     │  │
@@ -109,7 +109,7 @@ The admin user management system consists of **three interconnected subsystems**
 │  │    Status: 🔴 70% Complete (Critical Gaps)   │  │
 │  └──────────────────────────────────────────────┘  │
 │                                                     │
-└─────────────────────────────────────────────────────���
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -1337,6 +1337,54 @@ Priority 3 - Nice-to-have:
 [ ] Permission delegation
 [ ] Time-based permissions
 ```
+
+---
+
+---
+
+## 🎯 PRIORITY EXECUTION PLAN - REMAINING WORK
+
+### IMMEDIATE PRIORITY (This Sprint)
+
+**1. Consolidate Permission Modals (8-10h)**
+   - Merge legacy `RoleFormModal` into `UnifiedPermissionModal`
+   - Location: `src/components/admin/shared/RoleFormModal.tsx` → merge into `src/components/admin/permissions/UnifiedPermissionModal.tsx`
+   - Update `RbacTab` to use unified modal only
+   - Remove legacy modal after verification
+   - Test full permission workflow
+
+**2. Deploy Error Boundaries to Admin Users (2-3h)**
+   - Component ready at: `src/components/providers/error-boundary.tsx`
+   - Apply to: `src/app/admin/users/components/tabs/`
+   - Wrap each tab: ExecutiveDashboardTab, UsersTab, WorkflowsTab, BulkOperationsTab, AuditTab, RbacTab, AdminTab
+   - Add Suspense boundaries for lazy-loaded content
+   - Test error scenarios
+
+**3. Apply Comprehensive Audit Logging (3-4h)**
+   - Settings: All 9 tabs in `UserManagementSettingsPage` need audit logging
+   - Users: Track permission changes, role changes, bulk operations
+   - Workflow: Track all workflow state changes
+   - Use existing: `AuditLoggingService` and `globalEventEmitter`
+
+### SECONDARY PRIORITY (Next Sprint)
+
+**4. DryRun Conflict Detection (6-8h)**
+   - Enhance `/api/admin/permissions/batch` endpoint
+   - Add conflict detection in dry-run mode
+   - Show impact analysis (affected users, permission chains)
+   - Improve preview UI with warnings
+
+**5. Mobile UI Optimization (6-8h)**
+   - Fix responsive design for tables
+   - Add mobile-specific views for complex data
+   - Optimize touch interactions
+   - Test on mobile browsers
+
+**6. Test Suite Implementation (20-30h)**
+   - Permission engine tests (20+ tests)
+   - Component tests (30+ tests)
+   - API endpoint tests (20+ tests)
+   - Integration tests (15+ tests)
 
 ---
 
