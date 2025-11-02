@@ -22,12 +22,28 @@ export function RbacTab() {
   const [loadingRoles, setLoadingRoles] = useState(true)
   const [roleFormModal, setRoleFormModal] = useState({ isOpen: false, mode: 'create' as 'create' | 'edit', data: undefined as Partial<Role> | undefined })
 
-  // Load roles on mount
+  // Load roles on mount and listen for role changes
   useEffect(() => {
     loadRoles()
+
+    // Listen for role events
+    const unsubscribeRoleCreated = globalEventEmitter.on('role:created', () => {
+      loadRoles()
+    })
+
+    const unsubscribeRoleUpdated = globalEventEmitter.on('role:updated', () => {
+      loadRoles()
+    })
+
+    // Legacy event listener for compatibility
     const handleRefresh = () => loadRoles()
     window.addEventListener('refresh-roles', handleRefresh)
-    return () => window.removeEventListener('refresh-roles', handleRefresh)
+
+    return () => {
+      unsubscribeRoleCreated()
+      unsubscribeRoleUpdated()
+      window.removeEventListener('refresh-roles', handleRefresh)
+    }
   }, [])
 
   const loadRoles = useCallback(async () => {
