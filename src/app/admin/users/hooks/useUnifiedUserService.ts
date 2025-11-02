@@ -86,7 +86,8 @@ export function useUnifiedUserService() {
 
         for (let attempt = 0; attempt < maxRetries; attempt++) {
           try {
-            const controller = signal || abortControllerRef.current || new AbortController()
+            const controller = abortControllerRef.current || new AbortController()
+            const abortSignal = signal || controller.signal
 
             // 30 second timeout per attempt
             const timeoutId = setTimeout(() => controller.abort(), 30000)
@@ -94,7 +95,7 @@ export function useUnifiedUserService() {
             try {
               const res = await apiFetch(
                 `/api/admin/users?page=${page}&limit=${limit}`,
-                { signal: controller.signal } as any
+                { signal: abortSignal } as any
               )
 
               clearTimeout(timeoutId)
