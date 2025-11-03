@@ -10,3 +10,4 @@ export { useDashboardMetrics, useDashboardRecommendations, useDashboardAnalytics
 export { useFilterUsers, type FilterOptions, type FilterConfig } from './useFilterUsers'
 export { useUnifiedUserService } from './useUnifiedUserService'
 export { useEntityForm, type FormMode, type ValidationRule, type FieldValidation, type EntityFormConfig } from './useEntityForm'
+export { useServerSideFiltering, type ServerFilterOptions, type ServerFilterResponse, type UseServerSideFilteringState } from './useServerSideFiltering'

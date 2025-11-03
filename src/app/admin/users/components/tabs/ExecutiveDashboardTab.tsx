@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useState, useCallback } from 'react'
+import React, { Suspense, useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ExecutiveDashboard } from '../ExecutiveDashboard'
@@ -19,7 +19,8 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { useDashboardMetrics, useDashboardRecommendations, useDashboardAnalytics, useFilterUsers } from '../../hooks'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useDashboardMetrics, useDashboardRecommendations, useDashboardAnalytics, useServerSideFiltering } from '../../hooks'
 import { UserItem } from '../../contexts/UsersContextProvider'
 import { toast } from 'sonner'
 
@@ -58,8 +59,28 @@ export function ExecutiveDashboardTab({
   const { data: analyticsData, isLoading: analyticsLoading } = useDashboardAnalytics()
   const [dashboardView, setDashboardView] = useState<'overview' | 'operations'>('overview')
 
-  // Operations section state (merged from DashboardTab)
-  const [filters, setFilters] = useState<UserFilters>({
+  // Server-side filtering and pagination
+  const {
+    data: filterData,
+    loading: filterLoading,
+    error: filterError,
+    filters: activeFilters,
+    setFilters,
+    setPage,
+    refetch,
+    hasNextPage,
+    hasPreviousPage,
+    currentPage,
+    totalPages,
+    totalCount
+  } = useServerSideFiltering({
+    limit: 50,
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
+  })
+
+  // Legacy filter state for UI
+  const [filters, setFiltersUI] = useState<UserFilters>({
     search: '',
     role: undefined,
     status: undefined,
@@ -72,16 +93,23 @@ export function ExecutiveDashboardTab({
   const [isApplyingBulkAction, setIsApplyingBulkAction] = useState(false)
 
   const handleRefreshDashboard = () => {
+    refetch()
     onRefresh?.()
   }
 
-  // Filter users based on active filters
-  const filteredUsers = useFilterUsers(users, {
-    search: filters.search,
-    role: filters.role,
-    status: filters.status,
-    department: filters.department
-  })
+  // Handle filter changes - update both UI state and server filters
+  const handleFilterChange = useCallback((newFilters: UserFilters) => {
+    setFiltersUI(newFilters)
+    setFilters({
+      search: newFilters.search || undefined,
+      role: newFilters.role || undefined,
+      status: newFilters.status || undefined,
+      department: newFilters.department || undefined
+    })
+  }, [setFilters])
+
+  // Get users from server-side filtering or fallback
+  const filteredUsers = filterData?.users || users
 
   const displayMetrics: OperationsMetrics = stats || {
     totalUsers: users.length,
@@ -210,16 +238,18 @@ export function ExecutiveDashboardTab({
               <h2 className="text-lg font-semibold text-gray-900 mb-4">User Directory</h2>
               <AdvancedUserFilters
                 filters={filters}
-                onFiltersChange={setFilters}
-                onReset={() =>
-                  setFilters({
+                onFiltersChange={handleFilterChange}
+                onReset={() => {
+                  const resetFilters: UserFilters = {
                     search: '',
                     role: undefined,
                     status: undefined,
                     department: undefined,
                     dateRange: 'all'
-                  })
-                }
+                  }
+                  setFiltersUI(resetFilters)
+                  setFilters({})
+                }}
               />
             </section>
 
@@ -228,7 +258,16 @@ export function ExecutiveDashboardTab({
               <div className="mb-4 flex flex-col gap-4 flex-1">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="text-sm text-gray-600">
-                    Showing {filteredUsers.length} of {users.length} users
+                    {filterLoading ? (
+                      'Loading...'
+                    ) : (
+                      <>
+                        Showing {filteredUsers.length} of {totalCount || users.length} users
+                        {currentPage > 0 && totalPages > 0 && (
+                          <span className="ml-2 text-gray-500">(Page {currentPage} of {totalPages})</span>
+                        )}
+                      </>
+                    )}
                     {selectedUserIds.size > 0 && (
                       <span className="ml-2 font-semibold text-blue-600" role="status" aria-live="polite">
                         ({selectedUserIds.size} selected)
@@ -328,13 +367,42 @@ export function ExecutiveDashboardTab({
               <div className="flex-1 overflow-auto">
                 <UsersTable
                   users={filteredUsers}
-                  isLoading={isLoading}
+                  isLoading={isLoading || filterLoading}
                   selectedUserIds={selectedUserIds}
                   onSelectUser={handleSelectUser}
                   onSelectAll={handleSelectAll}
                   onViewProfile={() => {}}
                 />
               </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-between border-t pt-4">
+                  <Button
+                    onClick={() => setPage(currentPage - 1)}
+                    disabled={!hasPreviousPage || filterLoading}
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Previous
+                  </Button>
+                  <div className="text-sm text-gray-600">
+                    Page {currentPage} of {totalPages}
+                  </div>
+                  <Button
+                    onClick={() => setPage(currentPage + 1)}
+                    disabled={!hasNextPage || filterLoading}
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
             </section>
           </div>
         </TabsContent>
