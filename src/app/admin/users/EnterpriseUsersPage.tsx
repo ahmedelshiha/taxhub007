@@ -216,7 +216,7 @@ export function EnterpriseUsersPage() {
         )}
 
         {/* Entities Tab */}
-        {activeTab === 'entities' && (
+        {activeTab === 'entities' && !isFeatureEnabled('retireEntitiesTab', false) && (
           <ErrorBoundary
             fallback={({ error, resetError }) => (
               <div className="p-8 text-center">
