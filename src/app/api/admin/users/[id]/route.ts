@@ -65,6 +65,20 @@ export const PATCH = withTenantContext(async (request: NextRequest, context: { p
       select: { id: true, name: true, email: true, role: true, createdAt: true }
     })
 
+    // Emit real-time event for user update
+    try {
+      const changedFields = Object.keys(data)
+      realtimeService.emitUserUpdated(id, {
+        action: 'updated',
+        userEmail: updated.email,
+        userName: updated.name,
+        userRole: updated.role,
+        changedFields
+      })
+    } catch (err) {
+      console.error('Failed to emit user updated event:', err)
+    }
+
     if (parsed.data.role !== undefined && oldUser?.role !== parsed.data.role) {
       // Log role change to comprehensive audit trail
       try {
