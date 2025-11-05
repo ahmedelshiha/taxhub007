@@ -52,20 +52,21 @@ export const WorkstationSidebar = memo(function WorkstationSidebar({
   }), [filters])
 
   return (
-    <div className="workstation-sidebar-content">
+    <div className="workstation-sidebar-content" data-testid="workstation-sidebar">
       {/* Close Button - Mobile Only */}
       <button
         className="sidebar-close-btn md:hidden"
         onClick={onClose}
         aria-label="Close sidebar"
+        data-testid="sidebar-close-btn"
       >
         <X size={20} />
       </button>
 
       {/* Quick Stats Section */}
-      <div className="sidebar-section">
+      <div className="sidebar-section" data-testid="quick-stats-section">
         <h3 className="sidebar-title">Quick Stats</h3>
-        <div className="sidebar-stats-container">
+        <div className="sidebar-stats-container" data-testid="stats-container">
           {stats && (
             <>
               <div className="stat-item">
