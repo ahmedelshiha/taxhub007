@@ -54,8 +54,6 @@ export function WorkstationIntegrated({
 }: WorkstationIntegratedProps) {
   const context = useUsersContext()
   const workstationContext = useWorkstationContext()
-  const { data: metricsData } = useDashboardMetrics()
-
 
   // Filter state from context
   const [filters, setFilters] = useState<UserFilters>(() => {
