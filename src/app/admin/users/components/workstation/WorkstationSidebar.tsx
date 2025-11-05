@@ -16,11 +16,18 @@ export const WorkstationSidebar = memo(function WorkstationSidebar({
   onAddUser,
   onReset,
 }: WorkstationSidebarProps) {
-  // Helper to safely extract string filter values
+  /**
+   * Safely extracts string filter values, handling both string and undefined types
+   * @param value The filter value to extract
+   * @returns The string value or undefined
+   */
   const getFilterValue = (value: any): string | undefined => {
     return typeof value === 'string' ? value : undefined
   }
 
+  /**
+   * Handle saved view changes - clears other filters and applies selected role filter
+   */
   const handleViewChange = useCallback((viewName: string, roleFilter?: string) => {
     if (onFiltersChange) {
       onFiltersChange({
@@ -33,6 +40,9 @@ export const WorkstationSidebar = memo(function WorkstationSidebar({
     }
   }, [onFiltersChange])
 
+  /**
+   * Handle reset button click - clears all filters
+   */
   const handleResetClick = useCallback(() => {
     if (onFiltersChange) {
       onFiltersChange({})
@@ -42,13 +52,16 @@ export const WorkstationSidebar = memo(function WorkstationSidebar({
     }
   }, [onFiltersChange, onReset])
 
-  // Map filters from WorkstationIntegrated format to AdvancedUserFilters format
+  /**
+   * Map filters from WorkstationIntegrated format to AdvancedUserFilters format
+   * Ensures safe extraction of all filter values with proper typing
+   */
   const mappedFilters: AUserFilters = useMemo(() => ({
-    search: getFilterValue((filters as any)?.search) || '',
-    role: getFilterValue((filters as any)?.role),
-    status: getFilterValue((filters as any)?.status),
-    department: getFilterValue((filters as any)?.department),
-    dateRange: getFilterValue((filters as any)?.dateRange),
+    search: getFilterValue(filters?.search) || '',
+    role: getFilterValue(filters?.role),
+    status: getFilterValue(filters?.status),
+    department: getFilterValue(filters?.department),
+    dateRange: getFilterValue(filters?.dateRange),
   }), [filters])
 
   return (
