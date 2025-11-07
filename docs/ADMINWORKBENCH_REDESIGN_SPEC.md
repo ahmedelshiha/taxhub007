@@ -1553,7 +1553,6 @@ export default function AdminUsersLayout() {
 
 ### Phase 2: Header & Colors
 - [ ] Update QuickActionsBar background to blue (#1f55d4)
-- [ ] Add "Admin" title to header
 - [ ] Update all component colors (cards, sidebar, table, footer)
 - [ ] Add CSS variables for color palette
 - [ ] Update responsive layout for 2-column grid
