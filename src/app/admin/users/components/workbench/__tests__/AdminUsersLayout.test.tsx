@@ -80,20 +80,15 @@ describe('AdminUsersLayout', () => {
 
   describe('Responsive Behavior', () => {
     it('should render with proper layout structure', () => {
-      const { container } = renderWithContext(<AdminUsersLayout />)
-      const container_el = container.querySelector('.admin-workbench-container')
-      expect(container_el).toBeInTheDocument()
-
-      const header = container.querySelector('.admin-workbench-header')
-      expect(header).toBeInTheDocument()
-
-      const main = container.querySelector('.admin-workbench-main')
-      expect(main).toBeInTheDocument()
+      renderWithContext(<AdminUsersLayout />)
+      expect(screen.getByTestId('admin-workbench-header')).toBeInTheDocument()
+      expect(screen.getByTestId('admin-main-content')).toBeInTheDocument()
+      expect(screen.getByTestId('admin-sidebar')).toBeInTheDocument()
     })
 
-    it('should have sidebar with proper classes', () => {
-      const { container } = renderWithContext(<AdminUsersLayout />)
-      const sidebar = container.querySelector('.admin-workbench-sidebar')
+    it('should have sidebar with proper state', () => {
+      renderWithContext(<AdminUsersLayout />)
+      const sidebar = screen.getByTestId('admin-sidebar')
       expect(sidebar).toBeInTheDocument()
       expect(sidebar).toHaveClass('open')
     })
