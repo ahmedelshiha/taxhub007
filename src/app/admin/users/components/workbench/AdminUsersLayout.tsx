@@ -20,7 +20,7 @@ import '../styles/admin-users-layout.css'
  * ├──────────────┬────────────────────────────┤
  * │              │                            │
  * │   Sidebar    │     Main Content Area      │
- * │  (Analytics  │   ┌──────────────────┐    │
+ * │  (Analytics  ��   ┌──────────────────┐    │
  * │  + Filters)  │   │   OverviewCards  │    │
  * │              │   ├──────────────────┤    │
  * │              │   │   DirectoryHead  │    │
@@ -59,7 +59,7 @@ export default function AdminUsersLayout() {
       {/* Main Content Area */}
       <div className="admin-workbench-main">
         {/* Left Sidebar - Analytics & Filters (hidden on tablet/mobile) - Builder.io slot with fallback */}
-        <aside className={`admin-workbench-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+        <aside className={`admin-workbench-sidebar ${sidebarOpen ? 'open' : 'closed'}`} data-testid="admin-sidebar">
           {isBuilderEnabled ? (
             <BuilderSidebarSlot
               onFilterChange={setFilters}
