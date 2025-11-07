@@ -73,16 +73,16 @@ const UserRow = memo(function UserRow({
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      ACTIVE: 'bg-green-100 text-green-800',
-      INACTIVE: 'bg-gray-100 text-gray-800',
-      SUSPENDED: 'bg-red-100 text-red-800',
-      PENDING: 'bg-yellow-100 text-yellow-800'
+      ACTIVE: 'bg-green-100 text-green-800 border border-green-300',
+      INACTIVE: 'bg-red-100 text-red-800 border border-red-300',
+      SUSPENDED: 'bg-red-100 text-red-800 border border-red-300',
+      PENDING: 'bg-yellow-100 text-yellow-800 border border-yellow-300'
     }
-    return colors[status] || 'bg-gray-100 text-gray-800'
+    return colors[status] || 'bg-gray-100 text-gray-800 border border-gray-300'
   }
 
   return (
-    <div className="grid grid-cols-[40px_2fr_2fr_1fr_1fr_80px] items-center gap-4 px-4 py-3 border-b hover:bg-gray-50 transition-colors">
+    <div className="grid grid-cols-[40px_2fr_2fr_1fr_1fr_80px] items-center gap-4 px-4 py-3 border-b border-gray-200 hover:bg-gray-50 transition-colors">
       {/* Checkbox */}
       <div className="flex items-center justify-center">
         <Checkbox
