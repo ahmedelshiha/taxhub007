@@ -17,17 +17,17 @@ export default function OverviewCards() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Build metrics from context
+    // Build metrics from context with real database data
     const users = Array.isArray(context.users) ? context.users : []
 
-    // For production-like metrics, scale up numbers if needed
-    // This ensures the dashboard shows realistic data
-    const scaleFactor = Math.max(1, 120 / Math.max(1, users.length))
+    // Count actual users by status
+    const activeCount = users.filter(u => u.status === 'ACTIVE' || u.isActive).length
+    const inactiveCount = users.filter(u => u.status === 'INACTIVE' || !u.isActive).length
 
     const newMetrics: OperationsMetrics = {
-      totalUsers: Math.max(120, users.length),
-      pendingApprovals: Math.max(15, Math.floor(users.filter(u => u.status === 'INACTIVE').length * scaleFactor)),
-      inProgressWorkflows: Math.max(24, Math.floor(users.filter(u => u.status === 'ACTIVE').length * scaleFactor)),
+      totalUsers: users.length,
+      pendingApprovals: inactiveCount,
+      inProgressWorkflows: activeCount,
       systemHealth: 98.5
     }
 
