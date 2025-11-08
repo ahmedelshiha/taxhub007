@@ -5,6 +5,7 @@ import { useUsersContext } from '../../contexts/UsersContextProvider'
 import { UsersTable } from '../UsersTable'
 import { UserItem } from '../../contexts/UsersContextProvider'
 import { UserProfileDialog } from '../UserProfileDialog'
+import DirectoryHeader from './DirectoryHeader'
 
 interface UsersTableWrapperProps {
   selectedUserIds?: Set<string>
