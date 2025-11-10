@@ -142,9 +142,9 @@ function rankSuggestions(
         score += 100
       }
 
-      return { ...suggestion, frequency: score }
+      return { ...suggestion, score }
     })
-    .sort((a, b) => b.frequency - a.frequency)
+    .sort((a, b) => (b.score || 0) - (a.score || 0))
 }
 
 /**
