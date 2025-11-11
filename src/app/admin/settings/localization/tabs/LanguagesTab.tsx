@@ -2,37 +2,30 @@
 
 import React, { useEffect, useState } from 'react'
 import { useLocalizationContext } from '../LocalizationProvider'
+import { LanguageEditModal } from '../components/LanguageEditModal'
 import PermissionGate from '@/components/PermissionGate'
 import { PERMISSIONS } from '@/lib/permissions'
 import { TextField, SelectField, Toggle } from '@/components/admin/settings/FormField'
 import { toast } from 'sonner'
-import { Plus, Trash2, Download, Upload, Star } from 'lucide-react'
+import { Plus, Trash2, Download, Upload, Star, Edit2 } from 'lucide-react'
+import { useCache, invalidateLanguageCaches } from '../hooks/useCache'
+import { useFormMutation } from '../hooks/useFormMutation'
 import type { LanguageRow } from '../types'
 
 export const LanguagesTab: React.FC = () => {
   const {
     languages,
     setLanguages,
-    loading,
-    setLoading,
     saving,
     setSaving,
     error,
     setError,
   } = useLocalizationContext()
 
-  const [showAddForm, setShowAddForm] = useState(false)
-  const [editing, setEditing] = useState<Record<string, Partial<LanguageRow>>>({})
-  const [newLang, setNewLang] = useState<LanguageRow>({
-    code: '',
-    name: '',
-    nativeName: '',
-    direction: 'ltr',
-    flag: '🌐',
-    bcp47Locale: '',
-    enabled: true,
-    featured: false,
-  })
+  const { cachedFetch, invalidateCache } = useCache()
+  const [loading, setLoading] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editingLanguage, setEditingLanguage] = useState<LanguageRow | null>(null)
 
   useEffect(() => {
     loadLanguages()
@@ -41,9 +34,9 @@ export const LanguagesTab: React.FC = () => {
   async function loadLanguages() {
     try {
       setLoading(true)
-      const r = await fetch('/api/admin/languages')
-      const d = await r.json()
-      if (!r.ok) throw new Error(d?.error || 'Failed to load languages')
+      const d = await cachedFetch<{ data: LanguageRow[] }>('/api/admin/languages', {
+        ttlMs: 5 * 60 * 1000, // 5 minute cache
+      })
       setLanguages(d.data || [])
     } catch (e: any) {
       console.error('Failed to load languages:', e)
@@ -53,107 +46,51 @@ export const LanguagesTab: React.FC = () => {
     }
   }
 
-  async function createLanguage() {
-    setSaving(true)
-    setError(null)
-    try {
-      const body = { ...newLang, code: newLang.code.toLowerCase() }
-      const r = await fetch('/api/admin/languages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const d = await r.json()
-      if (!r.ok) throw new Error(d?.error || 'Failed to create language')
-      
-      setNewLang({
-        code: '',
-        name: '',
-        nativeName: '',
-        direction: 'ltr',
-        flag: '🌐',
-        bcp47Locale: '',
-        enabled: true,
-        featured: false,
-      })
-      setShowAddForm(false)
-      await loadLanguages()
-      toast.success('Language added successfully')
-    } catch (e: any) {
-      setError(e?.message || 'Failed to create language')
-      toast.error(e?.message || 'Failed to create language')
-    } finally {
-      setSaving(false)
-    }
-  }
+  const { saving: mutationSaving, mutate } = useFormMutation()
 
-  async function saveEdit(code: string) {
-    const changes = editing[code]
-    if (!changes) return
-    setSaving(true)
+  async function saveLanguage(language: LanguageRow) {
     setError(null)
-    try {
-      const r = await fetch(`/api/admin/languages/${encodeURIComponent(code)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(changes),
-      })
-      const d = await r.json()
-      if (!r.ok) throw new Error(d?.error || 'Failed to update language')
-      setEditing(prev => {
-        const next = { ...prev }
-        delete next[code]
-        return next
-      })
-      await loadLanguages()
-      toast.success('Language updated')
-    } catch (e: any) {
-      setError(e?.message || 'Failed to update language')
-      toast.error(e?.message || 'Failed to update language')
-    } finally {
-      setSaving(false)
+    const method = editingLanguage ? 'PUT' : 'POST'
+    const url = editingLanguage ? `/api/admin/languages/${encodeURIComponent(editingLanguage.code)}` : '/api/admin/languages'
+
+    const res = await mutate(url as string, method as any, language, { invalidate: ['api/admin/languages'] })
+    if (!res.ok) {
+      setError(res.error || (editingLanguage ? 'Failed to update language' : 'Failed to create language'))
+      toast.error(res.error || (editingLanguage ? 'Failed to update language' : 'Failed to create language'))
+      return
     }
+
+    toast.success(editingLanguage ? 'Language updated successfully' : 'Language added successfully')
+    setModalOpen(false)
+    setEditingLanguage(null)
+    await loadLanguages()
   }
 
   async function toggleLanguage(code: string) {
-    setSaving(true)
     setError(null)
-    try {
-      const r = await fetch(`/api/admin/languages/${encodeURIComponent(code)}/toggle`, {
-        method: 'PATCH',
-      })
-      const d = await r.json()
-      if (!r.ok) throw new Error(d?.error || 'Failed to toggle language')
-      await loadLanguages()
-      toast.success('Language status updated')
-    } catch (e: any) {
-      setError(e?.message)
-      toast.error(e?.message)
-    } finally {
-      setSaving(false)
+    const res = await mutate(`/api/admin/languages/${encodeURIComponent(code)}/toggle`, 'PATCH', undefined, { invalidate: ['api/admin/languages'] })
+    if (!res.ok) {
+      const msg = res.error ?? 'Failed to toggle language'
+      setError(msg)
+      toast.error(msg)
+      return
     }
+    await loadLanguages()
+    toast.success('Language status updated')
   }
 
   async function deleteLanguage(code: string) {
     if (!confirm(`Delete language ${code}? This cannot be undone.`)) return
-    setSaving(true)
     setError(null)
-    try {
-      const r = await fetch(`/api/admin/languages/${encodeURIComponent(code)}`, {
-        method: 'DELETE',
-      })
-      if (!r.ok) {
-        const d = await r.json().catch(() => ({}))
-        throw new Error((d as any)?.error || 'Failed to delete language')
-      }
-      await loadLanguages()
-      toast.success('Language deleted')
-    } catch (e: any) {
-      setError(e?.message)
-      toast.error(e?.message)
-    } finally {
-      setSaving(false)
+    const res = await mutate(`/api/admin/languages/${encodeURIComponent(code)}`, 'DELETE', undefined, { invalidate: ['api/admin/languages'] })
+    if (!res.ok) {
+      const msg = res.error ?? 'Failed to delete language'
+      setError(msg)
+      toast.error(msg)
+      return
     }
+    await loadLanguages()
+    toast.success('Language deleted')
   }
 
   async function exportLanguages() {
@@ -179,22 +116,17 @@ export const LanguagesTab: React.FC = () => {
     try {
       const text = await file.text()
       const data = JSON.parse(text) as LanguageRow[]
-      
-      setSaving(true)
-      const r = await fetch('/api/admin/languages/import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ languages: data }),
-      })
-      const d = await r.json()
-      if (!r.ok) throw new Error(d?.error || 'Failed to import languages')
-      
-      await loadLanguages()
-      toast.success(`Imported ${data.length} languages`)
+
+      const res = await mutate('/api/admin/languages/import', 'POST', { languages: data }, { invalidate: ['api/admin/languages'] })
+      if (!res.ok) {
+        toast.error(res.error || 'Failed to import languages')
+      } else {
+        await loadLanguages()
+        toast.success(`Imported ${data.length} languages`)
+      }
     } catch (e: any) {
       toast.error(e?.message || 'Failed to import languages')
     } finally {
-      setSaving(false)
       if (e.target) e.target.value = ''
     }
   }
@@ -231,104 +163,18 @@ export const LanguagesTab: React.FC = () => {
               disabled={saving}
             />
           </label>
-          {!showAddForm && (
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="h-4 w-4" />
-              Add Language
-            </button>
-          )}
+          <button
+            onClick={() => {
+              setEditingLanguage(null)
+              setModalOpen(true)
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700"
+          >
+            <Plus className="h-4 w-4" />
+            Add Language
+          </button>
         </div>
       </PermissionGate>
-
-      {showAddForm && (
-        <div className="rounded-lg border bg-white p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Language</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <TextField
-                label="Language Code"
-                value={newLang.code}
-                onChange={v => setNewLang(s => ({ ...s, code: v }))}
-                placeholder="e.g. fr"
-              />
-              <p className="text-xs text-gray-600 mt-1">2-3 letter language code (lowercase)</p>
-            </div>
-            <div>
-              <TextField
-                label="English Name"
-                value={newLang.name}
-                onChange={v => setNewLang(s => ({ ...s, name: v }))}
-                placeholder="e.g. French"
-              />
-            </div>
-            <div>
-              <TextField
-                label="Native Name"
-                value={newLang.nativeName}
-                onChange={v => setNewLang(s => ({ ...s, nativeName: v }))}
-                placeholder="e.g. Français"
-              />
-            </div>
-            <div>
-              <TextField
-                label="BCP47 Locale"
-                value={newLang.bcp47Locale}
-                onChange={v => setNewLang(s => ({ ...s, bcp47Locale: v }))}
-                placeholder="e.g. fr-FR"
-              />
-            </div>
-            <div>
-              <SelectField
-                label="Text Direction"
-                value={newLang.direction}
-                onChange={v => setNewLang(s => ({ ...s, direction: v as 'ltr' | 'rtl' }))}
-                options={[
-                  { value: 'ltr', label: 'Left-to-Right' },
-                  { value: 'rtl', label: 'Right-to-Left' },
-                ]}
-              />
-            </div>
-            <div>
-              <TextField
-                label="Flag Emoji"
-                value={newLang.flag || ''}
-                onChange={v => setNewLang(s => ({ ...s, flag: v }))}
-                placeholder="e.g. 🇫🇷"
-              />
-            </div>
-          </div>
-          <div className="flex gap-3 justify-end">
-            <button
-              onClick={() => {
-                setShowAddForm(false)
-                setNewLang({
-                  code: '',
-                  name: '',
-                  nativeName: '',
-                  direction: 'ltr',
-                  flag: '🌐',
-                  bcp47Locale: '',
-                  enabled: true,
-                  featured: false,
-                })
-              }}
-              className="px-4 py-2 rounded-md text-sm border border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={createLanguage}
-              disabled={saving || !newLang.code || !newLang.name || !newLang.nativeName || !newLang.bcp47Locale}
-              className="px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400"
-            >
-              {saving ? 'Adding...' : 'Add Language'}
-            </button>
-          </div>
-        </div>
-      )}
 
       <div className="rounded-lg border bg-white overflow-hidden">
         <div className="overflow-x-auto">
@@ -391,14 +237,27 @@ export const LanguagesTab: React.FC = () => {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <PermissionGate permission={PERMISSIONS.LANGUAGES_MANAGE}>
-                      <button
-                        onClick={() => deleteLanguage(lang.code)}
-                        disabled={saving || lang.code === 'en'}
-                        className="inline-flex items-center gap-1 px-3 py-1 text-xs rounded border border-red-300 text-red-700 hover:bg-red-50 disabled:opacity-50"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                        Delete
-                      </button>
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={() => {
+                            setEditingLanguage(lang)
+                            setModalOpen(true)
+                          }}
+                          disabled={saving}
+                          className="inline-flex items-center gap-1 px-3 py-1 text-xs rounded border border-blue-300 text-blue-700 hover:bg-blue-50 disabled:opacity-50"
+                        >
+                          <Edit2 className="h-3.5 w-3.5" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteLanguage(lang.code)}
+                          disabled={saving || lang.code === 'en'}
+                          className="inline-flex items-center gap-1 px-3 py-1 text-xs rounded border border-red-300 text-red-700 hover:bg-red-50 disabled:opacity-50"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          Delete
+                        </button>
+                      </div>
                     </PermissionGate>
                   </td>
                 </tr>
@@ -407,6 +266,17 @@ export const LanguagesTab: React.FC = () => {
           </table>
         </div>
       </div>
+
+      <LanguageEditModal
+        language={editingLanguage}
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+          setEditingLanguage(null)
+        }}
+        onSave={saveLanguage}
+        saving={saving}
+      />
     </div>
   )
 }

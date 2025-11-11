@@ -1,25 +1,29 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalizationContext } from '../LocalizationProvider'
 import PermissionGate from '@/components/PermissionGate'
 import { PERMISSIONS } from '@/lib/permissions'
 import { SelectField, Toggle } from '@/components/admin/settings/FormField'
 import { toast } from 'sonner'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, CheckCircle } from 'lucide-react'
+import { useCache, invalidateLanguageCaches } from '../hooks/useCache'
+import { useFormMutation } from '../hooks/useFormMutation'
+import { useFormValidation } from '../hooks/useFormValidation'
 
 export const OrganizationTab: React.FC = () => {
   const {
     orgSettings,
     setOrgSettings,
     languages,
-    loading,
-    setLoading,
     saving,
     setSaving,
     error,
     setError,
   } = useLocalizationContext()
+
+  const { cachedFetch } = useCache()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     loadOrgSettings()
@@ -28,37 +32,57 @@ export const OrganizationTab: React.FC = () => {
   async function loadOrgSettings() {
     try {
       setLoading(true)
-      const r = await fetch('/api/admin/org-settings/localization')
-      if (r.ok) {
-        const d = await r.json()
-        setOrgSettings(prev => ({ ...prev, ...d.data }))
-      }
+      const d = await cachedFetch<{ data: any }>('/api/admin/org-settings/localization', {
+        ttlMs: 5 * 60 * 1000, // 5 minute cache
+      })
+      setOrgSettings(prev => ({ ...prev, ...d.data }))
     } catch (e) {
       console.error('Failed to load org settings:', e)
+      setError('Failed to load organization settings')
     } finally {
       setLoading(false)
     }
   }
 
+  const { validateOrgSettings } = useFormValidation()
+
+  function validateSettings(): string | null {
+    const errors = validateOrgSettings(orgSettings, languages)
+    return errors.general || null
+  }
+
+  const { saving: mutationSaving, mutate } = useFormMutation()
+
   async function saveOrgSettings() {
-    setSaving(true)
+    const validationError = validateSettings()
+    if (validationError) {
+      setError(validationError)
+      toast.error(validationError)
+      return
+    }
+
     setError(null)
+    setSaving(true)
     try {
-      const r = await fetch('/api/admin/org-settings/localization', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orgSettings),
-      })
-      const d = await r.json()
-      if (!r.ok) throw new Error(d?.error || 'Failed to save organization settings')
+      const res = await mutate('/api/admin/org-settings/localization', 'PUT', orgSettings, { invalidate: ['api/admin/org-settings', 'api/admin/languages'] })
+      if (!res.ok) {
+        setError(res.error || 'Failed to save organization settings')
+        toast.error(res.error || 'Failed to save organization settings')
+        return
+      }
+      invalidateLanguageCaches()
       toast.success('Organization settings saved')
+      await loadOrgSettings()
     } catch (e: any) {
       setError(e?.message || 'Failed to save organization settings')
-      toast.error(e?.message || 'Failed to save settings')
+      toast.error(e?.message || 'Failed to save organization settings')
     } finally {
       setSaving(false)
     }
   }
+
+  const isDefaultLanguageDisabled = !languages.find(l => l.code === orgSettings.defaultLanguage)?.enabled
+  const isFallbackLanguageDisabled = !languages.find(l => l.code === orgSettings.fallbackLanguage)?.enabled
 
   if (loading) {
     return <div className="text-gray-600 py-8 text-center">Loading settings...</div>
@@ -81,28 +105,44 @@ export const OrganizationTab: React.FC = () => {
             <p className="text-sm text-gray-600 mb-4">Configure organization-wide language defaults</p>
             <div className="space-y-4">
               <div>
-                <SelectField
-                  label="Default Language"
-                  value={orgSettings.defaultLanguage}
-                  onChange={v => setOrgSettings(s => ({ ...s, defaultLanguage: v }))}
-                  options={languages.filter(l => l.enabled).map(l => ({
-                    value: l.code,
-                    label: `${l.name} (${l.nativeName})`,
-                  }))}
-                />
-                <p className="text-xs text-gray-600 mt-1">Language shown to new users and guests</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <SelectField
+                    label="Default Language"
+                    value={orgSettings.defaultLanguage}
+                    onChange={v => setOrgSettings(s => ({ ...s, defaultLanguage: v }))}
+                    options={languages.map(l => ({
+                      value: l.code,
+                      label: `${l.flag} ${l.name} (${l.nativeName})${!l.enabled ? ' [Disabled]' : ''}`,
+                    }))}
+                  />
+                  {isDefaultLanguageDisabled && (
+                    <AlertCircle className="h-5 w-5 text-red-600" aria-label="This language is disabled" />
+                  )}
+                </div>
+                <p className="text-xs text-gray-600">Language shown to new users and guests</p>
+                {isDefaultLanguageDisabled && (
+                  <p className="text-xs text-red-600 mt-1">⚠️ The selected default language is currently disabled</p>
+                )}
               </div>
               <div>
-                <SelectField
-                  label="Fallback Language"
-                  value={orgSettings.fallbackLanguage}
-                  onChange={v => setOrgSettings(s => ({ ...s, fallbackLanguage: v }))}
-                  options={languages.filter(l => l.enabled).map(l => ({
-                    value: l.code,
-                    label: `${l.name} (${l.nativeName})`,
-                  }))}
-                />
-                <p className="text-xs text-gray-600 mt-1">Language used when translation is missing</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <SelectField
+                    label="Fallback Language"
+                    value={orgSettings.fallbackLanguage}
+                    onChange={v => setOrgSettings(s => ({ ...s, fallbackLanguage: v }))}
+                    options={languages.map(l => ({
+                      value: l.code,
+                      label: `${l.flag} ${l.name} (${l.nativeName})${!l.enabled ? ' [Disabled]' : ''}`,
+                    }))}
+                  />
+                  {isFallbackLanguageDisabled && (
+                    <AlertCircle className="h-5 w-5 text-red-600" aria-label="This language is disabled" />
+                  )}
+                </div>
+                <p className="text-xs text-gray-600">Language used when translation is missing</p>
+                {isFallbackLanguageDisabled && (
+                  <p className="text-xs text-red-600 mt-1">⚠️ The selected fallback language is currently disabled</p>
+                )}
               </div>
             </div>
           </div>
@@ -112,9 +152,12 @@ export const OrganizationTab: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">User Language Control</h3>
             <p className="text-sm text-gray-600 mb-4">Control how users interact with language settings</p>
             <div className="space-y-4">
-              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50">
+              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
                 <div>
-                  <p className="font-medium text-gray-900">Show Language Switcher</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-gray-900">Show Language Switcher</p>
+                    {orgSettings.showLanguageSwitcher && <CheckCircle className="h-4 w-4 text-green-600" />}
+                  </div>
                   <p className="text-sm text-gray-600">Display language selector in UI</p>
                 </div>
                 <Toggle
@@ -124,10 +167,13 @@ export const OrganizationTab: React.FC = () => {
                 />
               </label>
 
-              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50">
+              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
                 <div>
-                  <p className="font-medium text-gray-900">Persist Language Preference</p>
-                  <p className="text-sm text-gray-600">Save user's language choice to database</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-gray-900">Persist Language Preference</p>
+                    {orgSettings.persistLanguagePreference && <CheckCircle className="h-4 w-4 text-green-600" />}
+                  </div>
+                  <p className="text-sm text-gray-600">Save user&apos;s language choice to database</p>
                 </div>
                 <Toggle
                   label=""
@@ -136,9 +182,12 @@ export const OrganizationTab: React.FC = () => {
                 />
               </label>
 
-              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50">
+              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
                 <div>
-                  <p className="font-medium text-gray-900">Auto-Detect Browser Language</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-gray-900">Auto-Detect Browser Language</p>
+                    {orgSettings.autoDetectBrowserLanguage && <CheckCircle className="h-4 w-4 text-green-600" />}
+                  </div>
                   <p className="text-sm text-gray-600">Use browser language on first visit</p>
                 </div>
                 <Toggle
@@ -148,9 +197,12 @@ export const OrganizationTab: React.FC = () => {
                 />
               </label>
 
-              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50">
+              <label className="flex items-start justify-between gap-4 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
                 <div>
-                  <p className="font-medium text-gray-900">Allow Users to Override</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-gray-900">Allow Users to Override</p>
+                    {orgSettings.allowUserLanguageOverride && <CheckCircle className="h-4 w-4 text-green-600" />}
+                  </div>
                   <p className="text-sm text-gray-600">Let users change their language preference</p>
                 </div>
                 <Toggle
@@ -233,10 +285,20 @@ export const OrganizationTab: React.FC = () => {
               {/* Default Language Preview */}
               <div className="rounded-lg border bg-gray-50 p-4">
                 <p className="text-xs font-semibold text-gray-600 uppercase mb-3">New User Default</p>
-                <div className="bg-white rounded border border-gray-300 px-3 py-2">
-                  <p className="text-sm text-gray-600">
+                <div className={`rounded border px-3 py-2 flex items-center gap-2 ${
+                  isDefaultLanguageDisabled
+                    ? 'bg-red-50 border-red-300'
+                    : 'bg-white border-gray-300'
+                }`}>
+                  {isDefaultLanguageDisabled ? (
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                  ) : (
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  )}
+                  <p className={`text-sm ${isDefaultLanguageDisabled ? 'text-red-700' : 'text-gray-600'}`}>
                     {languages.find(l => l.code === orgSettings.defaultLanguage)?.flag}{' '}
                     {languages.find(l => l.code === orgSettings.defaultLanguage)?.name}
+                    {isDefaultLanguageDisabled && ' (Disabled)'}
                   </p>
                 </div>
               </div>
@@ -257,14 +319,23 @@ export const OrganizationTab: React.FC = () => {
               <div className="rounded-lg border bg-gray-50 p-4">
                 <p className="text-xs font-semibold text-gray-600 uppercase mb-3">RTL Languages</p>
                 {orgSettings.enableRtlSupport ? (
-                  <div
-                    className="bg-white rounded border border-gray-300 px-3 py-3 text-right"
-                    dir="rtl"
-                  >
-                    <p className="text-sm text-gray-700">مرحبا بالعالم</p>
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <p className="text-xs font-medium text-green-700">RTL support enabled</p>
+                    </div>
+                    <div
+                      className="bg-white rounded border border-gray-300 px-3 py-3 text-right"
+                      dir="rtl"
+                    >
+                      <p className="text-sm text-gray-700">مرحبا بالعالم</p>
+                    </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 italic">RTL support disabled</p>
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-gray-400" />
+                    <p className="text-sm text-gray-500">RTL support disabled</p>
+                  </div>
                 )}
               </div>
             </div>

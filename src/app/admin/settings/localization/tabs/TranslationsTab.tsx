@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalizationContext } from '../LocalizationProvider'
 import PermissionGate from '@/components/PermissionGate'
 import { PERMISSIONS } from '@/lib/permissions'
+import { TranslationPriorityPanel } from '../components/TranslationPriorityPanel'
 
 export const TranslationsTab: React.FC = () => {
-  const { translationStatus, setTranslationStatus, loading, setLoading } = useLocalizationContext()
+  const { translationStatus, setTranslationStatus } = useLocalizationContext()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     loadTranslationStatus()
@@ -15,13 +17,21 @@ export const TranslationsTab: React.FC = () => {
   async function loadTranslationStatus() {
     try {
       setLoading(true)
-      const r = await fetch('/api/admin/translations/status')
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+
+      const r = await fetch('/api/admin/translations/status', { signal: controller.signal })
+      clearTimeout(timeoutId)
+
       if (r.ok) {
         const d = await r.json()
         setTranslationStatus(d.data)
       }
     } catch (e) {
       console.error('Failed to load translation status:', e)
+      if ((e as any).name === 'AbortError') {
+        console.error('Request timed out')
+      }
     } finally {
       setLoading(false)
     }
@@ -130,6 +140,11 @@ export const TranslationsTab: React.FC = () => {
               Run Discovery Audit
             </button>
           </div>
+        </div>
+
+        {/* Translation Priority Panel */}
+        <div className="mt-6">
+          <TranslationPriorityPanel />
         </div>
       </PermissionGate>
 

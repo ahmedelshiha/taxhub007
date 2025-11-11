@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalizationContext } from '../LocalizationProvider'
 import { BarChart3 } from 'lucide-react'
+import { BulkUserLanguageAssignPanel } from '../components/BulkUserLanguageAssignPanel'
 
 interface AnalyticsDistribution {
   language: string
@@ -11,7 +12,8 @@ interface AnalyticsDistribution {
 }
 
 export const UserPreferencesTab: React.FC = () => {
-  const { languages, analyticsData, setAnalyticsData, loading, setLoading } = useLocalizationContext()
+  const { languages, analyticsData, setAnalyticsData } = useLocalizationContext()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     loadAnalytics()
@@ -20,13 +22,21 @@ export const UserPreferencesTab: React.FC = () => {
   async function loadAnalytics() {
     try {
       setLoading(true)
-      const r = await fetch('/api/admin/user-language-analytics')
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+
+      const r = await fetch('/api/admin/user-language-analytics', { signal: controller.signal })
+      clearTimeout(timeoutId)
+
       const d = await r.json()
       if (r.ok && d.data) {
         setAnalyticsData(d.data)
       }
     } catch (e) {
       console.error('Failed to load analytics:', e)
+      if ((e as any).name === 'AbortError') {
+        console.error('Request timed out')
+      }
     } finally {
       setLoading(false)
     }
@@ -42,6 +52,9 @@ export const UserPreferencesTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Bulk Assignment Panel */}
+      <BulkUserLanguageAssignPanel />
+
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="rounded-lg border bg-white p-6">

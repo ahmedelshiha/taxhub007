@@ -5,7 +5,8 @@ import { useLocalizationContext } from '../LocalizationProvider'
 import PermissionGate from '@/components/PermissionGate'
 import { PERMISSIONS } from '@/lib/permissions'
 import { toast } from 'sonner'
-import { Code2, RefreshCw } from 'lucide-react'
+import { Code2, RefreshCw, Download, Check, Plus } from 'lucide-react'
+import { useFormMutation } from '../hooks/useFormMutation'
 
 interface AuditResult {
   keysInCode: number
@@ -16,53 +17,113 @@ interface AuditResult {
 }
 
 export const DiscoveryTab: React.FC = () => {
-  const { saving, setSaving } = useLocalizationContext()
+  const { saving: contextSaving } = useLocalizationContext()
+  const { mutate, saving } = useFormMutation()
   const [auditRunning, setAuditRunning] = useState(false)
   const [auditResults, setAuditResults] = useState<AuditResult | null>(null)
   const [scheduledAudit, setScheduledAudit] = useState<'none' | 'daily' | 'weekly'>('none')
+  const [approvedKeys, setApprovedKeys] = useState<Set<string>>(new Set())
+  const [bulkAddLoading, setBulkAddLoading] = useState(false)
 
   async function runDiscoveryAudit() {
     setAuditRunning(true)
-    setSaving(true)
-    try {
-      const r = await fetch('/api/admin/translations/discover', {
-        method: 'POST',
-      })
-      const d = await r.json()
-
-      if (r.ok && d.data) {
-        setAuditResults(d.data)
-        toast.success('Discovery audit completed')
-      } else {
-        toast.error('Failed to run discovery audit')
-      }
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to run discovery audit')
-    } finally {
-      setAuditRunning(false)
-      setSaving(false)
+    const res = await mutate('/api/admin/translations/discover', 'POST', undefined, { invalidate: [] })
+    if (res.ok && res.data) {
+      setAuditResults(res.data as AuditResult)
+      toast.success('Discovery audit completed')
+    } else {
+      toast.error(res.error || 'Failed to run discovery audit')
     }
+    setAuditRunning(false)
   }
 
   async function scheduleAudit() {
-    setSaving(true)
-    try {
-      const r = await fetch('/api/admin/translations/discover/schedule', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ frequency: scheduledAudit }),
+    const res = await mutate(
+      '/api/admin/translations/discover/schedule',
+      'POST',
+      { frequency: scheduledAudit },
+      { invalidate: [] }
+    )
+    if (res.ok) {
+      toast.success(`Audit scheduled: ${scheduledAudit === 'none' ? 'Disabled' : scheduledAudit}`)
+    } else {
+      toast.error(res.error || 'Failed to schedule audit')
+    }
+  }
+
+  function toggleKeyApproval(key: string) {
+    const newApproved = new Set(approvedKeys)
+    if (newApproved.has(key)) {
+      newApproved.delete(key)
+    } else {
+      newApproved.add(key)
+    }
+    setApprovedKeys(newApproved)
+  }
+
+  function exportResults(format: 'json' | 'csv') {
+    if (!auditResults) return
+
+    if (format === 'json') {
+      const data = JSON.stringify(auditResults, null, 2)
+      const blob = new Blob([data], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `discovery-audit-${new Date().toISOString().split('T')[0]}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+      toast.success('Audit results exported as JSON')
+    } else {
+      const rows = [['Type', 'Key', 'Value']]
+
+      auditResults.orphanedKeys.forEach(key => {
+        rows.push(['Orphaned Key', key, ''])
       })
 
-      if (r.ok) {
-        toast.success(`Audit scheduled: ${scheduledAudit === 'none' ? 'Disabled' : scheduledAudit}`)
-      } else {
-        toast.error('Failed to schedule audit')
-      }
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to schedule audit')
-    } finally {
-      setSaving(false)
+      Object.entries(auditResults.missingTranslations).forEach(([lang, keys]) => {
+        keys.forEach(key => {
+          rows.push(['Missing Translation', key, lang])
+        })
+      })
+
+      auditResults.namingIssues.forEach(issue => {
+        rows.push(['Naming Issue', issue.key, issue.issue])
+      })
+
+      const csv = rows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n')
+      const blob = new Blob([csv], { type: 'text/csv' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `discovery-audit-${new Date().toISOString().split('T')[0]}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+      toast.success('Audit results exported as CSV')
     }
+  }
+
+  async function bulkAddApprovedKeys() {
+    if (approvedKeys.size === 0) {
+      toast.error('No keys selected for approval')
+      return
+    }
+
+    setBulkAddLoading(true)
+    const keysArray = Array.from(approvedKeys)
+    const res = await mutate(
+      '/api/admin/translations/discover/approve',
+      'POST',
+      { keys: keysArray },
+      { invalidate: [] }
+    )
+    if (res.ok) {
+      toast.success(`Added ${keysArray.length} key(s) to translation system`)
+      setApprovedKeys(new Set())
+    } else {
+      toast.error(res.error || 'Failed to add keys')
+    }
+    setBulkAddLoading(false)
   }
 
   return (
@@ -75,7 +136,7 @@ export const DiscoveryTab: React.FC = () => {
             <div className="flex-1">
               <h4 className="font-semibold text-blue-900 mb-2">Automated Key Discovery</h4>
               <p className="text-sm text-blue-800 mb-4">
-                Scan your codebase for all <code className="bg-blue-100 px-2 py-1 rounded text-xs">t('key')</code> calls to identify translation gaps and optimize your i18n setup.
+                Scan your codebase for all <code className="bg-blue-100 px-2 py-1 rounded text-xs">t(&apos;key&apos;)</code> calls to identify translation gaps and optimize your i18n setup.
               </p>
               <ul className="list-disc list-inside text-sm text-blue-800 space-y-1 mb-4">
                 <li>Keys in code but missing from translation files</li>
@@ -98,7 +159,25 @@ export const DiscoveryTab: React.FC = () => {
         {/* Audit Results */}
         {auditResults && (
           <div className="rounded-lg border bg-white p-6 space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900">Audit Results</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">Audit Results</h3>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => exportResults('json')}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm border border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  <Download className="h-4 w-4" />
+                  Export JSON
+                </button>
+                <button
+                  onClick={() => exportResults('csv')}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm border border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  <Download className="h-4 w-4" />
+                  Export CSV
+                </button>
+              </div>
+            </div>
 
             {/* Summary Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -132,11 +211,17 @@ export const DiscoveryTab: React.FC = () => {
                   </span>
                   Orphaned Keys (Not Used in Code)
                 </h4>
-                <div className="rounded-lg border bg-orange-50 p-4 space-y-2">
+                <div className="rounded-lg border bg-orange-50 p-4 space-y-3">
                   {auditResults.orphanedKeys.slice(0, 10).map(key => (
-                    <p key={key} className="text-sm text-orange-900">
-                      • <code className="text-xs bg-orange-100 px-2 py-1 rounded">{key}</code>
-                    </p>
+                    <label key={key} className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={approvedKeys.has(key)}
+                        onChange={() => toggleKeyApproval(key)}
+                        className="w-4 h-4 text-orange-600 rounded"
+                      />
+                      <code className="text-xs bg-orange-100 px-2 py-1 rounded flex-1">{key}</code>
+                    </label>
                   ))}
                   {auditResults.orphanedKeys.length > 10 && (
                     <p className="text-sm text-orange-700 font-medium">
@@ -159,12 +244,18 @@ export const DiscoveryTab: React.FC = () => {
                 <div className="space-y-4">
                   {Object.entries(auditResults.missingTranslations).map(([lang, keys]) => (
                     <div key={lang} className="rounded-lg border bg-red-50 p-4">
-                      <p className="font-medium text-gray-900 mb-2">{lang.toUpperCase()}</p>
-                      <div className="space-y-1">
+                      <p className="font-medium text-gray-900 mb-3">{lang.toUpperCase()}</p>
+                      <div className="space-y-2">
                         {keys.slice(0, 5).map(key => (
-                          <p key={key} className="text-sm text-gray-700">
-                            • <code className="text-xs bg-red-100 px-2 py-1 rounded">{key}</code>
-                          </p>
+                          <label key={key} className="flex items-center gap-3">
+                            <input
+                              type="checkbox"
+                              checked={approvedKeys.has(key)}
+                              onChange={() => toggleKeyApproval(key)}
+                              className="w-4 h-4 text-red-600 rounded"
+                            />
+                            <code className="text-xs bg-red-100 px-2 py-1 rounded flex-1">{key}</code>
+                          </label>
                         ))}
                         {keys.length > 5 && (
                           <p className="text-sm text-gray-700 font-medium">+ {keys.length - 5} more keys</p>
@@ -191,6 +282,29 @@ export const DiscoveryTab: React.FC = () => {
                       • <code className="text-xs bg-yellow-100 px-2 py-1 rounded">{issue.key}</code> - {issue.issue}
                     </p>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Bulk Add Approved Keys */}
+            {approvedKeys.size > 0 && (
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-blue-600" />
+                    <div>
+                      <p className="font-medium text-blue-900">{approvedKeys.size} key(s) selected</p>
+                      <p className="text-sm text-blue-800">Ready to add to translation system</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={bulkAddApprovedKeys}
+                    disabled={bulkAddLoading || saving}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 font-medium"
+                  >
+                    <Plus className="h-4 w-4" />
+                    {bulkAddLoading ? 'Adding...' : 'Add Keys'}
+                  </button>
                 </div>
               </div>
             )}
@@ -251,7 +365,7 @@ export const DiscoveryTab: React.FC = () => {
       {/* Info Box */}
       <div className="rounded-lg border bg-blue-50 p-4">
         <p className="text-sm text-blue-900">
-          💡 Discovery audits scan your codebase for <code className="bg-blue-100 px-1">t('key')</code> patterns and compare them with your translation JSON files to identify gaps and orphaned keys.
+          💡 Discovery audits scan your codebase for <code className="bg-blue-100 px-1">t(&apos;key&apos;)</code> patterns and compare them with your translation JSON files to identify gaps and orphaned keys.
         </p>
       </div>
     </div>
