@@ -1,7 +1,8 @@
 /**
  * AdminWorkBench Layout Styles
  *
- * Responsive grid layout for the new user management dashboard.
+ * Full-width responsive layout for the admin user management dashboard.
+ * Optimized for maximum horizontal space with KPI cards and user directory.
  * Light theme color palette for production deployment.
  *
  * Color Palette:
@@ -12,10 +13,17 @@
  * - Text primary: #111827
  * - Text secondary: #6b7280
  *
+ * Layout Structure:
+ * - Header: Sticky blue bar with quick actions
+ * - Main Content: Full-width flex layout
+ *   - KPI Cards: Responsive grid (5 columns desktop, 2 tablet, 1 mobile)
+ *   - Directory: User table with full remaining height
+ * - Footer: Sticky bulk actions panel (when users selected)
+ *
  * Breakpoints:
- * - Desktop: ≥1400px (3-column layout: sidebar | main | fixed width)
- * - Tablet: 768px-1399px (sidebar hidden, drawer toggle)
- * - Mobile: <768px (full-width, sidebar as drawer)
+ * - Desktop (≥1400px): Full-width, 5-column KPI grid
+ * - Tablet (768px-1399px): Full-width, 2-column KPI grid, reduced padding
+ * - Mobile (<768px): Full-width, 1-column KPI grid, minimal padding
  */
 
 /* ============================================================================
