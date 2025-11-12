@@ -164,4 +164,6 @@ const _api_POST = async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}
+};
+
+export const POST = withTenantContext(_api_POST, { requireAuth: true });
