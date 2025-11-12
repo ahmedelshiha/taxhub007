@@ -1930,6 +1930,62 @@ model SupportTicketStatusHistory {
   @@map("support_ticket_status_history")
 }
 
+model KnowledgeBaseCategory {
+  id                    String                    @id @default(cuid())
+  tenantId              String
+  name                  String                    @db.VarChar(255)
+  slug                  String                    @db.VarChar(255)
+  description           String?                   @db.Text
+  icon                  String?                   @db.VarChar(50)
+  order                  Int                       @default(0)
+  published             Boolean                   @default(true)
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  tenant                Tenant                    @relation("KnowledgeBaseCategories", fields: [tenantId], references: [id], onDelete: Cascade)
+  articles              KnowledgeBaseArticle[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([published])
+  @@map("knowledge_base_categories")
+}
+
+model KnowledgeBaseArticle {
+  id                    String                    @id @default(cuid())
+  tenantId              String
+  categoryId            String
+  title                 String                    @db.VarChar(500)
+  slug                  String                    @db.VarChar(500)
+  content               String                    @db.Text
+  excerpt               String?                   @db.VarChar(1000)
+  authorId              String
+  published             Boolean                   @default(false)
+  featured              Boolean                   @default(false)
+  viewCount             Int                       @default(0)
+  helpfulCount          Int                       @default(0)
+  notHelpfulCount       Int                       @default(0)
+  tags                  String[]
+  relatedArticleIds     String[]
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  publishedAt           DateTime?
+
+  tenant                Tenant                    @relation("KnowledgeBaseArticles", fields: [tenantId], references: [id], onDelete: Cascade)
+  category              KnowledgeBaseCategory     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  author                User                      @relation("KnowledgeBaseArticles", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([published])
+  @@index([featured])
+  @@index([tags])
+  @@index([createdAt])
+  @@map("knowledge_base_articles")
+}
+
 enum TaskPriority {
   LOW
   MEDIUM
