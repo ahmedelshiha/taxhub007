@@ -336,6 +336,7 @@ model Tenant {
   documentVersions      DocumentVersion[]
   documentLinks         DocumentLink[]
   documentAuditLogs     DocumentAuditLog[]
+  supportTickets        SupportTicket[]           @relation("SupportTickets")
 
   @@index([status])
 }
