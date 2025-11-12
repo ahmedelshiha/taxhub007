@@ -1,10 +1,9 @@
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getTenantFromRequest } from '@/lib/tenant'
 import { logAuditSafe } from '@/lib/observability-helpers'
 import { z } from 'zod'
+import { withTenantContext } from '@/lib/api-wrapper'
+import { requireTenantContext } from '@/lib/tenant-utils'
 
 const ArticleFilterSchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(20).optional(),
@@ -31,219 +30,207 @@ const CreateArticleSchema = z.object({
 
 type CreateArticleInput = z.infer<typeof CreateArticleSchema>
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions)
+export const GET = withTenantContext(
+  async (request: NextRequest) => {
+    try {
+      const { userId, tenantId } = requireTenantContext()
 
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+      // Parse filters
+      const queryParams = Object.fromEntries(request.nextUrl.searchParams)
+      const filters = ArticleFilterSchema.parse(queryParams)
 
-    const tenantId = await getTenantFromRequest(request)
-    if (!tenantId) {
-      return NextResponse.json({ error: 'Tenant context required' }, { status: 400 })
-    }
+      // Build where clause
+      const where: any = { tenantId }
 
-    // Parse filters
-    const queryParams = Object.fromEntries(request.nextUrl.searchParams)
-    const filters = ArticleFilterSchema.parse(queryParams)
-
-    // Build where clause
-    const where: any = { tenantId }
-
-    if (filters.categoryId) {
-      where.categoryId = filters.categoryId
-    }
-
-    if (filters.published !== undefined) {
-      where.published = filters.published
-    }
-
-    if (filters.featured !== undefined) {
-      where.featured = filters.featured
-    }
-
-    if (filters.search) {
-      where.OR = [
-        { title: { contains: filters.search, mode: 'insensitive' } },
-        { content: { contains: filters.search, mode: 'insensitive' } },
-        { excerpt: { contains: filters.search, mode: 'insensitive' } },
-      ]
-    }
-
-    if (filters.tag) {
-      where.tags = {
-        has: filters.tag,
+      if (filters.categoryId) {
+        where.categoryId = filters.categoryId
       }
-    }
 
-    // Count total
-    const total = await prisma.knowledgeBaseArticle.count({ where })
+      if (filters.published !== undefined) {
+        where.published = filters.published
+      }
 
-    // Fetch articles
-    const articles = await prisma.knowledgeBaseArticle.findMany({
-      where,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        content: true,
-        published: true,
-        featured: true,
-        viewCount: true,
-        helpfulCount: true,
-        notHelpfulCount: true,
-        tags: true,
-        createdAt: true,
-        updatedAt: true,
-        publishedAt: true,
-        category: {
-          select: { id: true, name: true, slug: true },
+      if (filters.featured !== undefined) {
+        where.featured = filters.featured
+      }
+
+      if (filters.search) {
+        where.OR = [
+          { title: { contains: filters.search, mode: 'insensitive' } },
+          { content: { contains: filters.search, mode: 'insensitive' } },
+          { excerpt: { contains: filters.search, mode: 'insensitive' } },
+        ]
+      }
+
+      if (filters.tag) {
+        where.tags = {
+          has: filters.tag,
+        }
+      }
+
+      // Count total
+      const total = await prisma.knowledgeBaseArticle.count({ where })
+
+      // Fetch articles
+      const articles = await prisma.knowledgeBaseArticle.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          content: true,
+          published: true,
+          featured: true,
+          viewCount: true,
+          helpfulCount: true,
+          notHelpfulCount: true,
+          tags: true,
+          createdAt: true,
+          updatedAt: true,
+          publishedAt: true,
+          category: {
+            select: { id: true, name: true, slug: true },
+          },
+          author: {
+            select: { id: true, email: true, name: true },
+          },
         },
-        author: {
-          select: { id: true, email: true, name: true },
+        orderBy: {
+          [filters.sortBy || 'createdAt']: filters.sortOrder || 'desc',
         },
-      },
-      orderBy: {
-        [filters.sortBy || 'createdAt']: filters.sortOrder || 'desc',
-      },
-      take: filters.limit,
-      skip: filters.offset,
-    })
+        take: filters.limit,
+        skip: filters.offset,
+      })
 
-    await logAuditSafe({
-      action: 'knowledge_base:articles:list',
-      details: {
-        count: articles.length,
-        total,
-        filters: {
-          search: filters.search ? true : false,
-          categoryId: filters.categoryId || undefined,
-          published: filters.published || undefined,
-        },
-      },
-    }).catch(() => {})
-
-    return NextResponse.json(
-      {
-        articles,
-        pagination: {
+      await logAuditSafe({
+        action: 'knowledge_base:articles:list',
+        details: {
+          count: articles.length,
           total,
-          limit: filters.limit,
-          offset: filters.offset,
-          hasMore: filters.offset + filters.limit < total,
+          filters: {
+            search: filters.search ? true : false,
+            categoryId: filters.categoryId || undefined,
+            published: filters.published || undefined,
+          },
         },
-      },
-      { status: 200 }
-    )
-  } catch (error) {
-    if (error instanceof z.ZodError) {
+      }).catch(() => {})
+
       return NextResponse.json(
         {
-          error: 'Invalid query parameters',
-          details: error.errors,
+          articles,
+          pagination: {
+            total,
+            limit: filters.limit,
+            offset: filters.offset,
+            hasMore: filters.offset + filters.limit < total,
+          },
         },
-        { status: 400 }
+        { status: 200 }
       )
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          {
+            error: 'Invalid query parameters',
+            details: error.errors,
+          },
+          { status: 400 }
+        )
+      }
+
+      console.error('Knowledge Base list API error:', error)
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
+  },
+  { requireAuth: true }
+);
 
-    console.error('Knowledge Base list API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+export const POST = withTenantContext(
+  async (request: NextRequest) => {
+    try {
+      const { userId, tenantId } = requireTenantContext()
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions)
+      const body = await request.json()
+      const validated = CreateArticleSchema.parse(body)
 
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const tenantId = await getTenantFromRequest(request)
-    if (!tenantId) {
-      return NextResponse.json({ error: 'Tenant context required' }, { status: 400 })
-    }
-
-    const body = await request.json()
-    const validated = CreateArticleSchema.parse(body)
-
-    // Verify category exists and belongs to tenant
-    const category = await prisma.knowledgeBaseCategory.findFirst({
-      where: {
-        id: validated.categoryId,
-        tenantId,
-      },
-    })
-
-    if (!category) {
-      return NextResponse.json({ error: 'Category not found' }, { status: 404 })
-    }
-
-    // Generate slug from title
-    const slug = validated.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-
-    // Check for duplicate slug
-    const existing = await prisma.knowledgeBaseArticle.findFirst({
-      where: {
-        tenantId,
-        slug,
-      },
-    })
-
-    if (existing) {
-      return NextResponse.json(
-        { error: 'An article with this title already exists' },
-        { status: 409 }
-      )
-    }
-
-    // Create article
-    const article = await prisma.knowledgeBaseArticle.create({
-      data: {
-        ...validated,
-        slug,
-        tenantId,
-        authorId: session.user.id,
-        publishedAt: validated.published ? new Date() : null,
-      },
-      include: {
-        category: {
-          select: { id: true, name: true, slug: true },
+      // Verify category exists and belongs to tenant
+      const category = await prisma.knowledgeBaseCategory.findFirst({
+        where: {
+          id: validated.categoryId,
+          tenantId,
         },
-        author: {
-          select: { id: true, email: true, name: true },
-        },
-      },
-    })
+      })
 
-    await logAuditSafe({
-      action: 'knowledge_base:article:create',
-      details: {
-        articleId: article.id,
-        title: article.title,
-        categoryId: article.categoryId,
-        published: article.published,
-      },
-    }).catch(() => {})
+      if (!category) {
+        return NextResponse.json({ error: 'Category not found' }, { status: 404 })
+      }
 
-    return NextResponse.json(article, { status: 201 })
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Invalid request body',
-          details: error.errors,
+      // Generate slug from title
+      const slug = validated.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+
+      // Check for duplicate slug
+      const existing = await prisma.knowledgeBaseArticle.findFirst({
+        where: {
+          tenantId,
+          slug,
         },
-        { status: 400 }
-      )
+      })
+
+      if (existing) {
+        return NextResponse.json(
+          { error: 'An article with this title already exists' },
+          { status: 409 }
+        )
+      }
+
+      // Create article
+      const article = await prisma.knowledgeBaseArticle.create({
+        data: {
+          ...validated,
+          slug,
+          tenantId,
+          authorId: userId,
+          publishedAt: validated.published ? new Date() : null,
+        },
+        include: {
+          category: {
+            select: { id: true, name: true, slug: true },
+          },
+          author: {
+            select: { id: true, email: true, name: true },
+          },
+        },
+      })
+
+      await logAuditSafe({
+        action: 'knowledge_base:article:create',
+        details: {
+          articleId: article.id,
+          title: article.title,
+          categoryId: article.categoryId,
+          published: article.published,
+        },
+      }).catch(() => {})
+
+      return NextResponse.json(article, { status: 201 })
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          {
+            error: 'Invalid request body',
+            details: error.errors,
+          },
+          { status: 400 }
+        )
+      }
+
+      console.error('Knowledge Base create API error:', error)
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
-
-    console.error('Knowledge Base create API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+  },
+  { requireAuth: true }
+);

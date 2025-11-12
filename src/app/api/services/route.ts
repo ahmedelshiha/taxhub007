@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';
+import { withTenantContext } from '@/lib/api-wrapper';
+import { requireTenantContext } from '@/lib/tenant-utils';
 
 const serviceSchema = z.object({
   id: z.string(),
@@ -173,109 +174,109 @@ const SERVICES: Service[] = [
   },
 ];
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await getServerSession();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+export const GET = withTenantContext(
+  async (request: NextRequest) => {
+    try {
+      const { userId } = requireTenantContext();
 
-    // Get query parameters
-    const search = request.nextUrl.searchParams.get('search');
-    const country = request.nextUrl.searchParams.get('country');
-    const category = request.nextUrl.searchParams.get('category');
+      // Get query parameters
+      const search = request.nextUrl.searchParams.get('search');
+      const country = request.nextUrl.searchParams.get('country');
+      const category = request.nextUrl.searchParams.get('category');
 
-    // Filter services
-    let filtered = SERVICES;
+      // Filter services
+      let filtered = SERVICES;
 
-    if (search) {
-      const searchLower = search.toLowerCase();
-      filtered = filtered.filter(
-        (s) =>
-          s.name.toLowerCase().includes(searchLower) ||
-          s.description.toLowerCase().includes(searchLower)
-      );
-    }
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filtered = filtered.filter(
+          (s) =>
+            s.name.toLowerCase().includes(searchLower) ||
+            s.description.toLowerCase().includes(searchLower)
+        );
+      }
 
-    if (country) {
-      filtered = filtered.filter((s) => s.countryScope.includes(country));
-    }
+      if (country) {
+        filtered = filtered.filter((s) => s.countryScope.includes(country));
+      }
 
-    if (category) {
-      filtered = filtered.filter((s) => s.category === category);
-    }
+      if (category) {
+        filtered = filtered.filter((s) => s.category === category);
+      }
 
-    // Get unique categories
-    const categories = Array.from(new Set(SERVICES.map((s) => s.category)));
+      // Get unique categories
+      const categories = Array.from(new Set(SERVICES.map((s) => s.category)));
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        services: filtered,
-        categories,
-        total: filtered.length,
-      },
-    });
-  } catch (error) {
-    logger.error('Failed to fetch services', { error });
-    return NextResponse.json(
-      { error: 'Failed to fetch services' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const session = await getServerSession();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const data = await request.json();
-    const { serviceId } = data;
-
-    if (!serviceId) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          services: filtered,
+          categories,
+          total: filtered.length,
+        },
+      });
+    } catch (error) {
+      logger.error('Failed to fetch services', { error });
       return NextResponse.json(
-        { error: 'Service ID is required' },
-        { status: 400 }
+        { error: 'Failed to fetch services' },
+        { status: 500 }
       );
     }
+  },
+  { requireAuth: true }
+);
 
-    const service = SERVICES.find((s) => s.id === serviceId);
-    if (!service) {
+export const POST = withTenantContext(
+  async (request: NextRequest) => {
+    try {
+      const { userId } = requireTenantContext();
+
+      const data = await request.json();
+      const { serviceId } = data;
+
+      if (!serviceId) {
+        return NextResponse.json(
+          { error: 'Service ID is required' },
+          { status: 400 }
+        );
+      }
+
+      const service = SERVICES.find((s) => s.id === serviceId);
+      if (!service) {
+        return NextResponse.json(
+          { error: 'Service not found' },
+          { status: 404 }
+        );
+      }
+
+      // In production, this would create a service request ticket in messaging
+      const requestId = `req-${Date.now()}`;
+
+      // Log audit event
+      await logger.audit({
+        action: 'service.request_created',
+        actorId: userId,
+        targetId: serviceId,
+        details: { requestId, serviceName: service.name },
+      });
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          requestId,
+          serviceId,
+          serviceName: service.name,
+          status: 'pending',
+          createdAt: new Date(),
+        },
+      });
+    } catch (error) {
+      logger.error('Failed to create service request', { error });
       return NextResponse.json(
-        { error: 'Service not found' },
-        { status: 404 }
+        { error: 'Failed to create service request' },
+        { status: 500 }
       );
     }
-
-    // In production, this would create a service request ticket in messaging
-    const requestId = `req-${Date.now()}`;
-
-    // Log audit event
-    await logger.audit({
-      action: 'service.request_created',
-      actorId: session.user.id,
-      targetId: serviceId,
-      details: { requestId, serviceName: service.name },
-    });
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        requestId,
-        serviceId,
-        serviceName: service.name,
-        status: 'pending',
-        createdAt: new Date(),
-      },
-    });
-  } catch (error) {
-    logger.error('Failed to create service request', { error });
-    return NextResponse.json(
-      { error: 'Failed to create service request' },
-      { status: 500 }
-    );
-  }
-}
+  },
+  { requireAuth: true }
+);
