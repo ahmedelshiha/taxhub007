@@ -98,7 +98,7 @@ export const GET = withTenantContext(async (request: NextRequest) => {
           total,
           limit: filters.limit,
           offset: filters.offset,
-          hasMore: filters.offset + filters.limit < total,
+          hasMore: (filters.offset! + filters.limit!) < total,
         },
       },
       { status: 200 }
@@ -165,7 +165,7 @@ export const POST = withTenantContext(async (request: NextRequest) => {
         status: 'ACTIVE',
         syncFrequency: validated.syncFrequency,
         sessionToken: sessionToken || null,
-        credentials: validated.credentials ? JSON.stringify(validated.credentials) : null,
+        credentials: validated.credentials || undefined,
         metadata: {
           createdByUserId: ctx.userId,
           initializedAt: new Date().toISOString(),
