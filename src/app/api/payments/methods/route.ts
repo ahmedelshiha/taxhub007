@@ -81,8 +81,9 @@ export const POST = withTenantContext(async (request: NextRequest) => {
     const validated = AddPaymentMethodSchema.parse(body)
 
     // Verify payment method exists in Stripe
-    let stripePaymentMethod: Stripe.PaymentMethod
+    let stripePaymentMethod: any
     try {
+      const stripe = getStripeClient()
       stripePaymentMethod = await stripe.paymentMethods.retrieve(
         validated.paymentMethodId
       )
