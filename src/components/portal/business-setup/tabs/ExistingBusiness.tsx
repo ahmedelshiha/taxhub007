@@ -146,7 +146,7 @@ export default function ExistingBusinessTab({
 
       const result = await response.json();
       toast.success("Business account setup started!");
-      onComplete(result.data.id);
+      onComplete(result.data.entityId || result.data.id);
     } catch (error) {
       onError(error instanceof Error ? error.message : "Setup failed");
     } finally {
