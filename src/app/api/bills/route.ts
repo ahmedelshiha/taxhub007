@@ -41,8 +41,9 @@ const BillCreateSchema = z.object({
  * List bills with filters and pagination
  */
 const _api_GET = async (request: NextRequest) => {
+  let ctx: TenantContext | undefined;
+
   try {
-    let ctx;
     try {
       ctx = requireTenantContext();
     } catch (contextError) {
