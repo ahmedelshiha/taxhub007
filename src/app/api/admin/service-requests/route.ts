@@ -600,14 +600,36 @@ export const POST = withTenantContext(async (request: Request) => {
         }
         if (isMultiTenancyEnabled() && tenantId) (created as any).tenantId = tenantId
         addRequest(id, created)
-        try { realtimeService.emitServiceRequestUpdate(id, { action: 'created' }) } catch {}
+
+        try {
+          realtimeService.emitServiceRequestUpdate(id, { action: 'created' })
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err))
+          console.error('[SERVICE_REQUESTS_CREATE] Failed to emit service request update (fallback):', error)
+        }
+
         try {
           if ((created as any)?.isBooking && (created as any)?.scheduledAt) {
             const d = new Date((created as any).scheduledAt).toISOString().slice(0,10)
-            try { realtimeService.emitAvailabilityUpdate(created.serviceId, { date: d }) } catch {}
+            try {
+              realtimeService.emitAvailabilityUpdate(created.serviceId, { date: d })
+            } catch (err) {
+              const error = err instanceof Error ? err : new Error(String(err))
+              console.error('[SERVICE_REQUESTS_CREATE] Failed to emit availability update (fallback):', error)
+            }
           }
-        } catch {}
-        try { await logAudit({ action: 'service-request:create', actorId: ctx.userId ?? null, targetId: id, details: { clientId: created.clientId, serviceId: created.serviceId, priority: created.priority } }) } catch {}
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err))
+          console.error('[SERVICE_REQUESTS_CREATE] Failed to handle booking availability (fallback):', error)
+        }
+
+        try {
+          await logAudit({ action: 'service-request:create', actorId: ctx.userId ?? null, targetId: id, details: { clientId: created.clientId, serviceId: created.serviceId, priority: created.priority } })
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err))
+          console.error('[SERVICE_REQUESTS_CREATE] Failed to log audit (fallback):', error)
+        }
+
         return respond.created(created)
       } catch {
         return respond.serverError()
