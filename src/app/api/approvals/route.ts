@@ -27,8 +27,9 @@ const ApprovalFiltersSchema = z.object({
  * List approvals with filters and pagination
  */
 const _api_GET = async (request: NextRequest) => {
+  let ctx: ReturnType<typeof requireTenantContext> | undefined;
+
   try {
-    let ctx;
     try {
       ctx = requireTenantContext();
     } catch (contextError) {
