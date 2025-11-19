@@ -86,6 +86,8 @@ export default function StatusBadge({
           return 'bg-green-100 text-green-800'
         case 'BLOCKED':
           return 'bg-red-100 text-red-800'
+        case 'ON_HOLD':
+          return 'bg-orange-100 text-orange-800'
         case 'CANCELLED':
           return 'bg-gray-100 text-gray-800'
         default:
