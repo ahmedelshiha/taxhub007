@@ -72,6 +72,7 @@ export interface Booking {
     id: string;
     name: string;
     slug: string;
+    shortDesc?: string | null;
     price?: number | null;
   };
   
