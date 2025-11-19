@@ -75,11 +75,12 @@ export default function TaskCard({
     CANCELLED: 'bg-gray-100 text-gray-800',
   }
 
-  const priorityColors = {
+  const priorityColors: Record<string, string> = {
     LOW: 'bg-green-50 text-green-700',
-    MEDIUM: 'bg-yellow-50 text-yellow-700',
+    NORMAL: 'bg-blue-50 text-blue-700',
     HIGH: 'bg-orange-50 text-orange-700',
     URGENT: 'bg-red-50 text-red-700',
+    CRITICAL: 'bg-red-100 text-red-800',
   }
 
   const dueDate = task.dueDate ? new Date(task.dueDate) : null
