@@ -59,8 +59,8 @@ export default function BookingForm({
   variant = 'portal',
   className,
 }: BookingFormProps) {
-  const { can } = usePermissions()
-  const isAdmin = variant === 'admin' && can(PERMISSIONS.BOOKINGS_CREATE)
+  const { has } = usePermissions()
+  const isAdmin = variant === 'admin' && has(PERMISSIONS.BOOKINGS_CREATE)
   const isEditing = !!initialData?.id
 
   // Determine which schema to use
@@ -75,7 +75,6 @@ export default function BookingForm({
       scheduledTime: initialData?.scheduledAt ? new Date(initialData.scheduledAt).toISOString().split('T')[1]?.slice(0, 5) : '09:00',
       notes: initialData?.notes || '',
       ...(isAdmin && {
-        assignedToId: initialData?.assignedToId || '',
         status: initialData?.status || 'PENDING',
       }),
     },
@@ -255,29 +254,6 @@ export default function BookingForm({
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="assignedToId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Assign To</FormLabel>
-                        <Select value={field.value} onValueChange={field.onChange} disabled={isSubmitting}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select team member" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="user-1">Alice Johnson (Tax)</SelectItem>
-                            <SelectItem value="user-2">Bob Williams (Accounting)</SelectItem>
-                            <SelectItem value="user-3">Carol Davis (Consulting)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>Team member to handle this booking</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </div>
               )}
 
