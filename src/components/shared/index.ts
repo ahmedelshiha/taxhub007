@@ -29,6 +29,9 @@ export { default as TaskForm } from './forms/TaskForm'
 // Inputs - Input components and pickers
 export { default as DateRangePicker } from './inputs/DateRangePicker'
 export { default as MultiSelect } from './inputs/MultiSelect'
+export { default as ServiceFilter } from './inputs/ServiceFilter'
+export { type ServiceFilterValues } from './inputs/ServiceFilter'
+export { BookingCalendar } from './inputs/BookingCalendar'
 
 // Tables - List components
 export { default as SharedDataTable } from './tables/SharedDataTable'
@@ -37,6 +40,7 @@ export { default as SharedDataTable } from './tables/SharedDataTable'
 export { default as StatusBadge } from './widgets/StatusBadge'
 export { default as PriorityBadge } from './widgets/PriorityBadge'
 export { default as UserAvatar } from './widgets/UserAvatar'
+export { ServiceGrid } from './widgets/ServiceGrid'
 
 // Notifications - Notification components
 export { default as NotificationBanner } from './notifications/NotificationBanner'

@@ -6,16 +6,12 @@ import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 
 /**
- * GET /api/admin/tasks/[id]
- * Get detailed task information (admin only)
+ * GET /api/tasks/[id]
+ * Get task details with comments
  */
 export const GET = withTenantContext(
   async (request, { user, tenantId }, { params }) => {
     try {
-      if (!user.isAdmin) {
-        return respond.forbidden('Only administrators can access this endpoint')
-      }
-
       const taskId = (await params).id
 
       const task = await prisma.task.findFirst({
@@ -57,7 +53,9 @@ export const GET = withTenantContext(
                 },
               },
             },
-            where: { parentId: null },
+            where: {
+              parentId: null, // Only fetch top-level comments
+            },
           },
         },
       })
@@ -66,29 +64,30 @@ export const GET = withTenantContext(
         return respond.notFound('Task not found')
       }
 
+      // Check authorization: non-admins can only view their own tasks
+      if (!user.isAdmin && task.assigneeId !== user.id) {
+        return respond.forbidden('You do not have access to this task')
+      }
+
       return respond.ok({ data: task })
     } catch (error) {
-      console.error('Admin task detail error:', error)
+      console.error('Task detail error:', error)
       return respond.serverError()
     }
   },
-  { requireAuth: true, requireAdmin: true }
+  { requireAuth: true }
 )
 
 /**
- * PUT /api/admin/tasks/[id]
- * Update a task (admin only)
+ * PUT /api/tasks/[id]
+ * Update a task (admin or assignee)
  */
 export const PUT = withTenantContext(
   async (request, { user, tenantId }, { params }) => {
     try {
-      if (!user.isAdmin) {
-        return respond.forbidden('Only administrators can update tasks')
-      }
-
       const taskId = (await params).id
 
-      // Verify task exists
+      // Verify task exists and get current state
       const existingTask = await prisma.task.findFirst({
         where: {
           id: taskId,
@@ -98,6 +97,11 @@ export const PUT = withTenantContext(
 
       if (!existingTask) {
         return respond.notFound('Task not found')
+      }
+
+      // Check authorization: only admins or assignees can update
+      if (!user.isAdmin && existingTask.assigneeId !== user.id) {
+        return respond.forbidden('You do not have permission to update this task')
       }
 
       const body = await request.json()
@@ -126,20 +130,21 @@ export const PUT = withTenantContext(
       if (error instanceof z.ZodError) {
         return respond.badRequest('Invalid task data', error.errors)
       }
-      console.error('Admin task update error:', error)
+      console.error('Task update error:', error)
       return respond.serverError()
     }
   },
-  { requireAuth: true, requireAdmin: true }
+  { requireAuth: true }
 )
 
 /**
- * DELETE /api/admin/tasks/[id]
+ * DELETE /api/tasks/[id]
  * Delete a task (admin only)
  */
 export const DELETE = withTenantContext(
   async (request, { user, tenantId }, { params }) => {
     try {
+      // Only admins can delete tasks
       if (!user.isAdmin) {
         return respond.forbidden('Only administrators can delete tasks')
       }
@@ -158,16 +163,16 @@ export const DELETE = withTenantContext(
         return respond.notFound('Task not found')
       }
 
-      // Delete the task (cascade handles comments)
+      // Delete the task (cascade will handle comments)
       await prisma.task.delete({
         where: { id: taskId },
       })
 
       return respond.ok({ success: true, message: 'Task deleted successfully' })
     } catch (error) {
-      console.error('Admin task deletion error:', error)
+      console.error('Task deletion error:', error)
       return respond.serverError()
     }
   },
-  { requireAuth: true, requireAdmin: true }
+  { requireAuth: true }
 )

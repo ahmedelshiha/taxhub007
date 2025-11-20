@@ -7,18 +7,13 @@ import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 
 /**
- * GET /api/admin/tasks
- * List all tasks for admin management
- * Supports advanced filtering and sorting
+ * GET /api/tasks
+ * List tasks for the current user (own tasks or assigned tasks)
+ * Supports filtering by status, priority, assignee, and date range
  */
 export const GET = withTenantContext(
   async (request, { user, tenantId }) => {
     try {
-      // Verify admin access
-      if (!user.isAdmin) {
-        return respond.forbidden('Only administrators can access this endpoint')
-      }
-
       const { searchParams } = new URL(request.url)
 
       // Parse and validate filters
@@ -29,7 +24,7 @@ export const GET = withTenantContext(
         search: searchParams.get('search'),
         dueBefore: searchParams.get('dueBefore'),
         dueAfter: searchParams.get('dueAfter'),
-        limit: parseInt(searchParams.get('limit') || '50'),
+        limit: parseInt(searchParams.get('limit') || '20'),
         offset: parseInt(searchParams.get('offset') || '0'),
         sortBy: searchParams.get('sortBy') || 'createdAt',
         sortOrder: searchParams.get('sortOrder') || 'desc',
@@ -67,6 +62,9 @@ export const GET = withTenantContext(
       // Filter by assignee
       if (filters.assigneeId) {
         where.assigneeId = filters.assigneeId
+      } else if (!user.isAdmin) {
+        // Non-admin users only see their own tasks
+        where.OR = [{ assigneeId: user.id }, { assigneeId: null }]
       }
 
       // Search in title and description
@@ -105,9 +103,6 @@ export const GET = withTenantContext(
               position: true,
             },
           },
-          comments: {
-            select: { id: true },
-          },
         },
         orderBy: {
           [filters.sortBy]: filters.sortOrder === 'asc' ? 'asc' : 'desc',
@@ -116,15 +111,8 @@ export const GET = withTenantContext(
         take: filters.limit,
       })
 
-      // Add comment count to each task
-      const tasksWithCommentCount = data.map((task) => ({
-        ...task,
-        commentCount: task.comments.length,
-        comments: undefined,
-      }))
-
       return respond.ok({
-        data: tasksWithCommentCount,
+        data,
         meta: {
           total,
           limit: filters.limit,
@@ -136,21 +124,21 @@ export const GET = withTenantContext(
       if (error instanceof z.ZodError) {
         return respond.badRequest('Invalid filter parameters', error.errors)
       }
-      console.error('Admin task list error:', error)
+      console.error('Task list error:', error)
       return respond.serverError()
     }
   },
-  { requireAuth: true, requireAdmin: true }
+  { requireAuth: true }
 )
 
 /**
- * POST /api/admin/tasks
+ * POST /api/tasks
  * Create a new task (admin only)
  */
 export const POST = withTenantContext(
   async (request, { user, tenantId }) => {
     try {
-      // Verify admin access
+      // Only admins can create tasks
       if (!user.isAdmin) {
         return respond.forbidden('Only administrators can create tasks')
       }
@@ -178,7 +166,9 @@ export const POST = withTenantContext(
         },
       })
 
-      return respond.created({ data: task })
+      return respond.created({
+        data: task,
+      })
     } catch (error) {
       if (error instanceof z.ZodError) {
         return respond.badRequest('Invalid task data', error.errors)
@@ -187,5 +177,5 @@ export const POST = withTenantContext(
       return respond.serverError()
     }
   },
-  { requireAuth: true, requireAdmin: true }
+  { requireAuth: true }
 )

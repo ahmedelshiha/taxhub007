@@ -7,6 +7,7 @@ import { applyRateLimit, getClientIp } from '@/lib/rate-limit'
 import { logAudit } from '@/lib/audit'
 import { respond } from '@/lib/api-response'
 import { logger } from '@/lib/logger'
+import { publishBookingCreated } from '@/lib/realtime/booking-events'
 
 /**
  * Filter booking fields based on user role
@@ -220,6 +221,13 @@ export const POST = withTenantContext(
           clientId: booking.clientId,
           scheduledAt: booking.scheduledAt,
         },
+      })
+
+      // Publish real-time event for portal and admin notifications
+      publishBookingCreated({
+        id: booking.id,
+        serviceId: booking.serviceId,
+        action: 'created',
       })
 
       return respond.created(booking)

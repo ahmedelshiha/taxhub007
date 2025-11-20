@@ -8,6 +8,7 @@ import { PERMISSIONS, hasPermission } from '@/lib/permissions'
 import { logAudit } from '@/lib/audit'
 import { respond } from '@/lib/api-response'
 import { logger } from '@/lib/logger'
+import { publishBookingUpdated, publishBookingDeleted } from '@/lib/realtime/booking-events'
 
 /**
  * Filter booking fields based on user role and ownership
@@ -178,6 +179,13 @@ export const PUT = withTenantContext(
         },
       })
 
+      // Publish real-time event for portal and admin notifications
+      publishBookingUpdated({
+        id: updated.id,
+        serviceId: updated.serviceId,
+        action: 'updated',
+      })
+
       // Filter fields based on role
       const filteredBooking = filterBookingFields(updated, ctx.role, ctx.userId)
 
@@ -258,6 +266,13 @@ export const DELETE = withTenantContext(
           service: { select: { id: true, name: true } },
           client: { select: { id: true, email: true, name: true } },
         },
+      })
+
+      // Publish real-time event for portal and admin notifications
+      publishBookingDeleted({
+        id: cancelled.id,
+        serviceId: cancelled.serviceId,
+        action: 'deleted',
       })
 
       return respond.ok({ success: true, message: 'Booking cancelled successfully', data: cancelled })
