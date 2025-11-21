@@ -59,10 +59,8 @@ model User {
   bookingPreferences        BookingPreferences?
   assignedByServiceRequests ServiceRequest[]        @relation("ServiceRequestAssignedBy")
   clientServiceRequests     ServiceRequest[]        @relation("ServiceRequestClient")
-  tasks                     Task[]
   taskComments              TaskComment[]
   tasksAssigned             Task[]                  @relation("TaskAssignee")
-  tasksCreated              Task[]                  @relation("TaskCreatedBy")
   tasksAsClient             Task[]                  @relation("TaskClient")
   assignedWorkOrders        WorkOrder[]             @relation("WorkOrderAssignee")
   workOrdersAsClient        WorkOrder[]             @relation("WorkOrderClient")
