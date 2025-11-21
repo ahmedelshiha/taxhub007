@@ -76,7 +76,7 @@ export function TeamDirectory({
   const statuses = useMemo(() => {
     return Array.from(
       new Set(members.filter((m) => m.status).map((m) => m.status))
-    ).filter((s): s is string => typeof s === 'string' && s !== null)
+    ).filter((s): s is 'offline' | 'online' | 'away' => typeof s === 'string' && ['offline', 'online', 'away'].includes(s as string))
   }, [members])
 
   // Filter members
