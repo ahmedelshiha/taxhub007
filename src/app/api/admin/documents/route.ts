@@ -134,8 +134,8 @@ export const GET = withAdminAuth(async (request, context) => {
       data: {
         tenantId,
         action: 'admin:documents_list',
-        userId: user.id,
-        resourceType: 'Document',
+        userId,
+        resource: 'Document',
         details: {
           count: documents.length,
           total,
