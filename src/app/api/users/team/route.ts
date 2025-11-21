@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withTenantContext } from '@/lib/api-wrapper'
+import { requireTenantContext } from '@/lib/tenant-utils'
 import { respond } from '@/lib/api-response'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 /**
@@ -19,8 +20,9 @@ import { z } from 'zod'
  * - offset: Pagination offset (default: 0)
  */
 export const GET = withTenantContext(
-  async (request: NextRequest, { user, tenantId }) => {
+  async (request: NextRequest, { params }: any) => {
     try {
+      const { userId, tenantId, role } = requireTenantContext()
       const { searchParams } = new URL(request.url)
 
       // Parse query parameters
@@ -30,27 +32,27 @@ export const GET = withTenantContext(
       const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
       const offset = parseInt(searchParams.get('offset') || '0')
 
-      const isAdmin = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
+      const isAdmin = role === 'ADMIN' || role === 'SUPER_ADMIN'
 
       // Build where clause
       const where: any = {
         tenantId,
         // Exclude the current user from the list
-        NOT: { id: user.id },
+        NOT: { id: userId },
       }
 
       // For portal users: only show team members from their bookings/tasks
       if (!isAdmin) {
         // Get all team member IDs that are assigned to this user's bookings or tasks
-        const [taskAssignees, bookingAssignees] = await Promise.all([
+        const [taskAssignees, bookingAssignees, userRecord] = await Promise.all([
           prisma.task.findMany({
             where: {
               tenantId,
               OR: [
                 // Tasks created by the user
-                { createdById: user.id },
+                { createdById: userId },
                 // Tasks assigned to the user
-                { assigneeId: user.id },
+                { assigneeId: userId },
               ],
             },
             select: { assigneeId: true },
@@ -59,10 +61,14 @@ export const GET = withTenantContext(
           prisma.booking.findMany({
             where: {
               tenantId,
-              clientId: user.id,
+              clientId: userId,
             },
-            select: { assignedToId: true },
-            distinct: ['assignedToId'],
+            select: { assignedTeamMemberId: true },
+            distinct: ['assignedTeamMemberId'],
+          }),
+          prisma.user.findUnique({
+            where: { id: userId },
+            select: { department: true },
           }),
         ])
 
@@ -73,18 +79,18 @@ export const GET = withTenantContext(
           if (t.assigneeId) teamMemberIds.add(t.assigneeId)
         })
 
-        // Add booking assignees
+        // Add booking assignees (map from TeamMember userId)
         bookingAssignees.forEach((b) => {
-          if (b.assignedToId) teamMemberIds.add(b.assignedToId)
+          if (b.assignedTeamMemberId) teamMemberIds.add(b.assignedTeamMemberId)
         })
 
         // Add the user's department colleagues if they have a department
-        if (user.department) {
+        if (userRecord?.department) {
           const deptColleagues = await prisma.user.findMany({
             where: {
               tenantId,
-              department: user.department,
-              NOT: { id: user.id },
+              department: userRecord.department,
+              NOT: { id: userId },
             },
             select: { id: true },
           })
