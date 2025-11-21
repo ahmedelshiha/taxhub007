@@ -50,6 +50,8 @@ model User {
   autoAssign                Boolean?                // Auto-assign tasks
   certifications            String[]                // Team certifications
   experienceYears           Int?                    // Years of experience
+  isActive                  Boolean?                @default(true) // User active status
+  preferences               Json?
   attachments               Attachment[]
   bookingPreferences        BookingPreferences?
   assignedByServiceRequests ServiceRequest[]        @relation("ServiceRequestAssignedBy")
@@ -568,9 +570,11 @@ model Booking {
   updatedAt            DateTime        @updatedAt
   assignedTeamMemberId String?
   serviceRequestId     String?
+  createdById          String?         // User who created the booking
   workOrders           WorkOrder[]
   assignedTeamMember   TeamMember?     @relation(fields: [assignedTeamMemberId], references: [id])
   client               User            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdBy            User?           @relation("BookingCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   service              Service         @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   serviceRequest       ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
   tenant               Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -691,12 +695,14 @@ model Task {
   priority           TaskPriority       @default(MEDIUM)
   status             TaskStatus         @default(OPEN)
   assigneeId         String?
+  createdById        String?            // User who created the task
   complianceRequired Boolean            @default(false)
   complianceDeadline DateTime?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   complianceRecords  ComplianceRecord[]
   assignee           User?              @relation(fields: [assigneeId], references: [id])
+  createdBy          User?              @relation("TaskCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   tenant             Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   comments           TaskComment[]
   requestTasks       RequestTask[]
