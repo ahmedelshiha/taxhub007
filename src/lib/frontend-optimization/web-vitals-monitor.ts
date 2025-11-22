@@ -79,7 +79,7 @@ export function monitorWebVitals() {
  * Track specific performance metric
  */
 export function trackPerformanceMetric(
-  name: string,
+  name: 'CLS' | 'FCP' | 'LCP' | 'INP' | 'TTFB',
   startTime: number = performance.now()
 ): () => void {
   return () => {
@@ -90,7 +90,7 @@ export function trackPerformanceMetric(
       rating: duration < 1000 ? 'good' : duration < 2000 ? 'needs-improvement' : 'poor',
       delta: 0,
       id: `${name}-${Date.now()}`,
-    })
+    } as Metric)
   }
 }
 
