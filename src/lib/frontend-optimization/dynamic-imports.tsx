@@ -52,12 +52,12 @@ export function getDynamicComponentConfig(
  * Create a dynamically imported component
  */
 export function createDynamicComponent<T extends ComponentType<any>>(
-  importFunc: () => Promise<{ default: T }>,
+  importFunc: (() => Promise<{ default: T }>) | (() => Promise<{ default: () => Promise<ReactNode> }>),
   type: 'admin' | 'modal' | 'modal-heavy' | 'page' | 'feature' = 'feature'
 ): T {
   const config = getDynamicComponentConfig(type)
 
-  return dynamic(importFunc, {
+  return dynamic(importFunc as any, {
     loading: config.loading,
     ssr: config.ssr,
   }) as T
