@@ -101,7 +101,7 @@ export const PUT = withTenantContext(
         userId: ctx.userId,
         action: 'PROFILE_UPDATED',
         entity: 'User',
-        entityId: ctx.userId,
+        entityId: ctx.userId || undefined,
         changes: input,
       })
 
