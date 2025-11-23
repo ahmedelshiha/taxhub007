@@ -254,20 +254,23 @@ function MostUsedFiltersChart({
 
   return (
     <div className="space-y-4">
-      {stats.map((stat, idx) => (
+      {stats.map((stat, idx) => {
+        const typedStat = stat as any
+        return (
         <div key={idx} className="space-y-1">
           <div className="flex justify-between text-sm">
-            <span className="font-medium">{stat.filterType}</span>
-            <span className="text-muted-foreground">{stat.usageCount} uses</span>
+            <span className="font-medium">{typedStat.filterType}</span>
+            <span className="text-muted-foreground">{typedStat.usageCount} uses</span>
           </div>
           <div className="w-full bg-gray-200 rounded h-2">
             <div
               className="bg-blue-500 h-2 rounded transition-all"
-              style={{ width: `${(stat.usageCount / maxUsage) * 100}%` }}
+              style={{ width: `${((typedStat.usageCount as number) / maxUsage) * 100}%` }}
             />
           </div>
         </div>
-      ))}
+      )
+      })}
     </div>
   )
 }
