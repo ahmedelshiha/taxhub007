@@ -157,7 +157,7 @@ export function Component<T = any>({
       {variant === 'admin' && (
         <div className="admin-section">
           <div className="flex gap-2">
-            {has('update') && onEdit && (
+            {has && onEdit && (
               <button
                 onClick={() => onEdit(data)}
                 disabled={disabled}
@@ -167,7 +167,7 @@ export function Component<T = any>({
               </button>
             )}
 
-            {has('delete') && onDelete && (
+            {has && onDelete && (
               <button
                 onClick={() => onDelete()}
                 disabled={disabled}
@@ -183,7 +183,7 @@ export function Component<T = any>({
       {/* Portal section - visible only in portal variant */}
       {variant === 'portal' && (
         <div className="portal-section">
-          {has('view') && onAction && (
+          {has && onAction && (
             <button
               onClick={() => onAction(data)}
               disabled={disabled}

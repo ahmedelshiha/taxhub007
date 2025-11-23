@@ -348,7 +348,7 @@ export default function PortalDocumentsPage() {
                   uploader: doc.uploadedBy,
                   uploadedById: doc.uploadedById || '',
                   storageKey: doc.storageKey || '',
-                  visibility: doc.visibility || 'PRIVATE',
+                  visibility: (doc.visibility as any) || 'PRIVATE',
                   category: doc.contentType.split('/')[0],
                   version: 1,
                   isStarred: doc.isStarred,
