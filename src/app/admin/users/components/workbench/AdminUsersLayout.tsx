@@ -26,7 +26,7 @@ import '../styles/admin-users-layout.css'
  * │              │                            │
  * │   Sidebar    │     Main Content Area      │
  * ���  (Analytics  │   ┌──────────────────��    │
- * │  + Filters)  │   │   OverviewCards  │    │
+ * │  + Filters)  │   │   OverviewCards  │    ���
  * │              │   ├──────────────────┤    │
  * │              ���   │   DirectoryHead  │    │
  * │              │   ├──────────────────┤    │
@@ -72,7 +72,6 @@ export default function AdminUsersLayout() {
   }
 
   const handleImport = () => {
-    console.log('Import clicked')
     setShowImportWizard(true)
   }
 

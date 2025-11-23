@@ -189,7 +189,7 @@ export default function AdminSidebar({
               <RecentActivityFeed
                 limit={5}
                 showViewAll={true}
-                onViewAll={() => console.log('View all activity')}
+                onViewAll={() => { /* View all activity */ }}
               />
             </div>
           </CollapsibleContent>

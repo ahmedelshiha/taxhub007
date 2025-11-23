@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, RefreshCw, TrendingDown, TrendingUp } from 'lucide-react'
-import { DashboardMetrics } from '@/services/dashboard-metrics.service'
-import { Recommendation } from '@/services/recommendation-engine.service'
+import { DashboardMetrics, MetricCard as MetricCardType } from '@/services/dashboard-metrics.service'
+import { Recommendation, RecommendationAction } from '@/services/recommendation-engine.service'
 
 interface ExecutiveDashboardProps {
   initialMetrics?: Partial<DashboardMetrics>
@@ -150,7 +150,7 @@ export function ExecutiveDashboard({
 /**
  * Metric Card Component
  */
-function MetricCard({ metric }: { metric: any }) {
+function MetricCard({ metric }: { metric: MetricCardType }) {
   const TrendIcon = metric.trendDirection === 'up' ? TrendingUp : TrendingDown
 
   return (
@@ -297,24 +297,24 @@ function HealthIndicator({
 /**
  * Handle recommendation actions
  */
-function handleAction(action: any) {
+function handleAction(action: RecommendationAction) {
   switch (action.action) {
     case 'navigate':
-      window.location.href = action.target
+      if (action.target) {
+        window.location.href = action.target
+      }
       break
     case 'filter':
       // Would dispatch filter event to parent
-      console.log('Apply filter:', action.data)
       break
     case 'bulk_action':
       // Would show bulk action dialog
-      console.log('Bulk action:', action.data)
       break
     case 'generate_report':
       // Would trigger report generation
-      console.log('Generate report:', action.data)
       break
     default:
-      console.log('Action:', action)
+      // Action handled
+      break
   }
 }

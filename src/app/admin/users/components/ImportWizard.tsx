@@ -34,7 +34,7 @@ interface ImportError {
   row: number
   field: string
   message: string
-  value?: any
+  value?: unknown
 }
 
 interface FieldMapping {
@@ -85,7 +85,7 @@ export function ImportWizard({ onImportComplete }: ImportWizardProps) {
   // Parse file preview
   const parsePreview = (content: string) => {
     try {
-      let data: any[] = []
+      let data: Record<string, unknown>[] = []
 
       if (selectedFormat === 'CSV') {
         const lines = content.split('\n').slice(0, 6) // First 5 data rows

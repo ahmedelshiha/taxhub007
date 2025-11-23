@@ -162,7 +162,7 @@ export default function UsersTableWrapper({
         <DirectoryHeader
           selectedCount={selectedUserIds.size}
           onClearSelection={() => onSelectionChange?.(new Set())}
-          onSidebarToggle={() => console.log('Toggle sidebar')}
+          onSidebarToggle={() => { /* Toggle sidebar */ }}
         />
 
         {isMobile ? (
