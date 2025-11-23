@@ -9,12 +9,12 @@ interface FilterContextType {
   filters: TaskFilters
   setFilters: (filters: TaskFilters) => void
   resetFilters: () => void
-  filteredTasks: any[]
+  filteredTasks: Task[]
 }
 
 const FilterContext = createContext<FilterContextType | null>(null)
 
-export const FilterProvider = ({ children, tasks }: { children: React.ReactNode; tasks: any[] }) => {
+export const FilterProvider = ({ children, tasks }: { children: React.ReactNode; tasks: Task[] }) => {
   const [filters, setFilters] = useState<TaskFilters>(defaultFilters)
   const resetFilters = () => setFilters(defaultFilters)
 
