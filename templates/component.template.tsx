@@ -139,13 +139,14 @@ export function Component<T = any>({
   }
 
   // Check permissions for portal variant
-  if (variant === 'portal' && !has) {
-    return (
-      <div className={`${className} p-4 bg-gray-50 border border-gray-200 rounded-md`}>
-        <p className="text-gray-600 text-sm">You don&apos;t have permission to view this content</p>
-      </div>
-    )
-  }
+  // TODO: Add specific permission check here if needed
+  // if (variant === 'portal' && !has(PERMISSIONS.SOME_PERMISSION)) {
+  //   return (
+  //     <div className={`${className} p-4 bg-gray-50 border border-gray-200 rounded-md`}>
+  //       <p className="text-gray-600 text-sm">You don&apos;t have permission to view this content</p>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div
@@ -157,7 +158,7 @@ export function Component<T = any>({
       {variant === 'admin' && (
         <div className="admin-section">
           <div className="flex gap-2">
-            {has() && onEdit && (
+            {onEdit && (
               <button
                 onClick={() => onEdit(data)}
                 disabled={disabled}
@@ -167,7 +168,7 @@ export function Component<T = any>({
               </button>
             )}
 
-            {has() && onDelete && (
+            {onDelete && (
               <button
                 onClick={() => onDelete()}
                 disabled={disabled}
@@ -183,7 +184,7 @@ export function Component<T = any>({
       {/* Portal section - visible only in portal variant */}
       {variant === 'portal' && (
         <div className="portal-section">
-          {has() && onAction && (
+          {onAction && (
             <button
               onClick={() => onAction(data)}
               disabled={disabled}
