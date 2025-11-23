@@ -3043,1111 +3043,2956 @@ EXCEPTION
 END $$;
 
 -- CreateIndex
-CREATE INDEX "languages_enabled_idx" ON "languages"("enabled");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "languages_enabled_idx" ON "languages"("enabled");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "users_employeeId_key" ON "users"("employeeId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "users_employeeId_key" ON "users"("employeeId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "users_tenantId_role_idx" ON "users"("tenantId", "role");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_role_idx" ON "users"("tenantId", "role");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "users_tenantId_createdAt_idx" ON "users"("tenantId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_createdAt_idx" ON "users"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "users_tenantId_availabilityStatus_idx" ON "users"("tenantId", "availabilityStatus");
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_availabilityStatus_idx" ON "users"("tenantId", "availabilityStatus");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "users_tenantId_department_idx" ON "users"("tenantId", "department");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_department_idx" ON "users"("tenantId", "department");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "users_tenantId_tier_idx" ON "users"("tenantId", "tier");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_tier_idx" ON "users"("tenantId", "tier");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "users_tenantId_experienceYears_idx" ON "users"("tenantId", "experienceYears");
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_experienceYears_idx" ON "users"("tenantId", "experienceYears");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "users_tenantId_availabilityStatus_createdAt_idx" ON "users"("tenantId", "availabilityStatus", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_availabilityStatus_createdAt_idx" ON "users"("tenantId", "availabilityStatus", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "users_tenantId_role_createdAt_idx" ON "users"("tenantId", "role", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "users_tenantId_role_createdAt_idx" ON "users"("tenantId", "role", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "idx_users_tenantid_email" ON "users"("tenantId", "email");
+DO $$ BEGIN
+    CREATE INDEX "idx_users_tenantid_email" ON "users"("tenantId", "email");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "idx_users_tenantid_name" ON "users"("tenantId", "name");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "idx_users_tenantid_name" ON "users"("tenantId", "name");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "idx_users_tenantid_role_status" ON "users"("tenantId", "role", "availabilityStatus");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "idx_users_tenantid_role_status" ON "users"("tenantId", "role", "availabilityStatus");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "idx_users_tenantid_tier_created" ON "users"("tenantId", "tier", "createdAt" DESC);
+DO $$ BEGIN
+    CREATE INDEX "idx_users_tenantid_tier_created" ON "users"("tenantId", "tier", "createdAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "idx_users_tenantid_department_created" ON "users"("tenantId", "department", "createdAt" DESC);
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "idx_users_tenantid_department_created" ON "users"("tenantId", "department", "createdAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_tenantId_email_key" ON "users"("tenantId", "email");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "users_tenantId_email_key" ON "users"("tenantId", "email");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "invitations_token_key" ON "invitations"("token");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "invitations_token_key" ON "invitations"("token");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "invitations_tenantId_status_idx" ON "invitations"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "invitations_tenantId_status_idx" ON "invitations"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "invitations_expiresAt_idx" ON "invitations"("expiresAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "invitations_expiresAt_idx" ON "invitations"("expiresAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "invitations_tenantId_email_key" ON "invitations"("tenantId", "email");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "invitations_tenantId_email_key" ON "invitations"("tenantId", "email");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_profiles_userId_key" ON "user_profiles"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "user_profiles_userId_key" ON "user_profiles"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "user_profiles_userId_idx" ON "user_profiles"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "user_profiles_userId_idx" ON "user_profiles"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "filter_presets_tenantId_userId_idx" ON "filter_presets"("tenantId", "userId");
+DO $$ BEGIN
+    CREATE INDEX "filter_presets_tenantId_userId_idx" ON "filter_presets"("tenantId", "userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "filter_presets_userId_isPinned_idx" ON "filter_presets"("userId", "isPinned");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "filter_presets_userId_isPinned_idx" ON "filter_presets"("userId", "isPinned");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "filter_presets_userId_updatedAt_idx" ON "filter_presets"("userId", "updatedAt" DESC);
+DO $$ BEGIN
+    CREATE INDEX "filter_presets_userId_updatedAt_idx" ON "filter_presets"("userId", "updatedAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "filter_presets_userId_tenantId_name_key" ON "filter_presets"("userId", "tenantId", "name");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "filter_presets_userId_tenantId_name_key" ON "filter_presets"("userId", "tenantId", "name");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "preset_shares_presetId_idx" ON "preset_shares"("presetId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "preset_shares_presetId_idx" ON "preset_shares"("presetId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "preset_shares_ownerId_idx" ON "preset_shares"("ownerId");
+DO $$ BEGIN
+    CREATE INDEX "preset_shares_ownerId_idx" ON "preset_shares"("ownerId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "preset_shares_sharedWithUserId_idx" ON "preset_shares"("sharedWithUserId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "preset_shares_sharedWithUserId_idx" ON "preset_shares"("sharedWithUserId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "preset_shares_createdAt_idx" ON "preset_shares"("createdAt" DESC);
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "preset_shares_createdAt_idx" ON "preset_shares"("createdAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "preset_shares_presetId_sharedWithUserId_key" ON "preset_shares"("presetId", "sharedWithUserId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "preset_shares_presetId_sharedWithUserId_key" ON "preset_shares"("presetId", "sharedWithUserId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "preset_share_logs_presetId_createdAt_idx" ON "preset_share_logs"("presetId", "createdAt" DESC);
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "preset_share_logs_presetId_createdAt_idx" ON "preset_share_logs"("presetId", "createdAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "preset_share_logs_userId_eventType_createdAt_idx" ON "preset_share_logs"("userId", "eventType", "createdAt" DESC);
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "preset_share_logs_userId_eventType_createdAt_idx" ON "preset_share_logs"("userId", "eventType", "createdAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "preset_share_logs_eventType_createdAt_idx" ON "preset_share_logs"("eventType", "createdAt" DESC);
+DO $$ BEGIN
+    CREATE INDEX "preset_share_logs_eventType_createdAt_idx" ON "preset_share_logs"("eventType", "createdAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "accounts_provider_providerAccountId_key" ON "accounts"("provider", "providerAccountId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "accounts_provider_providerAccountId_key" ON "accounts"("provider", "providerAccountId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "sessions_sessionToken_key" ON "sessions"("sessionToken");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "sessions_sessionToken_key" ON "sessions"("sessionToken");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "verificationtokens_token_key" ON "verificationtokens"("token");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "verificationtokens_token_key" ON "verificationtokens"("token");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "verificationtokens_identifier_token_key" ON "verificationtokens"("identifier", "token");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "verificationtokens_identifier_token_key" ON "verificationtokens"("identifier", "token");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "translation_priorities_tenantId_idx" ON "translation_priorities"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "translation_priorities_tenantId_idx" ON "translation_priorities"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "translation_priorities_tenantId_key_languageCode_key" ON "translation_priorities"("tenantId", "key", "languageCode");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "translation_priorities_tenantId_key_languageCode_key" ON "translation_priorities"("tenantId", "key", "languageCode");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Tenant_slug_key" ON "Tenant"("slug");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "Tenant_slug_key" ON "Tenant"("slug");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Tenant_primaryDomain_key" ON "Tenant"("primaryDomain");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "Tenant_primaryDomain_key" ON "Tenant"("primaryDomain");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "Tenant_status_idx" ON "Tenant"("status");
+DO $$ BEGIN
+    CREATE INDEX "Tenant_status_idx" ON "Tenant"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tenant_memberships_tenantId_idx" ON "tenant_memberships"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tenant_memberships_tenantId_idx" ON "tenant_memberships"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tenant_memberships_userId_idx" ON "tenant_memberships"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tenant_memberships_userId_idx" ON "tenant_memberships"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "tenant_memberships_userId_tenantId_key" ON "tenant_memberships"("userId", "tenantId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "tenant_memberships_userId_tenantId_key" ON "tenant_memberships"("userId", "tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "audit_logs_action_createdAt_idx" ON "audit_logs"("action", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "audit_logs_action_createdAt_idx" ON "audit_logs"("action", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "audit_logs_userId_createdAt_idx" ON "audit_logs"("userId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "audit_logs_userId_createdAt_idx" ON "audit_logs"("userId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "audit_logs_tenantId_createdAt_idx" ON "audit_logs"("tenantId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "audit_logs_tenantId_createdAt_idx" ON "audit_logs"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "posts_slug_key" ON "posts"("slug");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "posts_slug_key" ON "posts"("slug");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "posts_publishedAt_idx" ON "posts"("publishedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "posts_publishedAt_idx" ON "posts"("publishedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "posts_featured_idx" ON "posts"("featured");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "posts_featured_idx" ON "posts"("featured");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "newsletter_email_key" ON "newsletter"("email");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "newsletter_email_key" ON "newsletter"("email");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "services_tenantId_idx" ON "services"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "services_tenantId_idx" ON "services"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "services_active_bookingEnabled_idx" ON "services"("active", "bookingEnabled");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "services_active_bookingEnabled_idx" ON "services"("active", "bookingEnabled");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "services_status_idx" ON "services"("status");
+DO $$ BEGIN
+    CREATE INDEX "services_status_idx" ON "services"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "services_createdAt_idx" ON "services"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "services_createdAt_idx" ON "services"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "services_updatedAt_idx" ON "services"("updatedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "services_updatedAt_idx" ON "services"("updatedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "services_active_featured_idx" ON "services"("active", "featured");
+DO $$ BEGIN
+    CREATE INDEX "services_active_featured_idx" ON "services"("active", "featured");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "services_tenantId_slug_key" ON "services"("tenantId", "slug");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "services_tenantId_slug_key" ON "services"("tenantId", "slug");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "service_views_service_id_created_at_idx" ON "service_views"("service_id", "created_at");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "service_views_service_id_created_at_idx" ON "service_views"("service_id", "created_at");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "bookings_scheduledAt_idx" ON "bookings"("scheduledAt");
+DO $$ BEGIN
+    CREATE INDEX "bookings_scheduledAt_idx" ON "bookings"("scheduledAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bookings_status_idx" ON "bookings"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bookings_status_idx" ON "bookings"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bookings_clientId_idx" ON "bookings"("clientId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bookings_clientId_idx" ON "bookings"("clientId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "bookings_serviceId_idx" ON "bookings"("serviceId");
+DO $$ BEGIN
+    CREATE INDEX "bookings_serviceId_idx" ON "bookings"("serviceId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bookings_clientEmail_idx" ON "bookings"("clientEmail");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bookings_clientEmail_idx" ON "bookings"("clientEmail");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bookings_createdAt_idx" ON "bookings"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bookings_createdAt_idx" ON "bookings"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "bookings_status_scheduledAt_idx" ON "bookings"("status", "scheduledAt");
+DO $$ BEGIN
+    CREATE INDEX "bookings_status_scheduledAt_idx" ON "bookings"("status", "scheduledAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bookings_tenantId_idx" ON "bookings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bookings_tenantId_idx" ON "bookings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "contact_submissions_responded_createdAt_idx" ON "contact_submissions"("responded", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "contact_submissions_responded_createdAt_idx" ON "contact_submissions"("responded", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "contact_submissions_createdAt_idx" ON "contact_submissions"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "contact_submissions_createdAt_idx" ON "contact_submissions"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "HealthLog_tenantId_idx" ON "HealthLog"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "HealthLog_tenantId_idx" ON "HealthLog"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "HealthLog_tenantId_checkedAt_idx" ON "HealthLog"("tenantId", "checkedAt");
+DO $$ BEGIN
+    CREATE INDEX "HealthLog_tenantId_checkedAt_idx" ON "HealthLog"("tenantId", "checkedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "HealthLog_tenantId_service_checkedAt_idx" ON "HealthLog"("tenantId", "service", "checkedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "HealthLog_tenantId_service_checkedAt_idx" ON "HealthLog"("tenantId", "service", "checkedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "HealthLog_tenantId_service_status_checkedAt_idx" ON "HealthLog"("tenantId", "service", "status", "checkedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "HealthLog_tenantId_service_status_checkedAt_idx" ON "HealthLog"("tenantId", "service", "status", "checkedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "sidebar_preferences_userId_key" ON "sidebar_preferences"("userId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "sidebar_preferences_userId_key" ON "sidebar_preferences"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "sidebar_preferences_userId_idx" ON "sidebar_preferences"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "sidebar_preferences_userId_idx" ON "sidebar_preferences"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ExchangeRate_base_target_idx" ON "ExchangeRate"("base", "target");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ExchangeRate_base_target_idx" ON "ExchangeRate"("base", "target");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "PriceOverride_entity_entityId_currencyCode_idx" ON "PriceOverride"("entity", "entityId", "currencyCode");
+DO $$ BEGIN
+    CREATE INDEX "PriceOverride_entity_entityId_currencyCode_idx" ON "PriceOverride"("entity", "entityId", "currencyCode");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "Task_tenantId_idx" ON "Task"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "Task_tenantId_idx" ON "Task"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "Task_tenantId_status_idx" ON "Task"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "Task_tenantId_status_idx" ON "Task"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "Task_tenantId_dueAt_idx" ON "Task"("tenantId", "dueAt");
+DO $$ BEGIN
+    CREATE INDEX "Task_tenantId_dueAt_idx" ON "Task"("tenantId", "dueAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "Task_tenantId_createdAt_idx" ON "Task"("tenantId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "Task_tenantId_createdAt_idx" ON "Task"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "Task_tenantId_assigneeId_idx" ON "Task"("tenantId", "assigneeId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "Task_tenantId_assigneeId_idx" ON "Task"("tenantId", "assigneeId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "Task_tenantId_status_dueAt_idx" ON "Task"("tenantId", "status", "dueAt");
+DO $$ BEGIN
+    CREATE INDEX "Task_tenantId_status_dueAt_idx" ON "Task"("tenantId", "status", "dueAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "Task_clientId_idx" ON "Task"("clientId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "Task_clientId_idx" ON "Task"("clientId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "Task_bookingId_idx" ON "Task"("bookingId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "Task_bookingId_idx" ON "Task"("bookingId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "ComplianceRecord_tenantId_idx" ON "ComplianceRecord"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "ComplianceRecord_tenantId_idx" ON "ComplianceRecord"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ComplianceRecord_tenantId_taskId_idx" ON "ComplianceRecord"("tenantId", "taskId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ComplianceRecord_tenantId_taskId_idx" ON "ComplianceRecord"("tenantId", "taskId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "TaskComment_taskId_idx" ON "TaskComment"("taskId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "TaskComment_taskId_idx" ON "TaskComment"("taskId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "task_templates_category_idx" ON "task_templates"("category");
+DO $$ BEGIN
+    CREATE INDEX "task_templates_category_idx" ON "task_templates"("category");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ServiceRequest_uuid_key" ON "ServiceRequest"("uuid");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "ServiceRequest_uuid_key" ON "ServiceRequest"("uuid");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "ServiceRequest_paymentSessionId_key" ON "ServiceRequest"("paymentSessionId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "ServiceRequest_paymentSessionId_key" ON "ServiceRequest"("paymentSessionId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ServiceRequest_clientId_idx" ON "ServiceRequest"("clientId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_clientId_idx" ON "ServiceRequest"("clientId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ServiceRequest_scheduledAt_idx" ON "ServiceRequest"("scheduledAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_scheduledAt_idx" ON "ServiceRequest"("scheduledAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "ServiceRequest_isBooking_status_idx" ON "ServiceRequest"("isBooking", "status");
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_isBooking_status_idx" ON "ServiceRequest"("isBooking", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ServiceRequest_tenantId_idx" ON "ServiceRequest"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_tenantId_idx" ON "ServiceRequest"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ServiceRequest_tenantId_status_idx" ON "ServiceRequest"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_tenantId_status_idx" ON "ServiceRequest"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "ServiceRequest_tenantId_assignedTeamMemberId_idx" ON "ServiceRequest"("tenantId", "assignedTeamMemberId");
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_tenantId_assignedTeamMemberId_idx" ON "ServiceRequest"("tenantId", "assignedTeamMemberId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ServiceRequest_tenantId_scheduledAt_idx" ON "ServiceRequest"("tenantId", "scheduledAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_tenantId_scheduledAt_idx" ON "ServiceRequest"("tenantId", "scheduledAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ServiceRequest_tenantId_isBooking_status_idx" ON "ServiceRequest"("tenantId", "isBooking", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ServiceRequest_tenantId_isBooking_status_idx" ON "ServiceRequest"("tenantId", "isBooking", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "request_tasks_serviceRequestId_taskId_key" ON "request_tasks"("serviceRequestId", "taskId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "request_tasks_serviceRequestId_taskId_key" ON "request_tasks"("serviceRequestId", "taskId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "team_members_isAvailable_idx" ON "team_members"("isAvailable");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "team_members_isAvailable_idx" ON "team_members"("isAvailable");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "team_members_status_idx" ON "team_members"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "team_members_status_idx" ON "team_members"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "AvailabilitySlot_date_serviceId_idx" ON "AvailabilitySlot"("date", "serviceId");
+DO $$ BEGIN
+    CREATE INDEX "AvailabilitySlot_date_serviceId_idx" ON "AvailabilitySlot"("date", "serviceId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "AvailabilitySlot_teamMemberId_date_idx" ON "AvailabilitySlot"("teamMemberId", "date");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "AvailabilitySlot_teamMemberId_date_idx" ON "AvailabilitySlot"("teamMemberId", "date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "AvailabilitySlot_available_date_idx" ON "AvailabilitySlot"("available", "date");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "AvailabilitySlot_available_date_idx" ON "AvailabilitySlot"("available", "date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "AvailabilitySlot_serviceId_teamMemberId_date_startTime_key" ON "AvailabilitySlot"("serviceId", "teamMemberId", "date", "startTime");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "AvailabilitySlot_serviceId_teamMemberId_date_startTime_key" ON "AvailabilitySlot"("serviceId", "teamMemberId", "date", "startTime");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BookingPreferences_userId_key" ON "BookingPreferences"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "BookingPreferences_userId_key" ON "BookingPreferences"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "ScheduledReminder_scheduledAt_idx" ON "ScheduledReminder"("scheduledAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "ScheduledReminder_scheduledAt_idx" ON "ScheduledReminder"("scheduledAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "ScheduledReminder_serviceRequestId_idx" ON "ScheduledReminder"("serviceRequestId");
+DO $$ BEGIN
+    CREATE INDEX "ScheduledReminder_serviceRequestId_idx" ON "ScheduledReminder"("serviceRequestId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Attachment_key_key" ON "Attachment"("key");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "Attachment_key_key" ON "Attachment"("key");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "Attachment_serviceRequestId_idx" ON "Attachment"("serviceRequestId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "Attachment_serviceRequestId_idx" ON "Attachment"("serviceRequestId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "Attachment_tenantId_idx" ON "Attachment"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "Attachment_tenantId_idx" ON "Attachment"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "DocumentVersion_attachmentId_idx" ON "DocumentVersion"("attachmentId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "DocumentVersion_attachmentId_idx" ON "DocumentVersion"("attachmentId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "DocumentVersion_tenantId_idx" ON "DocumentVersion"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "DocumentVersion_tenantId_idx" ON "DocumentVersion"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "DocumentVersion_uploadedAt_idx" ON "DocumentVersion"("uploadedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "DocumentVersion_uploadedAt_idx" ON "DocumentVersion"("uploadedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "DocumentVersion_attachmentId_versionNumber_key" ON "DocumentVersion"("attachmentId", "versionNumber");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "DocumentVersion_attachmentId_versionNumber_key" ON "DocumentVersion"("attachmentId", "versionNumber");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "DocumentLink_attachmentId_idx" ON "DocumentLink"("attachmentId");
+DO $$ BEGIN
+    CREATE INDEX "DocumentLink_attachmentId_idx" ON "DocumentLink"("attachmentId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "DocumentLink_linkedToType_idx" ON "DocumentLink"("linkedToType");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "DocumentLink_linkedToType_idx" ON "DocumentLink"("linkedToType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "DocumentLink_linkedToId_idx" ON "DocumentLink"("linkedToId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "DocumentLink_linkedToId_idx" ON "DocumentLink"("linkedToId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "DocumentLink_tenantId_idx" ON "DocumentLink"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "DocumentLink_tenantId_idx" ON "DocumentLink"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "DocumentLink_attachmentId_linkedToType_linkedToId_key" ON "DocumentLink"("attachmentId", "linkedToType", "linkedToId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "DocumentLink_attachmentId_linkedToType_linkedToId_key" ON "DocumentLink"("attachmentId", "linkedToType", "linkedToId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "DocumentAuditLog_attachmentId_idx" ON "DocumentAuditLog"("attachmentId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "DocumentAuditLog_attachmentId_idx" ON "DocumentAuditLog"("attachmentId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "DocumentAuditLog_performedAt_idx" ON "DocumentAuditLog"("performedAt");
+DO $$ BEGIN
+    CREATE INDEX "DocumentAuditLog_performedAt_idx" ON "DocumentAuditLog"("performedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "DocumentAuditLog_tenantId_idx" ON "DocumentAuditLog"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "DocumentAuditLog_tenantId_idx" ON "DocumentAuditLog"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "DocumentAuditLog_action_idx" ON "DocumentAuditLog"("action");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "DocumentAuditLog_action_idx" ON "DocumentAuditLog"("action");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "WorkOrder_code_key" ON "WorkOrder"("code");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "WorkOrder_code_key" ON "WorkOrder"("code");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "WorkOrder_tenantId_idx" ON "WorkOrder"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "WorkOrder_tenantId_idx" ON "WorkOrder"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "WorkOrder_status_priority_idx" ON "WorkOrder"("status", "priority");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "WorkOrder_status_priority_idx" ON "WorkOrder"("status", "priority");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "WorkOrder_assigneeId_idx" ON "WorkOrder"("assigneeId");
+DO $$ BEGIN
+    CREATE INDEX "WorkOrder_assigneeId_idx" ON "WorkOrder"("assigneeId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "WorkOrder_dueAt_idx" ON "WorkOrder"("dueAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "WorkOrder_dueAt_idx" ON "WorkOrder"("dueAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "WorkOrder_createdAt_idx" ON "WorkOrder"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "WorkOrder_createdAt_idx" ON "WorkOrder"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "booking_settings_tenantId_key" ON "booking_settings"("tenantId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "booking_settings_tenantId_key" ON "booking_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "booking_settings_tenantId_idx" ON "booking_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "booking_settings_tenantId_idx" ON "booking_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "booking_step_config_bookingSettingsId_stepOrder_idx" ON "booking_step_config"("bookingSettingsId", "stepOrder");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "booking_step_config_bookingSettingsId_stepOrder_idx" ON "booking_step_config"("bookingSettingsId", "stepOrder");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "business_hours_config_bookingSettingsId_dayOfWeek_idx" ON "business_hours_config"("bookingSettingsId", "dayOfWeek");
+DO $$ BEGIN
+    CREATE INDEX "business_hours_config_bookingSettingsId_dayOfWeek_idx" ON "business_hours_config"("bookingSettingsId", "dayOfWeek");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "payment_method_config_bookingSettingsId_methodType_key" ON "payment_method_config"("bookingSettingsId", "methodType");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "payment_method_config_bookingSettingsId_methodType_key" ON "payment_method_config"("bookingSettingsId", "methodType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "notification_templates_bookingSettingsId_templateType_idx" ON "notification_templates"("bookingSettingsId", "templateType");
+DO $$ BEGIN
+    CREATE INDEX "notification_templates_bookingSettingsId_templateType_idx" ON "notification_templates"("bookingSettingsId", "templateType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_payment_methods_paymentMethodId_key" ON "user_payment_methods"("paymentMethodId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "user_payment_methods_paymentMethodId_key" ON "user_payment_methods"("paymentMethodId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "user_payment_methods_userId_idx" ON "user_payment_methods"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "user_payment_methods_userId_idx" ON "user_payment_methods"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "user_payment_methods_tenantId_idx" ON "user_payment_methods"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "user_payment_methods_tenantId_idx" ON "user_payment_methods"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "user_payment_methods_isDefault_idx" ON "user_payment_methods"("isDefault");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "user_payment_methods_isDefault_idx" ON "user_payment_methods"("isDefault");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "user_payment_methods_status_idx" ON "user_payment_methods"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "user_payment_methods_status_idx" ON "user_payment_methods"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "user_payment_methods_userId_paymentMethodId_key" ON "user_payment_methods"("userId", "paymentMethodId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "user_payment_methods_userId_paymentMethodId_key" ON "user_payment_methods"("userId", "paymentMethodId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "banking_connections_tenantId_idx" ON "banking_connections"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "banking_connections_tenantId_idx" ON "banking_connections"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "banking_connections_status_idx" ON "banking_connections"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "banking_connections_status_idx" ON "banking_connections"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "banking_connections_lastSyncAt_idx" ON "banking_connections"("lastSyncAt");
+DO $$ BEGIN
+    CREATE INDEX "banking_connections_lastSyncAt_idx" ON "banking_connections"("lastSyncAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "banking_transactions_tenantId_idx" ON "banking_transactions"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "banking_transactions_tenantId_idx" ON "banking_transactions"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "banking_transactions_connectionId_idx" ON "banking_transactions"("connectionId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "banking_transactions_connectionId_idx" ON "banking_transactions"("connectionId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "banking_transactions_date_idx" ON "banking_transactions"("date");
+DO $$ BEGIN
+    CREATE INDEX "banking_transactions_date_idx" ON "banking_transactions"("date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "banking_transactions_matched_idx" ON "banking_transactions"("matched");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "banking_transactions_matched_idx" ON "banking_transactions"("matched");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "banking_transactions_connectionId_externalId_key" ON "banking_transactions"("connectionId", "externalId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "banking_transactions_connectionId_externalId_key" ON "banking_transactions"("connectionId", "externalId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "invoices_number_key" ON "invoices"("number");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "invoices_number_key" ON "invoices"("number");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "invoices_tenantId_idx" ON "invoices"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "invoices_tenantId_idx" ON "invoices"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "invoices_bookingId_idx" ON "invoices"("bookingId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "invoices_bookingId_idx" ON "invoices"("bookingId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "invoices_clientId_idx" ON "invoices"("clientId");
+DO $$ BEGIN
+    CREATE INDEX "invoices_clientId_idx" ON "invoices"("clientId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "invoice_items_invoiceId_idx" ON "invoice_items"("invoiceId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "invoice_items_invoiceId_idx" ON "invoice_items"("invoiceId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "expenses_tenantId_idx" ON "expenses"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "expenses_tenantId_idx" ON "expenses"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "expenses_date_idx" ON "expenses"("date");
+DO $$ BEGIN
+    CREATE INDEX "expenses_date_idx" ON "expenses"("date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "expenses_status_idx" ON "expenses"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "expenses_status_idx" ON "expenses"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "chat_messages_tenantId_room_createdAt_idx" ON "chat_messages"("tenantId", "room", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "chat_messages_tenantId_room_createdAt_idx" ON "chat_messages"("tenantId", "room", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "IdempotencyKey_tenantId_idx" ON "IdempotencyKey"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "IdempotencyKey_tenantId_idx" ON "IdempotencyKey"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "IdempotencyKey_tenantId_key_key" ON "IdempotencyKey"("tenantId", "key");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "IdempotencyKey_tenantId_key_key" ON "IdempotencyKey"("tenantId", "key");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "setting_change_diffs_tenantId_createdAt_idx" ON "setting_change_diffs"("tenantId", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "setting_change_diffs_tenantId_createdAt_idx" ON "setting_change_diffs"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "setting_change_diffs_tenantId_category_createdAt_idx" ON "setting_change_diffs"("tenantId", "category", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "setting_change_diffs_tenantId_category_createdAt_idx" ON "setting_change_diffs"("tenantId", "category", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "favorite_settings_tenantId_userId_idx" ON "favorite_settings"("tenantId", "userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "favorite_settings_tenantId_userId_idx" ON "favorite_settings"("tenantId", "userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "favorite_settings_tenantId_userId_settingKey_key" ON "favorite_settings"("tenantId", "userId", "settingKey");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "favorite_settings_tenantId_userId_settingKey_key" ON "favorite_settings"("tenantId", "userId", "settingKey");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "audit_events_createdAt_idx" ON "audit_events"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "audit_events_createdAt_idx" ON "audit_events"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "audit_events_tenantId_createdAt_idx" ON "audit_events"("tenantId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "audit_events_tenantId_createdAt_idx" ON "audit_events"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "audit_events_type_createdAt_idx" ON "audit_events"("type", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "audit_events_type_createdAt_idx" ON "audit_events"("type", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "organization_settings_tenantId_key" ON "organization_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "organization_settings_tenantId_key" ON "organization_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "organization_settings_tenantId_idx" ON "organization_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "organization_settings_tenantId_idx" ON "organization_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "user_management_settings_tenantId_key" ON "user_management_settings"("tenantId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "user_management_settings_tenantId_key" ON "user_management_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "user_management_settings_tenantId_idx" ON "user_management_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "user_management_settings_tenantId_idx" ON "user_management_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "translation_keys_tenantId_namespace_idx" ON "translation_keys"("tenantId", "namespace");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "translation_keys_tenantId_namespace_idx" ON "translation_keys"("tenantId", "namespace");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "translation_keys_tenantId_enTranslated_idx" ON "translation_keys"("tenantId", "enTranslated");
+DO $$ BEGIN
+    CREATE INDEX "translation_keys_tenantId_enTranslated_idx" ON "translation_keys"("tenantId", "enTranslated");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "translation_keys_tenantId_arTranslated_idx" ON "translation_keys"("tenantId", "arTranslated");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "translation_keys_tenantId_arTranslated_idx" ON "translation_keys"("tenantId", "arTranslated");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "translation_keys_tenantId_hiTranslated_idx" ON "translation_keys"("tenantId", "hiTranslated");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "translation_keys_tenantId_hiTranslated_idx" ON "translation_keys"("tenantId", "hiTranslated");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "translation_keys_addedAt_idx" ON "translation_keys"("addedAt");
+DO $$ BEGIN
+    CREATE INDEX "translation_keys_addedAt_idx" ON "translation_keys"("addedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "translation_keys_tenantId_key_key" ON "translation_keys"("tenantId", "key");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "translation_keys_tenantId_key_key" ON "translation_keys"("tenantId", "key");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "translation_metrics_tenantId_date_idx" ON "translation_metrics"("tenantId", "date");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "translation_metrics_tenantId_date_idx" ON "translation_metrics"("tenantId", "date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "translation_metrics_date_idx" ON "translation_metrics"("date");
+DO $$ BEGIN
+    CREATE INDEX "translation_metrics_date_idx" ON "translation_metrics"("date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "translation_metrics_tenantId_date_key" ON "translation_metrics"("tenantId", "date");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "translation_metrics_tenantId_date_key" ON "translation_metrics"("tenantId", "date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "integration_settings_tenantId_key" ON "integration_settings"("tenantId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "integration_settings_tenantId_key" ON "integration_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "integration_settings_tenantId_idx" ON "integration_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "integration_settings_tenantId_idx" ON "integration_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "communication_settings_tenantId_key" ON "communication_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "communication_settings_tenantId_key" ON "communication_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "communication_settings_tenantId_idx" ON "communication_settings"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "communication_settings_tenantId_idx" ON "communication_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "security_settings_tenantId_key" ON "security_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "security_settings_tenantId_key" ON "security_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "security_settings_tenantId_idx" ON "security_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "security_settings_tenantId_idx" ON "security_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "cron_telemetry_settings_tenantId_key" ON "cron_telemetry_settings"("tenantId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "cron_telemetry_settings_tenantId_key" ON "cron_telemetry_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "cron_telemetry_settings_tenantId_idx" ON "cron_telemetry_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "cron_telemetry_settings_tenantId_idx" ON "cron_telemetry_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "org_localization_settings_tenantId_key" ON "org_localization_settings"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "org_localization_settings_tenantId_key" ON "org_localization_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "org_localization_settings_tenantId_idx" ON "org_localization_settings"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "org_localization_settings_tenantId_idx" ON "org_localization_settings"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "regional_formats_tenantId_idx" ON "regional_formats"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "regional_formats_tenantId_idx" ON "regional_formats"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "regional_formats_languageCode_idx" ON "regional_formats"("languageCode");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "regional_formats_languageCode_idx" ON "regional_formats"("languageCode");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "regional_formats_tenantId_languageCode_key" ON "regional_formats"("tenantId", "languageCode");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "regional_formats_tenantId_languageCode_key" ON "regional_formats"("tenantId", "languageCode");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "crowdin_integrations_tenantId_key" ON "crowdin_integrations"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "crowdin_integrations_tenantId_key" ON "crowdin_integrations"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "crowdin_integrations_tenantId_idx" ON "crowdin_integrations"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "crowdin_integrations_tenantId_idx" ON "crowdin_integrations"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "menu_customizations_userId_key" ON "menu_customizations"("userId");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "menu_customizations_userId_key" ON "menu_customizations"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "menu_customizations_userId_idx" ON "menu_customizations"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "menu_customizations_userId_idx" ON "menu_customizations"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "permission_audits_tenantId_idx" ON "permission_audits"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "permission_audits_tenantId_idx" ON "permission_audits"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "permission_audits_userId_idx" ON "permission_audits"("userId");
+DO $$ BEGIN
+    CREATE INDEX "permission_audits_userId_idx" ON "permission_audits"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "permission_audits_changedBy_idx" ON "permission_audits"("changedBy");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "permission_audits_changedBy_idx" ON "permission_audits"("changedBy");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "permission_audits_createdAt_idx" ON "permission_audits"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "permission_audits_createdAt_idx" ON "permission_audits"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "permission_audits_tenantId_createdAt_idx" ON "permission_audits"("tenantId", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "permission_audits_tenantId_createdAt_idx" ON "permission_audits"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "permission_templates_tenantId_idx" ON "permission_templates"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "permission_templates_tenantId_idx" ON "permission_templates"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "permission_templates_isActive_idx" ON "permission_templates"("isActive");
+DO $$ BEGIN
+    CREATE INDEX "permission_templates_isActive_idx" ON "permission_templates"("isActive");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "permission_templates_tenantId_isActive_idx" ON "permission_templates"("tenantId", "isActive");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "permission_templates_tenantId_isActive_idx" ON "permission_templates"("tenantId", "isActive");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "permission_templates_tenantId_name_key" ON "permission_templates"("tenantId", "name");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "permission_templates_tenantId_name_key" ON "permission_templates"("tenantId", "name");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "custom_roles_tenantId_idx" ON "custom_roles"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "custom_roles_tenantId_idx" ON "custom_roles"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "custom_roles_tenantId_isActive_idx" ON "custom_roles"("tenantId", "isActive");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "custom_roles_tenantId_isActive_idx" ON "custom_roles"("tenantId", "isActive");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "custom_roles_tenantId_name_key" ON "custom_roles"("tenantId", "name");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "custom_roles_tenantId_name_key" ON "custom_roles"("tenantId", "name");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "user_workflows_tenantId_status_createdAt_idx" ON "user_workflows"("tenantId", "status", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "user_workflows_tenantId_status_createdAt_idx" ON "user_workflows"("tenantId", "status", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "user_workflows_userId_createdAt_idx" ON "user_workflows"("userId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "user_workflows_userId_createdAt_idx" ON "user_workflows"("userId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "workflow_steps_workflowId_stepNumber_idx" ON "workflow_steps"("workflowId", "stepNumber");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "workflow_steps_workflowId_stepNumber_idx" ON "workflow_steps"("workflowId", "stepNumber");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "workflow_steps_status_idx" ON "workflow_steps"("status");
+DO $$ BEGIN
+    CREATE INDEX "workflow_steps_status_idx" ON "workflow_steps"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "workflow_templates_tenantId_isActive_idx" ON "workflow_templates"("tenantId", "isActive");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "workflow_templates_tenantId_isActive_idx" ON "workflow_templates"("tenantId", "isActive");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "workflow_templates_tenantId_name_key" ON "workflow_templates"("tenantId", "name");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "workflow_templates_tenantId_name_key" ON "workflow_templates"("tenantId", "name");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "workflow_notifications_workflowId_createdAt_idx" ON "workflow_notifications"("workflowId", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "workflow_notifications_workflowId_createdAt_idx" ON "workflow_notifications"("workflowId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "workflow_history_workflowId_createdAt_idx" ON "workflow_history"("workflowId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "workflow_history_workflowId_createdAt_idx" ON "workflow_history"("workflowId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_tickets_tenantId_idx" ON "support_tickets"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_tenantId_idx" ON "support_tickets"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "support_tickets_userId_idx" ON "support_tickets"("userId");
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_userId_idx" ON "support_tickets"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_tickets_assignedToId_idx" ON "support_tickets"("assignedToId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_assignedToId_idx" ON "support_tickets"("assignedToId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_tickets_status_idx" ON "support_tickets"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_status_idx" ON "support_tickets"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "support_tickets_priority_idx" ON "support_tickets"("priority");
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_priority_idx" ON "support_tickets"("priority");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_tickets_category_idx" ON "support_tickets"("category");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_category_idx" ON "support_tickets"("category");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_tickets_createdAt_idx" ON "support_tickets"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_createdAt_idx" ON "support_tickets"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "support_tickets_dueAt_idx" ON "support_tickets"("dueAt");
+DO $$ BEGIN
+    CREATE INDEX "support_tickets_dueAt_idx" ON "support_tickets"("dueAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_ticket_comments_ticketId_idx" ON "support_ticket_comments"("ticketId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_ticket_comments_ticketId_idx" ON "support_ticket_comments"("ticketId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "support_ticket_comments_authorId_idx" ON "support_ticket_comments"("authorId");
+DO $$ BEGIN
+    CREATE INDEX "support_ticket_comments_authorId_idx" ON "support_ticket_comments"("authorId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_ticket_comments_createdAt_idx" ON "support_ticket_comments"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_ticket_comments_createdAt_idx" ON "support_ticket_comments"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "support_ticket_status_history_ticketId_idx" ON "support_ticket_status_history"("ticketId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "support_ticket_status_history_ticketId_idx" ON "support_ticket_status_history"("ticketId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "support_ticket_status_history_changedAt_idx" ON "support_ticket_status_history"("changedAt");
+DO $$ BEGIN
+    CREATE INDEX "support_ticket_status_history_changedAt_idx" ON "support_ticket_status_history"("changedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "knowledge_base_categories_tenantId_idx" ON "knowledge_base_categories"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_categories_tenantId_idx" ON "knowledge_base_categories"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "knowledge_base_categories_published_idx" ON "knowledge_base_categories"("published");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_categories_published_idx" ON "knowledge_base_categories"("published");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "knowledge_base_categories_tenantId_slug_key" ON "knowledge_base_categories"("tenantId", "slug");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "knowledge_base_categories_tenantId_slug_key" ON "knowledge_base_categories"("tenantId", "slug");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "knowledge_base_articles_tenantId_idx" ON "knowledge_base_articles"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_articles_tenantId_idx" ON "knowledge_base_articles"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "knowledge_base_articles_categoryId_idx" ON "knowledge_base_articles"("categoryId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_articles_categoryId_idx" ON "knowledge_base_articles"("categoryId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "knowledge_base_articles_authorId_idx" ON "knowledge_base_articles"("authorId");
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_articles_authorId_idx" ON "knowledge_base_articles"("authorId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "knowledge_base_articles_published_idx" ON "knowledge_base_articles"("published");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_articles_published_idx" ON "knowledge_base_articles"("published");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "knowledge_base_articles_featured_idx" ON "knowledge_base_articles"("featured");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_articles_featured_idx" ON "knowledge_base_articles"("featured");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "knowledge_base_articles_tags_idx" ON "knowledge_base_articles"("tags");
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_articles_tags_idx" ON "knowledge_base_articles"("tags");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "knowledge_base_articles_createdAt_idx" ON "knowledge_base_articles"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "knowledge_base_articles_createdAt_idx" ON "knowledge_base_articles"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "knowledge_base_articles_tenantId_slug_key" ON "knowledge_base_articles"("tenantId", "slug");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "knowledge_base_articles_tenantId_slug_key" ON "knowledge_base_articles"("tenantId", "slug");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "bulk_operations_tenantId_status_createdAt_idx" ON "bulk_operations"("tenantId", "status", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "bulk_operations_tenantId_status_createdAt_idx" ON "bulk_operations"("tenantId", "status", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bulk_operations_createdBy_createdAt_idx" ON "bulk_operations"("createdBy", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bulk_operations_createdBy_createdAt_idx" ON "bulk_operations"("createdBy", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bulk_operations_status_idx" ON "bulk_operations"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bulk_operations_status_idx" ON "bulk_operations"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "bulk_operation_results_bulkOperationId_status_idx" ON "bulk_operation_results"("bulkOperationId", "status");
+DO $$ BEGIN
+    CREATE INDEX "bulk_operation_results_bulkOperationId_status_idx" ON "bulk_operation_results"("bulkOperationId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bulk_operation_results_userId_createdAt_idx" ON "bulk_operation_results"("userId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bulk_operation_results_userId_createdAt_idx" ON "bulk_operation_results"("userId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bulk_operation_history_bulkOperationId_createdAt_idx" ON "bulk_operation_history"("bulkOperationId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bulk_operation_history_bulkOperationId_createdAt_idx" ON "bulk_operation_history"("bulkOperationId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "entities_tenantId_country_idx" ON "entities"("tenantId", "country");
+DO $$ BEGIN
+    CREATE INDEX "entities_tenantId_country_idx" ON "entities"("tenantId", "country");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entities_tenantId_status_idx" ON "entities"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entities_tenantId_status_idx" ON "entities"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "entities_createdAt_idx" ON "entities"("createdAt");
+DO $$ BEGIN
+    CREATE INDEX "entities_createdAt_idx" ON "entities"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entities_tenantId_createdAt_idx" ON "entities"("tenantId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entities_tenantId_createdAt_idx" ON "entities"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "entities_tenantId_name_key" ON "entities"("tenantId", "name");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "entities_tenantId_name_key" ON "entities"("tenantId", "name");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "user_on_entities_entityId_idx" ON "user_on_entities"("entityId");
+DO $$ BEGIN
+    CREATE INDEX "user_on_entities_entityId_idx" ON "user_on_entities"("entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_on_entities_userId_entityId_key" ON "user_on_entities"("userId", "entityId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "user_on_entities_userId_entityId_key" ON "user_on_entities"("userId", "entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entity_licenses_entityId_idx" ON "entity_licenses"("entityId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entity_licenses_entityId_idx" ON "entity_licenses"("entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "entity_licenses_status_idx" ON "entity_licenses"("status");
+DO $$ BEGIN
+    CREATE INDEX "entity_licenses_status_idx" ON "entity_licenses"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entity_licenses_createdAt_idx" ON "entity_licenses"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entity_licenses_createdAt_idx" ON "entity_licenses"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "entity_licenses_entityId_country_licenseNumber_key" ON "entity_licenses"("entityId", "country", "licenseNumber");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "entity_licenses_entityId_country_licenseNumber_key" ON "entity_licenses"("entityId", "country", "licenseNumber");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "entity_registrations_entityId_idx" ON "entity_registrations"("entityId");
+DO $$ BEGIN
+    CREATE INDEX "entity_registrations_entityId_idx" ON "entity_registrations"("entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entity_registrations_status_idx" ON "entity_registrations"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entity_registrations_status_idx" ON "entity_registrations"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entity_registrations_createdAt_idx" ON "entity_registrations"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entity_registrations_createdAt_idx" ON "entity_registrations"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "entity_registrations_entityId_type_key" ON "entity_registrations"("entityId", "type");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "entity_registrations_entityId_type_key" ON "entity_registrations"("entityId", "type");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "economic_zones_country_idx" ON "economic_zones"("country");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "economic_zones_country_idx" ON "economic_zones"("country");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "economic_zones_city_idx" ON "economic_zones"("city");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "economic_zones_city_idx" ON "economic_zones"("city");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "economic_zones_country_name_key" ON "economic_zones"("country", "name");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "economic_zones_country_name_key" ON "economic_zones"("country", "name");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "obligations_entityId_idx" ON "obligations"("entityId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "obligations_entityId_idx" ON "obligations"("entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "obligations_country_idx" ON "obligations"("country");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "obligations_country_idx" ON "obligations"("country");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "obligations_type_idx" ON "obligations"("type");
+DO $$ BEGIN
+    CREATE INDEX "obligations_type_idx" ON "obligations"("type");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "obligations_entityId_type_country_key" ON "obligations"("entityId", "type", "country");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "obligations_entityId_type_country_key" ON "obligations"("entityId", "type", "country");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "filing_periods_obligationId_idx" ON "filing_periods"("obligationId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "filing_periods_obligationId_idx" ON "filing_periods"("obligationId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "filing_periods_status_idx" ON "filing_periods"("status");
+DO $$ BEGIN
+    CREATE INDEX "filing_periods_status_idx" ON "filing_periods"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "filing_periods_dueAt_idx" ON "filing_periods"("dueAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "filing_periods_dueAt_idx" ON "filing_periods"("dueAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "filing_periods_assigneeId_idx" ON "filing_periods"("assigneeId");
+DO $$ BEGIN
+    CREATE INDEX "filing_periods_assigneeId_idx" ON "filing_periods"("assigneeId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "consents_tenantId_idx" ON "consents"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "consents_tenantId_idx" ON "consents"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "consents_entityId_idx" ON "consents"("entityId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "consents_entityId_idx" ON "consents"("entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "consents_acceptedBy_idx" ON "consents"("acceptedBy");
+DO $$ BEGIN
+    CREATE INDEX "consents_acceptedBy_idx" ON "consents"("acceptedBy");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "consents_createdAt_idx" ON "consents"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "consents_createdAt_idx" ON "consents"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "verification_attempts_tenantId_idx" ON "verification_attempts"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "verification_attempts_tenantId_idx" ON "verification_attempts"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "verification_attempts_status_idx" ON "verification_attempts"("status");
+DO $$ BEGIN
+    CREATE INDEX "verification_attempts_status_idx" ON "verification_attempts"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "verification_attempts_createdAt_idx" ON "verification_attempts"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "verification_attempts_createdAt_idx" ON "verification_attempts"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "verification_attempts_correlationId_idx" ON "verification_attempts"("correlationId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "verification_attempts_correlationId_idx" ON "verification_attempts"("correlationId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "entity_audit_logs_entityId_idx" ON "entity_audit_logs"("entityId");
+DO $$ BEGIN
+    CREATE INDEX "entity_audit_logs_entityId_idx" ON "entity_audit_logs"("entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entity_audit_logs_userId_idx" ON "entity_audit_logs"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entity_audit_logs_userId_idx" ON "entity_audit_logs"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "entity_audit_logs_action_idx" ON "entity_audit_logs"("action");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "entity_audit_logs_action_idx" ON "entity_audit_logs"("action");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "entity_audit_logs_createdAt_idx" ON "entity_audit_logs"("createdAt");
+DO $$ BEGIN
+    CREATE INDEX "entity_audit_logs_createdAt_idx" ON "entity_audit_logs"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "workflows_status_createdAt_idx" ON "workflows"("status", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "workflows_status_createdAt_idx" ON "workflows"("status", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "workflows_createdBy_createdAt_idx" ON "workflows"("createdBy", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "workflows_createdBy_createdAt_idx" ON "workflows"("createdBy", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "workflow_simulations_workflowId_createdAt_idx" ON "workflow_simulations"("workflowId", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "workflow_simulations_workflowId_createdAt_idx" ON "workflow_simulations"("workflowId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "reports_tenantId_createdAt_idx" ON "reports"("tenantId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "reports_tenantId_createdAt_idx" ON "reports"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "reports_userId_createdAt_idx" ON "reports"("userId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "reports_userId_createdAt_idx" ON "reports"("userId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "report_executions_reportId_status_idx" ON "report_executions"("reportId", "status");
+DO $$ BEGIN
+    CREATE INDEX "report_executions_reportId_status_idx" ON "report_executions"("reportId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "report_executions_executedAt_idx" ON "report_executions"("executedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "report_executions_executedAt_idx" ON "report_executions"("executedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "export_schedules_tenantId_isActive_idx" ON "export_schedules"("tenantId", "isActive");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "export_schedules_tenantId_isActive_idx" ON "export_schedules"("tenantId", "isActive");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "export_schedules_userId_createdAt_idx" ON "export_schedules"("userId", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "export_schedules_userId_createdAt_idx" ON "export_schedules"("userId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "export_schedules_nextExecutedAt_isActive_idx" ON "export_schedules"("nextExecutedAt", "isActive");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "export_schedules_nextExecutedAt_isActive_idx" ON "export_schedules"("nextExecutedAt", "isActive");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "export_schedule_executions_scheduleId_status_idx" ON "export_schedule_executions"("scheduleId", "status");
+DO $$ BEGIN
+    CREATE INDEX "export_schedule_executions_scheduleId_status_idx" ON "export_schedule_executions"("scheduleId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "export_schedule_executions_executedAt_idx" ON "export_schedule_executions"("executedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "export_schedule_executions_executedAt_idx" ON "export_schedule_executions"("executedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tax_filings_tenantId_country_taxType_idx" ON "tax_filings"("tenantId", "country", "taxType");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tax_filings_tenantId_country_taxType_idx" ON "tax_filings"("tenantId", "country", "taxType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "tax_filings_tenantId_status_idx" ON "tax_filings"("tenantId", "status");
+DO $$ BEGIN
+    CREATE INDEX "tax_filings_tenantId_status_idx" ON "tax_filings"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tax_filings_entityId_idx" ON "tax_filings"("entityId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tax_filings_entityId_idx" ON "tax_filings"("entityId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tax_filings_periodStartDate_periodEndDate_idx" ON "tax_filings"("periodStartDate", "periodEndDate");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tax_filings_periodStartDate_periodEndDate_idx" ON "tax_filings"("periodStartDate", "periodEndDate");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "tax_filings_submittedAt_idx" ON "tax_filings"("submittedAt");
+DO $$ BEGIN
+    CREATE INDEX "tax_filings_submittedAt_idx" ON "tax_filings"("submittedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "parties_tenantId_partyType_idx" ON "parties"("tenantId", "partyType");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "parties_tenantId_partyType_idx" ON "parties"("tenantId", "partyType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "parties_tenantId_status_idx" ON "parties"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "parties_tenantId_status_idx" ON "parties"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "parties_tenantId_isMasterRecord_idx" ON "parties"("tenantId", "isMasterRecord");
+DO $$ BEGIN
+    CREATE INDEX "parties_tenantId_isMasterRecord_idx" ON "parties"("tenantId", "isMasterRecord");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "parties_masterRecordId_idx" ON "parties"("masterRecordId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "parties_masterRecordId_idx" ON "parties"("masterRecordId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "parties_dataQualityScore_idx" ON "parties"("dataQualityScore");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "parties_dataQualityScore_idx" ON "parties"("dataQualityScore");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE UNIQUE INDEX "parties_tenantId_registrationNumber_key" ON "parties"("tenantId", "registrationNumber");
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "parties_tenantId_registrationNumber_key" ON "parties"("tenantId", "registrationNumber");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "parties_tenantId_taxId_key" ON "parties"("tenantId", "taxId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "parties_tenantId_taxId_key" ON "parties"("tenantId", "taxId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "products_tenantId_productType_idx" ON "products"("tenantId", "productType");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "products_tenantId_productType_idx" ON "products"("tenantId", "productType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "products_tenantId_status_idx" ON "products"("tenantId", "status");
+DO $$ BEGIN
+    CREATE INDEX "products_tenantId_status_idx" ON "products"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "products_tenantId_isMasterRecord_idx" ON "products"("tenantId", "isMasterRecord");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "products_tenantId_isMasterRecord_idx" ON "products"("tenantId", "isMasterRecord");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "products_masterRecordId_idx" ON "products"("masterRecordId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "products_masterRecordId_idx" ON "products"("masterRecordId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "products_taxCodeId_idx" ON "products"("taxCodeId");
+DO $$ BEGIN
+    CREATE INDEX "products_taxCodeId_idx" ON "products"("taxCodeId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "products_tenantId_productCode_key" ON "products"("tenantId", "productCode");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "products_tenantId_productCode_key" ON "products"("tenantId", "productCode");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tax_codes_tenantId_taxType_idx" ON "tax_codes"("tenantId", "taxType");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tax_codes_tenantId_taxType_idx" ON "tax_codes"("tenantId", "taxType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "tax_codes_tenantId_country_idx" ON "tax_codes"("tenantId", "country");
+DO $$ BEGIN
+    CREATE INDEX "tax_codes_tenantId_country_idx" ON "tax_codes"("tenantId", "country");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tax_codes_tenantId_status_idx" ON "tax_codes"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tax_codes_tenantId_status_idx" ON "tax_codes"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "tax_codes_tenantId_isMasterRecord_idx" ON "tax_codes"("tenantId", "isMasterRecord");
+DO $$ BEGIN
+    CREATE INDEX "tax_codes_tenantId_isMasterRecord_idx" ON "tax_codes"("tenantId", "isMasterRecord");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "tax_codes_masterRecordId_idx" ON "tax_codes"("masterRecordId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "tax_codes_masterRecordId_idx" ON "tax_codes"("masterRecordId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "tax_codes_tenantId_taxCodeValue_country_key" ON "tax_codes"("tenantId", "taxCodeValue", "country");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "tax_codes_tenantId_taxCodeValue_country_key" ON "tax_codes"("tenantId", "taxCodeValue", "country");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "merge_logs_tenantId_recordType_idx" ON "merge_logs"("tenantId", "recordType");
+DO $$ BEGIN
+    CREATE INDEX "merge_logs_tenantId_recordType_idx" ON "merge_logs"("tenantId", "recordType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "merge_logs_tenantId_mergeStatus_idx" ON "merge_logs"("tenantId", "mergeStatus");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "merge_logs_tenantId_mergeStatus_idx" ON "merge_logs"("tenantId", "mergeStatus");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "merge_logs_masterRecordId_idx" ON "merge_logs"("masterRecordId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "merge_logs_masterRecordId_idx" ON "merge_logs"("masterRecordId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "merge_logs_duplicateRecordId_idx" ON "merge_logs"("duplicateRecordId");
+DO $$ BEGIN
+    CREATE INDEX "merge_logs_duplicateRecordId_idx" ON "merge_logs"("duplicateRecordId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "merge_logs_mergedAt_idx" ON "merge_logs"("mergedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "merge_logs_mergedAt_idx" ON "merge_logs"("mergedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "merge_logs_tenantId_mergedAt_idx" ON "merge_logs"("tenantId", "mergedAt" DESC);
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "merge_logs_tenantId_mergedAt_idx" ON "merge_logs"("tenantId", "mergedAt" DESC);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "survivorship_rules_tenantId_recordType_idx" ON "survivorship_rules"("tenantId", "recordType");
+DO $$ BEGIN
+    CREATE INDEX "survivorship_rules_tenantId_recordType_idx" ON "survivorship_rules"("tenantId", "recordType");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "survivorship_rules_tenantId_isActive_idx" ON "survivorship_rules"("tenantId", "isActive");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "survivorship_rules_tenantId_isActive_idx" ON "survivorship_rules"("tenantId", "isActive");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "survivorship_rules_tenantId_ruleName_key" ON "survivorship_rules"("tenantId", "ruleName");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "survivorship_rules_tenantId_ruleName_key" ON "survivorship_rules"("tenantId", "ruleName");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "bills_tenantId_status_idx" ON "bills"("tenantId", "status");
+DO $$ BEGIN
+    CREATE INDEX "bills_tenantId_status_idx" ON "bills"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bills_tenantId_date_idx" ON "bills"("tenantId", "date");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bills_tenantId_date_idx" ON "bills"("tenantId", "date");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "bills_tenantId_vendor_idx" ON "bills"("tenantId", "vendor");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "bills_tenantId_vendor_idx" ON "bills"("tenantId", "vendor");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "bills_attachmentId_idx" ON "bills"("attachmentId");
+DO $$ BEGIN
+    CREATE INDEX "bills_attachmentId_idx" ON "bills"("attachmentId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "approvals_tenantId_status_idx" ON "approvals"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "approvals_tenantId_status_idx" ON "approvals"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "approvals_tenantId_approverId_status_idx" ON "approvals"("tenantId", "approverId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "approvals_tenantId_approverId_status_idx" ON "approvals"("tenantId", "approverId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "approvals_tenantId_itemType_itemId_idx" ON "approvals"("tenantId", "itemType", "itemId");
+DO $$ BEGIN
+    CREATE INDEX "approvals_tenantId_itemType_itemId_idx" ON "approvals"("tenantId", "itemType", "itemId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "approvals_expiresAt_idx" ON "approvals"("expiresAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "approvals_expiresAt_idx" ON "approvals"("expiresAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "approval_history_approvalId_idx" ON "approval_history"("approvalId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "approval_history_approvalId_idx" ON "approval_history"("approvalId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "approval_history_tenantId_idx" ON "approval_history"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "approval_history_tenantId_idx" ON "approval_history"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "notifications_tenantId_idx" ON "notifications"("tenantId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "notifications_tenantId_idx" ON "notifications"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "notifications_userId_idx" ON "notifications"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "notifications_userId_idx" ON "notifications"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "notifications_status_idx" ON "notifications"("status");
+DO $$ BEGIN
+    CREATE INDEX "notifications_status_idx" ON "notifications"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "notifications_type_idx" ON "notifications"("type");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "notifications_type_idx" ON "notifications"("type");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "notifications_createdAt_idx" ON "notifications"("createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "notifications_createdAt_idx" ON "notifications"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "notifications_tenantId_userId_createdAt_idx" ON "notifications"("tenantId", "userId", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "notifications_tenantId_userId_createdAt_idx" ON "notifications"("tenantId", "userId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "notifications_tenantId_readAt_idx" ON "notifications"("tenantId", "readAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "notifications_tenantId_readAt_idx" ON "notifications"("tenantId", "readAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "notification_preferences_userId_key" ON "notification_preferences"("userId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE UNIQUE INDEX "notification_preferences_userId_key" ON "notification_preferences"("userId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "notification_preferences_tenantId_idx" ON "notification_preferences"("tenantId");
+DO $$ BEGIN
+    CREATE INDEX "notification_preferences_tenantId_idx" ON "notification_preferences"("tenantId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "document_signature_requests_attachmentId_idx" ON "document_signature_requests"("attachmentId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "document_signature_requests_attachmentId_idx" ON "document_signature_requests"("attachmentId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "document_signature_requests_requesterId_idx" ON "document_signature_requests"("requesterId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "document_signature_requests_requesterId_idx" ON "document_signature_requests"("requesterId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "document_signature_requests_signerId_idx" ON "document_signature_requests"("signerId");
+DO $$ BEGIN
+    CREATE INDEX "document_signature_requests_signerId_idx" ON "document_signature_requests"("signerId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "document_signature_requests_status_idx" ON "document_signature_requests"("status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "document_signature_requests_status_idx" ON "document_signature_requests"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "document_signature_requests_tenantId_status_idx" ON "document_signature_requests"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "document_signature_requests_tenantId_status_idx" ON "document_signature_requests"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "document_signature_requests_tenantId_createdAt_idx" ON "document_signature_requests"("tenantId", "createdAt");
+DO $$ BEGIN
+    CREATE INDEX "document_signature_requests_tenantId_createdAt_idx" ON "document_signature_requests"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "document_signatures_attachmentId_idx" ON "document_signatures"("attachmentId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "document_signatures_attachmentId_idx" ON "document_signatures"("attachmentId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "document_signatures_signerId_idx" ON "document_signatures"("signerId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "document_signatures_signerId_idx" ON "document_signatures"("signerId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "document_signatures_signatureRequestId_idx" ON "document_signatures"("signatureRequestId");
+DO $$ BEGIN
+    CREATE INDEX "document_signatures_signatureRequestId_idx" ON "document_signatures"("signatureRequestId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "document_signatures_tenantId_signedAt_idx" ON "document_signatures"("tenantId", "signedAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "document_signatures_tenantId_signedAt_idx" ON "document_signatures"("tenantId", "signedAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "analysis_jobs_attachmentId_idx" ON "analysis_jobs"("attachmentId");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "analysis_jobs_attachmentId_idx" ON "analysis_jobs"("attachmentId");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "analysis_jobs_status_idx" ON "analysis_jobs"("status");
+DO $$ BEGIN
+    CREATE INDEX "analysis_jobs_status_idx" ON "analysis_jobs"("status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "analysis_jobs_tenantId_status_idx" ON "analysis_jobs"("tenantId", "status");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "analysis_jobs_tenantId_status_idx" ON "analysis_jobs"("tenantId", "status");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateIndex
-CREATE INDEX "analysis_jobs_tenantId_createdAt_idx" ON "analysis_jobs"("tenantId", "createdAt");
+-- CreateIndex
+DO $$ BEGIN
+    CREATE INDEX "analysis_jobs_tenantId_createdAt_idx" ON "analysis_jobs"("tenantId", "createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
+-- CreateIndex
 -- CreateIndex
-CREATE INDEX "analysis_jobs_createdAt_idx" ON "analysis_jobs"("createdAt");
+DO $$ BEGIN
+    CREATE INDEX "analysis_jobs_createdAt_idx" ON "analysis_jobs"("createdAt");
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
