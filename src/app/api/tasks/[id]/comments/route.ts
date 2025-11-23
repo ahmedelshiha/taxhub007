@@ -22,7 +22,7 @@ export const GET = withTenantContext(
       const task = await prisma.task.findFirst({
         where: {
           id: taskId,
-          tenantId,
+          tenantId: tenantId ?? undefined,
         },
       })
 
@@ -116,7 +116,7 @@ export const POST = withTenantContext(
       const task = await prisma.task.findFirst({
         where: {
           id: taskId,
-          tenantId,
+          tenantId: tenantId ?? undefined,
         },
       })
 

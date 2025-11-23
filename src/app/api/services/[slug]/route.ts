@@ -120,7 +120,7 @@ export const PUT = withTenantContext(
       const existing = await prisma.service.findFirst({
         where: {
           slug,
-          tenantId: ctx.tenantId,
+          tenantId: ctx.tenantId ?? undefined,
         },
       })
 
@@ -186,7 +186,7 @@ export const DELETE = withTenantContext(
       const existing = await prisma.service.findFirst({
         where: {
           slug,
-          tenantId: ctx.tenantId,
+          tenantId: ctx.tenantId ?? undefined,
         },
       })
 

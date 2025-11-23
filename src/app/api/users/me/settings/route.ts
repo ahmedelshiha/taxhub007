@@ -112,7 +112,7 @@ export const PUT = withTenantContext(
 
       // Log audit event
       await logAudit({
-        tenantId,
+        tenantId: tenantId ?? undefined,
         userId: ctx.userId,
         action: 'SETTINGS_UPDATED',
         entity: 'UserSettings',

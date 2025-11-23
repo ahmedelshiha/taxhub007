@@ -200,7 +200,7 @@ export const DELETE = withTenantContext(
       const task = await prisma.task.findFirst({
         where: {
           id: taskId,
-          tenantId,
+          tenantId: tenantId ?? undefined,
         },
       })
 

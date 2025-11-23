@@ -47,7 +47,7 @@ export const GET = withTenantContext(
         const [taskAssignees, bookingAssignees, userRecord] = await Promise.all([
           prisma.task.findMany({
             where: {
-              tenantId,
+              tenantId: tenantId ?? undefined,
               OR: [
                 // Tasks created by the user
                 { createdById: userId },
@@ -60,14 +60,14 @@ export const GET = withTenantContext(
           }),
           prisma.booking.findMany({
             where: {
-              tenantId,
-              clientId: userId,
+              tenantId: tenantId ?? undefined,
+              clientId: userId ?? undefined,
             },
             select: { assignedTeamMemberId: true },
             distinct: ['assignedTeamMemberId'],
           }),
           prisma.user.findUnique({
-            where: { id: userId },
+            where: { id: userId ?? undefined },
             select: { department: true },
           }),
         ])
@@ -88,9 +88,9 @@ export const GET = withTenantContext(
         if (userRecord?.department) {
           const deptColleagues = await prisma.user.findMany({
             where: {
-              tenantId,
+              tenantId: tenantId ?? undefined,
               department: userRecord.department,
-              NOT: { id: userId },
+              NOT: { id: userId ?? undefined },
             },
             select: { id: true },
           })
