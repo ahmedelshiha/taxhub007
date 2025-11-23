@@ -1,18 +1,14 @@
-#!/bin/sh
-set -e
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-# Pre-commit hook: Fast TypeScript type checking before linting
-# This ensures type safety issues are caught immediately before other checks
+# Run lint-staged on staged files
+pnpm lint-staged
 
-echo "🔍 Running TypeScript type check..."
-
-if ! pnpm typecheck > /dev/null 2>&1; then
-  echo "❌ TypeScript errors found. Fix them before committing:"
-  pnpm typecheck
+# Run TypeScript type check
+echo "Running TypeScript type check..."
+pnpm tsc --noEmit || {
+  echo "❌ TypeScript type check failed. Fix the errors before committing."
   exit 1
-fi
+}
 
-echo "✅ Type check passed"
-
-# Continue with eslint and lint-staged for staged files
-pnpm dlx lint-staged
+echo "✅ Pre-commit checks passed!"

@@ -70,6 +70,13 @@ interface UseDataResponse<T> {
  * await mutate() // Refetch data
  * ```
  */
+interface ApiResponse<T> {
+  data: T[]
+  meta?: {
+    total: number
+  }
+}
+
 export function useData<T = any>(
   filters: Filters = {},
   options?: SWRConfiguration
@@ -95,9 +102,9 @@ export function useData<T = any>(
   }, [queryString])
 
   // Fetch data using SWR
-  const { data: response, error, isValidating, mutate } = useSWR(
+  const { data: response, error, isValidating, mutate } = useSWR<ApiResponse<T>>(
     endpoint,
-    (url) => apiFetch(url),
+    (url) => apiFetch(url) as unknown as Promise<ApiResponse<T>>,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
@@ -120,7 +127,7 @@ export function useData<T = any>(
       error,
       isLoading: !response && !error,
       isValidating,
-      mutate,
+      mutate: mutate as any,
       hasMore,
       total,
       pageSize,
