@@ -923,7 +923,8 @@ EXCEPTION
 END $$;
 
 -- CreateTable
-CREATE TABLE "task_templates" (
+DO $$ BEGIN
+    CREATE TABLE "task_templates" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "content" TEXT NOT NULL,
@@ -940,10 +941,14 @@ CREATE TABLE "task_templates" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "task_templates_pkey" PRIMARY KEY ("id")
-);
+    );
+EXCEPTION
+    WHEN duplicate_table THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "ServiceRequest" (
+DO $$ BEGIN
+    CREATE TABLE "ServiceRequest" (
     "id" TEXT NOT NULL,
     "uuid" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
@@ -985,20 +990,28 @@ CREATE TABLE "ServiceRequest" (
     "paymentAttempts" INTEGER DEFAULT 0,
 
     CONSTRAINT "ServiceRequest_pkey" PRIMARY KEY ("id")
-);
+    );
+EXCEPTION
+    WHEN duplicate_table THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "request_tasks" (
+DO $$ BEGIN
+    CREATE TABLE "request_tasks" (
     "id" TEXT NOT NULL,
     "serviceRequestId" TEXT NOT NULL,
     "taskId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "request_tasks_pkey" PRIMARY KEY ("id")
-);
+    );
+EXCEPTION
+    WHEN duplicate_table THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "team_members" (
+DO $$ BEGIN
+    CREATE TABLE "team_members" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT,
@@ -1021,10 +1034,14 @@ CREATE TABLE "team_members" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "team_members_pkey" PRIMARY KEY ("id")
-);
+    );
+EXCEPTION
+    WHEN duplicate_table THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "service_request_comments" (
+DO $$ BEGIN
+    CREATE TABLE "service_request_comments" (
     "id" TEXT NOT NULL,
     "serviceRequestId" TEXT NOT NULL,
     "authorId" TEXT,
@@ -1034,10 +1051,14 @@ CREATE TABLE "service_request_comments" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "service_request_comments_pkey" PRIMARY KEY ("id")
-);
+    );
+EXCEPTION
+    WHEN duplicate_table THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "user_permissions" (
+DO $$ BEGIN
+    CREATE TABLE "user_permissions" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "grantedById" TEXT,
@@ -1046,10 +1067,14 @@ CREATE TABLE "user_permissions" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_permissions_pkey" PRIMARY KEY ("id")
-);
+    );
+EXCEPTION
+    WHEN duplicate_table THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "AvailabilitySlot" (
+DO $$ BEGIN
+    CREATE TABLE "AvailabilitySlot" (
     "id" TEXT NOT NULL,
     "serviceId" TEXT NOT NULL,
     "teamMemberId" TEXT,
@@ -1062,7 +1087,10 @@ CREATE TABLE "AvailabilitySlot" (
     "currentBookings" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "AvailabilitySlot_pkey" PRIMARY KEY ("id")
-);
+    );
+EXCEPTION
+    WHEN duplicate_table THEN null;
+END $$;
 
 -- CreateTable
 CREATE TABLE "BookingPreferences" (
