@@ -1105,58 +1105,62 @@ Effective cash flow management requires ongoing attention and planning. Regular 
 
   console.log('✅ Notifications created')
 
-  // Direct Messages
-  const messages = [
-    {
-      id: 'msg_1',
-      tenantId: defaultTenant.id,
-      senderId: admin.id,
-      recipientId: staff.id,
-      subject: 'Follow up on Client Request',
-      body: 'Can you please follow up with Client One regarding their bookkeeping setup? They should have received our initial questionnaire.',
-      status: 'read',
-      readAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
-    },
-    {
-      id: 'msg_2',
-      tenantId: defaultTenant.id,
-      senderId: staff.id,
-      recipientId: admin.id,
-      subject: 'Re: Follow up on Client Request',
-      body: 'I\'ll reach out to them today. I\'ll send you an update by end of day.',
-      status: 'read',
-      readAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 23),
-    },
-    {
-      id: 'msg_3',
-      tenantId: defaultTenant.id,
-      senderId: client1.id,
-      recipientId: admin.id,
-      subject: 'Question about Invoice',
-      body: 'Hi, I received your invoice but have a question about the service breakdown. Can we discuss?',
-      status: 'sent',
-    },
-    {
-      id: 'msg_4',
-      tenantId: defaultTenant.id,
-      senderId: lead.id,
-      recipientId: staff.id,
-      subject: 'Great Work on Tax Return',
-      body: 'Excellent job on the tax return preparation. Your attention to detail is appreciated.',
-      status: 'read',
-      readAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 12),
-    },
-  ]
+  // Direct Messages (optional - may not be present in all schemas)
+  try {
+    const messages = [
+      {
+        id: 'msg_1',
+        tenantId: defaultTenant.id,
+        senderId: admin.id,
+        recipientId: staff.id,
+        subject: 'Follow up on Client Request',
+        body: 'Can you please follow up with Client One regarding their bookkeeping setup? They should have received our initial questionnaire.',
+        status: 'read',
+        readAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
+      },
+      {
+        id: 'msg_2',
+        tenantId: defaultTenant.id,
+        senderId: staff.id,
+        recipientId: admin.id,
+        subject: 'Re: Follow up on Client Request',
+        body: 'I\'ll reach out to them today. I\'ll send you an update by end of day.',
+        status: 'read',
+        readAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 23),
+      },
+      {
+        id: 'msg_3',
+        tenantId: defaultTenant.id,
+        senderId: client1.id,
+        recipientId: admin.id,
+        subject: 'Question about Invoice',
+        body: 'Hi, I received your invoice but have a question about the service breakdown. Can we discuss?',
+        status: 'sent',
+      },
+      {
+        id: 'msg_4',
+        tenantId: defaultTenant.id,
+        senderId: lead.id,
+        recipientId: staff.id,
+        subject: 'Great Work on Tax Return',
+        body: 'Excellent job on the tax return preparation. Your attention to detail is appreciated.',
+        status: 'read',
+        readAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 12),
+      },
+    ]
 
-  for (const msg of messages) {
-    await prisma.message.upsert({
-      where: { id: msg.id },
-      update: { subject: msg.subject, body: msg.body, status: msg.status, readAt: msg.readAt },
-      create: msg,
-    })
+    for (const msg of messages) {
+      await prisma.message.upsert({
+        where: { id: msg.id },
+        update: { subject: msg.subject, body: msg.body, status: msg.status, readAt: msg.readAt },
+        create: msg,
+      })
+    }
+
+    console.log('✅ Direct messages created')
+  } catch (e) {
+    console.warn('Skipping direct messages seed:', (e as any)?.message || 'Table not found')
   }
-
-  console.log('✅ Direct messages created')
 
   // Chat Messages
   const chatMessages = [
