@@ -1573,8 +1573,9 @@ Effective cash flow management requires ongoing attention and planning. Regular 
 
   console.log('✅ Currencies & exchange rates created')
 
-  // Financial & Domain Data
-  const bankingConnections = [
+  // Financial & Domain Data (optional - may not be present in all schemas)
+  try {
+    const bankingConnections = [
     {
       id: 'bc_1',
       tenantId: defaultTenant.id,
@@ -1886,7 +1887,10 @@ Effective cash flow management requires ongoing attention and planning. Regular 
     })
   }
 
-  console.log('✅ Products created')
+    console.log('✅ Products created')
+  } catch (e) {
+    console.warn('Skipping financial & domain data seed:', (e as any)?.message || 'Tables not found')
+  }
 
   // Seed sample tasks with compliance requirements
   let __canSeedTasks = false
