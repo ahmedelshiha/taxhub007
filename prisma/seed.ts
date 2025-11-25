@@ -1017,6 +1017,182 @@ Effective cash flow management requires ongoing attention and planning. Regular 
 
   console.log('✅ Support ticket comments created')
 
+  // Communication & Notifications
+  const notifications = [
+    {
+      id: 'notif_1',
+      tenantId: defaultTenant.id,
+      recipientId: client1.id,
+      senderId: admin.id,
+      title: 'Your Quarterly Tax Report is Ready',
+      description: 'Your Q3 tax report has been completed and is available for review in your portal.',
+      type: 'REPORT_READY' as const,
+      status: 'UNREAD' as const,
+    },
+    {
+      id: 'notif_2',
+      tenantId: defaultTenant.id,
+      recipientId: client2.id,
+      senderId: admin.id,
+      title: 'Invoice Paid Successfully',
+      description: 'Your recent invoice has been marked as paid. Thank you!',
+      type: 'PAYMENT_RECEIVED' as const,
+      status: 'READ' as const,
+    },
+    {
+      id: 'notif_3',
+      tenantId: defaultTenant.id,
+      recipientId: staff.id,
+      senderId: admin.id,
+      title: 'New Service Request Assigned',
+      description: 'A new bookkeeping service request has been assigned to you.',
+      type: 'ASSIGNMENT' as const,
+      status: 'UNREAD' as const,
+    },
+    {
+      id: 'notif_4',
+      tenantId: defaultTenant.id,
+      recipientId: lead.id,
+      senderId: admin.id,
+      title: 'Team Performance Report',
+      description: 'Your weekly team performance report is ready.',
+      type: 'REPORT_READY' as const,
+      status: 'UNREAD' as const,
+    },
+    {
+      id: 'notif_5',
+      tenantId: defaultTenant.id,
+      recipientId: admin.id,
+      senderId: staff.id,
+      title: 'Task Completed',
+      description: 'The quarterly compliance review has been completed.',
+      type: 'TASK_COMPLETED' as const,
+      status: 'READ' as const,
+    },
+  ]
+
+  for (const notif of notifications) {
+    await prisma.notification.upsert({
+      where: { id: notif.id },
+      update: { ...notif, id: undefined },
+      create: notif,
+    })
+  }
+
+  console.log('✅ Notifications created')
+
+  // Direct Messages
+  const messages = [
+    {
+      id: 'msg_1',
+      tenantId: defaultTenant.id,
+      senderId: admin.id,
+      recipientId: staff.id,
+      subject: 'Follow up on Client Request',
+      content: 'Can you please follow up with Client One regarding their bookkeeping setup? They should have received our initial questionnaire.',
+      isRead: true,
+    },
+    {
+      id: 'msg_2',
+      tenantId: defaultTenant.id,
+      senderId: staff.id,
+      recipientId: admin.id,
+      subject: 'Re: Follow up on Client Request',
+      content: 'I\'ll reach out to them today. I\'ll send you an update by end of day.',
+      isRead: true,
+    },
+    {
+      id: 'msg_3',
+      tenantId: defaultTenant.id,
+      senderId: client1.id,
+      recipientId: admin.id,
+      subject: 'Question about Invoice',
+      content: 'Hi, I received your invoice but have a question about the service breakdown. Can we discuss?',
+      isRead: false,
+    },
+    {
+      id: 'msg_4',
+      tenantId: defaultTenant.id,
+      senderId: lead.id,
+      recipientId: staff.id,
+      subject: 'Great Work on Tax Return',
+      content: 'Excellent job on the tax return preparation. Your attention to detail is appreciated.',
+      isRead: true,
+    },
+  ]
+
+  for (const msg of messages) {
+    await prisma.message.upsert({
+      where: { id: msg.id },
+      update: { ...msg, id: undefined },
+      create: msg,
+    })
+  }
+
+  console.log('✅ Direct messages created')
+
+  // Chat Messages
+  const chatMessages = [
+    {
+      id: 'chat_1',
+      tenantId: defaultTenant.id,
+      userId: admin.id,
+      content: 'Welcome to the team channel! This is where we discuss general project updates.',
+      channel: 'general',
+      isSystemMessage: true,
+    },
+    {
+      id: 'chat_2',
+      tenantId: defaultTenant.id,
+      userId: staff.id,
+      content: 'Thanks for the welcome! Looking forward to collaborating with everyone.',
+      channel: 'general',
+      isSystemMessage: false,
+    },
+    {
+      id: 'chat_3',
+      tenantId: defaultTenant.id,
+      userId: lead.id,
+      content: 'Don\'t forget that the quarterly review meeting is scheduled for next Friday at 2 PM.',
+      channel: 'general',
+      isSystemMessage: false,
+    },
+    {
+      id: 'chat_4',
+      tenantId: defaultTenant.id,
+      userId: admin.id,
+      content: 'Great reminder. I\'ll send out the meeting details to everyone.',
+      channel: 'general',
+      isSystemMessage: false,
+    },
+    {
+      id: 'chat_5',
+      tenantId: defaultTenant.id,
+      userId: staff.id,
+      content: 'Quick question about the new client onboarding process.',
+      channel: 'operations',
+      isSystemMessage: false,
+    },
+    {
+      id: 'chat_6',
+      tenantId: defaultTenant.id,
+      userId: lead.id,
+      content: 'Sure, what would you like to know?',
+      channel: 'operations',
+      isSystemMessage: false,
+    },
+  ]
+
+  for (const chat of chatMessages) {
+    await prisma.chatMessage.upsert({
+      where: { id: chat.id },
+      update: { ...chat, id: undefined },
+      create: chat,
+    })
+  }
+
+  console.log('✅ Chat messages created')
+
   // Create task templates
   const templates = [
     {
