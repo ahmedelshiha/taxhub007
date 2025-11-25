@@ -1287,8 +1287,9 @@ Effective cash flow management requires ongoing attention and planning. Regular 
 
   console.log('✅ Default task templates created')
 
-  // Documents & Approvals
-  const documentVersions = [
+  // Documents & Approvals (optional - may not be present in all schemas)
+  try {
+    const documentVersions = [
     {
       id: 'doc_v_1',
       tenantId: defaultTenant.id,
@@ -1441,7 +1442,10 @@ Effective cash flow management requires ongoing attention and planning. Regular 
     })
   }
 
-  console.log('✅ Approval history created')
+    console.log('✅ Approval history created')
+  } catch (e) {
+    console.warn('Skipping documents & approvals seed:', (e as any)?.message || 'Tables not found')
+  }
 
   // Create contact submissions
   const contactSubmissions = [
