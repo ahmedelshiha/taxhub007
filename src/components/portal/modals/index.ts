@@ -48,6 +48,6 @@ export { default as RecurringBookingModal } from "./RecurringBookingModal";
 
 // Communication & Notifications Modals (Phase 5)
 export { default as NotificationCenterModal } from "./NotificationCenterModal";
-export { default as MessageComposeModal } from "./MessageComposeModal";
-export { default as MessageThreadModal } from "./MessageThreadModal";
-export { default as ApprovalActionModal } from "./ApprovalActionModal";
+export { MessageComposeModal } from "./MessageComposeModal";
+export { MessageThreadModal } from "./MessageThreadModal";
+export { ApprovalActionModal } from "./ApprovalActionModal";

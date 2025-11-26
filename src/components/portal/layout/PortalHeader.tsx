@@ -50,7 +50,7 @@ export default function PortalHeader({ onMenuToggle, isMobile = false }: PortalH
         onOpenChange={setGlobalSearchOpen}
       />
 
-      <NotificationCenterModal ref={null}
+      <NotificationCenterModal
         open={notificationCenterOpen}
         onOpenChange={setNotificationCenterOpen}
       />
