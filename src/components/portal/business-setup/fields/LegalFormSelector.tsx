@@ -21,7 +21,7 @@ export default function LegalFormSelector({ value, onChange }: LegalFormSelector
     return (
         <div className="space-y-2">
             <Label>Legal Form</Label>
-            <Select value={value} onValueChange={onChange}>
+            <Select value={value || ''} onValueChange={onChange}>
                 <SelectTrigger>
                     <SelectValue placeholder="Select legal structure" />
                 </SelectTrigger>

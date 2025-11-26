@@ -21,7 +21,7 @@ export default function EconomicZoneSelector({ value, onChange, country }: Econo
     return (
         <div className="space-y-2">
             <Label>Economic Zone / Jurisdiction</Label>
-            <Select value={value} onValueChange={onChange}>
+            <Select value={value || ''} onValueChange={onChange}>
                 <SelectTrigger>
                     <SelectValue placeholder="Select jurisdiction" />
                 </SelectTrigger>
