@@ -41,7 +41,8 @@ export default function EntitySwitcher() {
         data: { entities: Entity[]; total: number }
     }>('/api/portal/entities', fetcher)
 
-    const entities = data?.data?.entities || []
+    const rawEntities = data?.data?.entities
+    const entities = Array.isArray(rawEntities) ? rawEntities : []
     const currentEntity = selectedEntityId
         ? entities.find(e => e.id === selectedEntityId)
         : entities[0] // Default to first entity

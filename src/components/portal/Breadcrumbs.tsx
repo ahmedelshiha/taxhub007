@@ -87,7 +87,8 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
     const pathname = usePathname();
 
     // Use custom items or generate from pathname
-    const breadcrumbs = items || generateBreadcrumbs(pathname);
+    const rawBreadcrumbs = items || generateBreadcrumbs(pathname);
+    const breadcrumbs = Array.isArray(rawBreadcrumbs) ? rawBreadcrumbs : [];
 
     // Map breadcrumbs to use friendly labels
     const labeledBreadcrumbs = breadcrumbs.map((crumb) => {
