@@ -93,7 +93,7 @@ export default function ActivityTab() {
     const activities = data?.data?.activities || []
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 tab-content-enter">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>

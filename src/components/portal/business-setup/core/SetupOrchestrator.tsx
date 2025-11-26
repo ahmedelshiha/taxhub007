@@ -150,10 +150,29 @@ function WizardContent() {
     )
 }
 
-export default function SetupOrchestrator() {
-    return (
-        <SetupProvider>
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { SetupWizardProps } from '../types/setup'
+
+export default function SetupOrchestrator({ open, onOpenChange, onComplete }: Partial<SetupWizardProps>) {
+    const content = (
+        <SetupProvider onComplete={onComplete}>
             <WizardContent />
         </SetupProvider>
     )
+
+    // If controlled as a modal
+    if (typeof open !== 'undefined') {
+        return (
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="max-w-4xl p-0 overflow-hidden bg-white dark:bg-gray-950 border-0">
+                    <div className="max-h-[90vh] overflow-y-auto">
+                        {content}
+                    </div>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+
+    // Standalone page mode
+    return content
 }

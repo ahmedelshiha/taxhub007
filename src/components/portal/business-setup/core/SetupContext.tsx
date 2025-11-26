@@ -7,7 +7,7 @@ import { draftService, entitySetupService } from '../services'
 
 const SetupContext = createContext<SetupContextType | undefined>(undefined)
 
-export function SetupProvider({ children }: { children: ReactNode }) {
+export function SetupProvider({ children, onComplete }: { children: ReactNode; onComplete?: (entityId: string) => void }) {
     const router = useRouter()
     const [currentStep, setCurrentStep] = useState(1)
     const [completedSteps, setCompletedSteps] = useState<number[]>([])
@@ -119,7 +119,8 @@ export function SetupProvider({ children }: { children: ReactNode }) {
             setValidationErrors,
             clearValidationErrors: () => setValidationErrors([]),
             markStepComplete,
-            setShowHelpPanel
+            setShowHelpPanel,
+            onComplete
         }
     }
 

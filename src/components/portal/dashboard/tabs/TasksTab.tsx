@@ -101,7 +101,7 @@ export default function TasksTab() {
   }))
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 tab-content-enter">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

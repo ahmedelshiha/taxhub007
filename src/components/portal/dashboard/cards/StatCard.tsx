@@ -32,7 +32,7 @@ export default function StatCard({
     return (
         <Card
             className={cn(
-                'transition-all hover:shadow-md',
+                'card-hover',
                 onClick && 'cursor-pointer hover:border-blue-300'
             )}
             onClick={onClick}

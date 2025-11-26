@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation'
 import PortalSidebar from './PortalSidebar'
 import PortalHeader from './PortalHeader'
 import PortalFooter from './PortalFooter'
+import { Breadcrumbs } from '../Breadcrumbs'
 import { useResponsive } from '@/hooks/admin/useResponsive'
 import {
     usePortalSidebarCollapsed,
@@ -133,6 +134,13 @@ export default function PortalDashboardLayout({
                     onMenuToggle={handleMenuToggle}
                     isMobile={responsive.isMobile}
                 />
+
+                {/* Breadcrumbs */}
+                <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                        <Breadcrumbs />
+                    </div>
+                </div>
 
                 {/* Scrollable content */}
                 <main

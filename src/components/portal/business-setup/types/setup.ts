@@ -61,6 +61,7 @@ export interface SetupContextType {
     clearValidationErrors: () => void
     markStepComplete: (step: number) => void
     setShowHelpPanel: (show: boolean) => void
+    onComplete?: (entityId: string) => void
   }
 }
 
