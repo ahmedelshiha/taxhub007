@@ -41,7 +41,7 @@ export const POST = withTenantContext(
   async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
       const { userId, tenantId } = requireTenantContext()
-      const { id } = params
+      const { id } = await params
       const body = await request.json()
       const validated = CreateCommentSchema.parse(body)
 
