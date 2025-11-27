@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: counts,
     })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Portal counts API error:', error)
     return NextResponse.json(
       { 

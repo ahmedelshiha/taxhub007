@@ -14,7 +14,7 @@ import { z } from 'zod'
  * Supports filtering by status, priority, assignee, and date range
  */
 export const GET = withTenantContext(
-  async (request, { params }) => {
+  async (request, { params }: { params: unknown }) => {
     try {
       const ctx = requireTenantContext()
       const { userId: userId_, tenantId } = ctx
@@ -125,7 +125,7 @@ export const GET = withTenantContext(
           hasMore: filters.offset + filters.limit < total,
         },
       })
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         return respond.badRequest('Invalid filter parameters', error.errors)
       }
@@ -141,7 +141,7 @@ export const GET = withTenantContext(
  * Create a new task (admin only)
  */
 export const POST = withTenantContext(
-  async (request, { params }) => {
+  async (request, { params }: { params: unknown }) => {
     try {
       const { userId, tenantId, role } = requireTenantContext()
 
@@ -197,7 +197,7 @@ export const POST = withTenantContext(
       return respond.created({
         data: task,
       })
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         return respond.badRequest('Invalid task data', error.errors)
       }

@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         */
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Performance monitoring error:', error);
         return NextResponse.json(
             { success: false, error: 'Failed to process metrics' },

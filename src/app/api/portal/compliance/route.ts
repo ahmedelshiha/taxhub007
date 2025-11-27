@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
                 },
             },
         })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Portal compliance API error:', error)
         return NextResponse.json(
             {

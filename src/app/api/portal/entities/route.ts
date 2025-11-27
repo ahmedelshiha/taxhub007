@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
                 total: entities.length,
             },
         })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Portal entities API error:', error)
         return NextResponse.json(
             {

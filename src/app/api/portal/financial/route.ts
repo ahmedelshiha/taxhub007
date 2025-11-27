@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
         },
       },
     })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Portal financial API error:', error)
     return NextResponse.json(
       {

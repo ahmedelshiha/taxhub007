@@ -172,7 +172,7 @@ export const GET = withTenantContext(async (req: NextRequest) => {
             ...dashboardData
         });
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Dashboard API Error:', error);
         return NextResponse.json(
             { success: false, error: 'Failed to fetch dashboard data' },

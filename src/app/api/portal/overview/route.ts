@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
             success: true,
             data: stats,
         })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Portal overview API error:', error)
         return NextResponse.json(
             {

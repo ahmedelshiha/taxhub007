@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
                 total: activities.length,
             },
         })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Portal activity API error:', error)
         return NextResponse.json(
             {

@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
         },
       },
     })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Portal tasks API error:', error)
     return NextResponse.json(
       { 

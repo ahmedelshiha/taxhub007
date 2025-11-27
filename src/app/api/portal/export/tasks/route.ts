@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         }
 
         return new NextResponse('Unsupported format', { status: 400 })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Tasks export error:', error)
         return new NextResponse('Export failed', { status: 500 })
     }
