@@ -14,6 +14,7 @@ export interface KPICardProps {
     comparisonText?: string
     icon?: LucideIcon
     variant?: 'default' | 'info' | 'success' | 'warning' | 'danger'
+    onClick?: () => void
     className?: string
 }
 
@@ -40,6 +41,7 @@ export function KPICard({
     comparisonText,
     icon: Icon,
     variant = 'default',
+    onClick,
     className,
 }: KPICardProps) {
     const getTrendIcon = () => {
@@ -55,7 +57,14 @@ export function KPICard({
     const TrendIcon = getTrendIcon()
 
     return (
-        <Card className={cn(variantStyles[variant], className)}>
+        <Card
+            className={cn(
+                variantStyles[variant],
+                onClick && 'cursor-pointer transition-all hover:shadow-md',
+                className
+            )}
+            onClick={onClick}
+        >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {label}
