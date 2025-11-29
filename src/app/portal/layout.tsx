@@ -1,10 +1,7 @@
 
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
-import { SessionProvider } from 'next-auth/react'
-import { ThemeProvider } from '@/components/providers/ThemeProvider'
-import { QueryProvider } from '@/providers/QueryProvider'
-import PortalDashboardLayout from '@/components/portal/layout/PortalDashboardLayout'
+import { PortalProviders } from './PortalProviders'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,14 +26,8 @@ export default async function PortalLayout({
     }
 
     return (
-        <SessionProvider session={session}>
-            <ThemeProvider defaultTheme="light" enableSystem>
-                <QueryProvider>
-                    <PortalDashboardLayout>
-                        {children}
-                    </PortalDashboardLayout>
-                </QueryProvider>
-            </ThemeProvider>
-        </SessionProvider>
+        <PortalProviders session={session as any}>
+            {children}
+        </PortalProviders>
     )
 }
