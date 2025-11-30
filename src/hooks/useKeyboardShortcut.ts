@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useKeyboard } from "@/components/providers/KeyboardProvider"
 
 interface UseShortcutOptions {
@@ -22,6 +22,12 @@ export function useKeyboardShortcut({
 }: UseShortcutOptions) {
     const { registerShortcut, unregisterShortcut } = useKeyboard()
 
+    // Use ref for action to handle stale closures without triggering effect
+    const actionRef = useRef(action)
+    useEffect(() => {
+        actionRef.current = action
+    }, [action])
+
     useEffect(() => {
         if (disabled) return
 
@@ -29,7 +35,7 @@ export function useKeyboardShortcut({
             id,
             combo,
             description,
-            action,
+            action: () => actionRef.current(),
             disabled
         })
 

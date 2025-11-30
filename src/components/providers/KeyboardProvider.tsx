@@ -81,8 +81,14 @@ export function KeyboardProvider({ children }: { children: React.ReactNode }) {
         return () => window.removeEventListener("keydown", handleKeyDown)
     }, [shortcuts])
 
+    const contextValue = useMemo(() => ({
+        registerShortcut,
+        unregisterShortcut,
+        shortcuts
+    }), [registerShortcut, unregisterShortcut, shortcuts])
+
     return (
-        <KeyboardContext.Provider value={{ registerShortcut, unregisterShortcut, shortcuts }}>
+        <KeyboardContext.Provider value={contextValue}>
             {children}
         </KeyboardContext.Provider>
     )
