@@ -2324,6 +2324,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       description: 'Standard workflow for new client onboarding',
       createdBy: admin.id,
       category: 'ONBOARDING' as const,
+      type: 'ONBOARDING' as const,
       isActive: true,
       steps: [
         { stepNumber: 1, name: 'Collect KYC Documents', duration: 1 },
@@ -2339,6 +2340,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       description: 'Workflow for preparing tax returns',
       createdBy: admin.id,
       category: 'TAX_COMPLIANCE' as const,
+      type: 'ONBOARDING' as const, // Using ONBOARDING as TAX_COMPLIANCE is not in WorkflowType enum
       isActive: true,
       steps: [
         { stepNumber: 1, name: 'Request Documents from Client', duration: 2 },
@@ -2368,6 +2370,8 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       workflowTemplateId: 'wf_tmpl_1',
       userId: client1.id,
       triggeredBy: admin.id,
+      type: 'ONBOARDING' as const,
+      totalSteps: 4,
       status: 'IN_PROGRESS' as const,
       startedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 2),
       completedAt: null,
@@ -2379,6 +2383,8 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       workflowTemplateId: 'wf_tmpl_2',
       userId: client2.id,
       triggeredBy: admin.id,
+      type: 'ONBOARDING' as const,
+      totalSteps: 5,
       status: 'PENDING' as const,
       startedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 1),
       completedAt: null,
@@ -2401,7 +2407,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
     {
       id: 'report_1',
       tenantId: defaultTenant.id,
-      createdBy: admin.id,
+      userId: admin.id,
       name: 'Monthly Revenue Report',
       description: 'Summary of monthly revenue by service',
       type: 'REVENUE' as const,
@@ -2412,7 +2418,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
     {
       id: 'report_2',
       tenantId: defaultTenant.id,
-      createdBy: admin.id,
+      userId: admin.id,
       name: 'Team Performance Report',
       description: 'Team member performance metrics and utilization',
       type: 'PERFORMANCE' as const,
@@ -2423,7 +2429,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
     {
       id: 'report_3',
       tenantId: defaultTenant.id,
-      createdBy: lead.id,
+      userId: lead.id,
       name: 'Tax Compliance Status',
       description: 'Status of all tax filings and compliance deadlines',
       type: 'COMPLIANCE' as const,
@@ -2434,7 +2440,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
     {
       id: 'report_4',
       tenantId: defaultTenant.id,
-      createdBy: admin.id,
+      userId: admin.id,
       name: 'Client Engagement Report',
       description: 'Client activity and engagement metrics',
       type: 'CLIENT' as const,
@@ -2460,6 +2466,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       id: 'entity_1',
       tenantId: defaultTenant.id,
       createdBy: admin.id,
+      country: 'US',
       name: 'Primary Accounting Firm LLC',
       type: 'LLC' as const,
       status: 'ACTIVE' as const,
@@ -2476,6 +2483,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       id: 'entity_2',
       tenantId: defaultTenant.id,
       createdBy: admin.id,
+      country: 'US',
       name: 'Client Service Division',
       type: 'DIVISION' as const,
       status: 'ACTIVE' as const,
@@ -2489,6 +2497,7 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       id: 'entity_3',
       tenantId: defaultTenant.id,
       createdBy: admin.id,
+      country: 'US',
       name: 'Tech Startup Client Inc',
       type: 'C_CORP' as const,
       status: 'ACTIVE' as const,
@@ -2516,19 +2525,19 @@ Effective cash flow management requires ongoing attention and planning. Regular 
   // Create associations between users and entities
   try {
     await prisma.userOnEntity.upsert({
-      where: { unique_user_entity: { userId: admin.id, entityId: 'entity_1' } },
+      where: { userId_entityId: { userId: admin.id, entityId: 'entity_1' } },
       update: { role: 'OWNER' },
       create: { userId: admin.id, entityId: 'entity_1', role: 'OWNER' },
     })
 
     await prisma.userOnEntity.upsert({
-      where: { unique_user_entity: { userId: client1.id, entityId: 'entity_3' } },
+      where: { userId_entityId: { userId: client1.id, entityId: 'entity_3' } },
       update: { role: 'OWNER' },
       create: { userId: client1.id, entityId: 'entity_3', role: 'OWNER' },
     })
 
     await prisma.userOnEntity.upsert({
-      where: { unique_user_entity: { userId: staff.id, entityId: 'entity_1' } },
+      where: { userId_entityId: { userId: staff.id, entityId: 'entity_1' } },
       update: { role: 'MEMBER' },
       create: { userId: staff.id, entityId: 'entity_1', role: 'MEMBER' },
     })
