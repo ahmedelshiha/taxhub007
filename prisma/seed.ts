@@ -2617,60 +2617,6 @@ Effective cash flow management requires ongoing attention and planning. Regular 
   }
   console.log('✅ User profiles and preferences created')
 
-  // Seed Knowledge Base
-  const kbCategories = [
-    { name: 'Tax Guides', slug: 'tax-guides', description: 'Guides for tax preparation and filing' },
-    { name: 'Portal Help', slug: 'portal-help', description: 'How to use the client portal' },
-  ]
-
-  for (const cat of kbCategories) {
-    const category = await prisma.knowledgeBaseCategory.upsert({
-      where: {
-        tenantId_slug: {
-          tenantId: defaultTenant.id,
-          slug: cat.slug,
-        },
-      },
-      update: {
-        name: cat.name,
-        description: cat.description,
-      },
-      create: {
-        tenantId: defaultTenant.id,
-        name: cat.name,
-        slug: cat.slug,
-        description: cat.description,
-      },
-    })
-
-    await prisma.knowledgeBaseArticle.upsert({
-      where: {
-        tenantId_slug: {
-          tenantId: defaultTenant.id,
-          slug: `getting-started-${cat.slug}`,
-        },
-      },
-      update: {
-        title: `Getting Started with ${cat.name}`,
-        content: `This is a comprehensive guide about ${cat.name}.`,
-        authorId: admin.id,
-        published: true,
-        categoryId: category.id,
-      },
-      create: {
-        tenantId: defaultTenant.id,
-        categoryId: category.id,
-        title: `Getting Started with ${cat.name}`,
-        slug: `getting-started-${cat.slug}`,
-        content: `This is a comprehensive guide about ${cat.name}.`,
-        excerpt: `Learn the basics of ${cat.name}`,
-        authorId: admin.id,
-        published: true,
-      },
-    })
-  }
-  console.log('✅ Knowledge base created')
-
   // Seed Support Tickets
   const ticket = await prisma.supportTicket.create({
     data: {
