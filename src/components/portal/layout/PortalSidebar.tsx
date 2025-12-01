@@ -36,7 +36,7 @@ import { cn } from '@/lib/utils'
 import {
     usePortalSidebarCollapsed,
     usePortalExpandedGroups,
-    usePortalLayoutActions
+    usePortalLayoutStore
 } from '@/stores/portal/layout.store'
 import { useQuery } from '@tanstack/react-query'
 
@@ -71,7 +71,8 @@ export default function PortalSidebar({
     // State from Zustand store
     const collapsed = usePortalSidebarCollapsed()
     const expandedGroups = usePortalExpandedGroups()
-    const { toggleGroup } = usePortalLayoutActions()
+    // Use stable selector to prevent unnecessary re-renders
+    const toggleGroup = usePortalLayoutStore((state) => state.toggleGroup)
 
     // Fetch notification counts for badges using React Query
     const { data: countsResponse } = useQuery({
