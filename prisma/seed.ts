@@ -1372,99 +1372,103 @@ Effective cash flow management requires ongoing attention and planning. Regular 
       });
     }
 
-  console.log('✅ Document versions created')
+    console.log('✅ Document versions created')
 
-  // Approvals
-  const approvals = [
-    {
-      id: 'appr_1',
-      tenantId: defaultTenant.id,
-      requesterId: client1.id,
-      approverId: admin.id,
-      documentVersionId: 'doc_v_1',
-      type: 'DOCUMENT_REVIEW' as const,
-      status: 'APPROVED' as const,
-      reason: 'Verified and approved for use',
-      decidedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 2),
-    },
-    {
-      id: 'appr_2',
-      tenantId: defaultTenant.id,
-      requesterId: staff.id,
-      approverId: lead.id,
-      documentVersionId: 'doc_v_2',
-      type: 'DOCUMENT_REVIEW' as const,
-      status: 'PENDING' as const,
-      reason: 'Awaiting manager approval for final tax return',
-    },
-    {
-      id: 'appr_3',
-      tenantId: defaultTenant.id,
-      requesterId: client2.id,
-      approverId: admin.id,
-      type: 'EXPENSE_REPORT' as const,
-      status: 'APPROVED' as const,
-      reason: 'All expenses verified',
-      decidedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 1),
-    },
-    {
-      id: 'appr_4',
-      tenantId: defaultTenant.id,
-      requesterId: staff.id,
-      approverId: lead.id,
-      type: 'TIME_OFF' as const,
-      status: 'PENDING' as const,
-      reason: 'Vacation request for next month',
-    },
-  ]
+    // Approvals
+    const approvals = [
+      {
+        id: 'appr_1',
+        tenantId: defaultTenant.id,
+        requesterId: client1.id,
+        approverId: admin.id,
+        itemType: 'DOCUMENT' as const,
+        itemId: 'doc_v_1',
+        status: 'APPROVED' as const,
+        reason: 'Verified and approved for use',
+        decisionAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 2),
+        decisionBy: admin.id,
+      },
+      {
+        id: 'appr_2',
+        tenantId: defaultTenant.id,
+        requesterId: staff.id,
+        approverId: lead.id,
+        itemType: 'DOCUMENT' as const,
+        itemId: 'doc_v_2',
+        status: 'PENDING' as const,
+        reason: 'Awaiting manager approval for final tax return',
+      },
+      {
+        id: 'appr_3',
+        tenantId: defaultTenant.id,
+        requesterId: client2.id,
+        approverId: admin.id,
+        itemType: 'EXPENSE' as const,
+        itemId: 'exp_1',
+        status: 'APPROVED' as const,
+        reason: 'All expenses verified',
+        decisionAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 1),
+        decisionBy: admin.id,
+      },
+      {
+        id: 'appr_4',
+        tenantId: defaultTenant.id,
+        requesterId: staff.id,
+        approverId: lead.id,
+        itemType: 'OTHER' as const,
+        itemId: 'time_off_1',
+        status: 'PENDING' as const,
+        reason: 'Vacation request for next month',
+      },
+    ]
 
-  for (const appr of approvals) {
-    await prisma.approval.upsert({
-      where: { id: appr.id },
-      update: { ...appr, id: undefined },
-      create: appr,
-    })
-  }
+    for (const appr of approvals) {
+      await prisma.approval.upsert({
+        where: { id: appr.id },
+        update: { ...appr, id: undefined },
+        create: appr,
+      })
+    }
 
-  console.log('✅ Approvals created')
+    console.log('✅ Approvals created')
 
-  // Approval History
-  const approvalHistories = [
-    {
-      id: 'appr_hist_1',
-      tenantId: defaultTenant.id,
-      approvalId: 'appr_1',
-      performedBy: admin.id,
-      action: 'APPROVED' as const,
-      comment: 'Document looks good and complies with all standards',
-      metadata: { reviewTime: 45, pages: 15 },
-    },
-    {
-      id: 'appr_hist_2',
-      tenantId: defaultTenant.id,
-      approvalId: 'appr_3',
-      performedBy: admin.id,
-      action: 'APPROVED' as const,
-      comment: 'All receipts verified and amounts match supporting documentation',
-      metadata: { expenseCount: 12, totalAmount: 2450 },
-    },
-    {
-      id: 'appr_hist_3',
-      tenantId: defaultTenant.id,
-      approvalId: 'appr_1',
-      performedBy: client1.id,
-      action: 'SUBMITTED' as const,
-      comment: 'Initial submission for review',
-    },
-  ]
+    // Approval History
+    const approvalHistories = [
+      {
+        id: 'appr_hist_1',
+        tenantId: defaultTenant.id,
+        approvalId: 'appr_1',
+        performedBy: admin.id,
+        action: 'APPROVED' as const,
+        notes: 'Document looks good and complies with all standards',
+        metadata: { reviewTime: 45, pages: 15 },
+      },
+      {
+        id: 'appr_hist_2',
+        tenantId: defaultTenant.id,
+        approvalId: 'appr_3',
+        performedBy: admin.id,
+        action: 'APPROVED' as const,
+        notes: 'All receipts verified and amounts match supporting documentation',
+        metadata: { expenseCount: 12, totalAmount: 2450 },
+      },
+      {
+        id: 'appr_hist_3',
+        tenantId: defaultTenant.id,
+        approvalId: 'appr_1',
+        performedBy: client1.id,
+        action: 'SUBMITTED' as const,
+        comment: 'Initial submission for review',
+      },
+    ]
 
-  for (const hist of approvalHistories) {
-    await prisma.approvalHistory.upsert({
-      where: { id: hist.id },
-      update: { ...hist, id: undefined },
-      create: hist,
-    })
-  }
+    for (const hist of approvalHistories) {
+      await prisma.approvalHistory.upsert({
+        where: { id: hist.id },
+        update: { ...hist, id: undefined },
+        create: hist,
+      })
+    }
 
     console.log('✅ Approval history created')
   } catch (e) {
@@ -1600,316 +1604,289 @@ Effective cash flow management requires ongoing attention and planning. Regular 
   // Financial & Domain Data (optional - may not be present in all schemas)
   try {
     const bankingConnections = [
-    {
-      id: 'bc_1',
-      tenantId: defaultTenant.id,
-      bankName: 'Chase Bank',
-      accountNumber: '****1234',
-      routingNumber: '021000021',
-      accountType: 'CHECKING' as const,
-      status: 'ACTIVE' as const,
-      isDefault: true,
-      syncEnabled: true,
-      lastSyncedAt: new Date(),
-    },
-    {
-      id: 'bc_2',
-      tenantId: defaultTenant.id,
-      bankName: 'Wells Fargo',
-      accountNumber: '****5678',
-      routingNumber: '121000248',
-      accountType: 'SAVINGS' as const,
-      status: 'ACTIVE' as const,
-      isDefault: false,
-      syncEnabled: true,
-      lastSyncedAt: new Date(),
-    },
-  ]
+      {
+        id: 'bc_1',
+        tenantId: defaultTenant.id,
+        bankName: 'Chase Bank',
+        accountNumber: '****1234',
+        provider: 'plaid',
+        accountType: 'checking',
+        status: 'ACTIVE',
+        lastSyncAt: new Date(),
+      },
+      {
+        id: 'bc_2',
+        tenantId: defaultTenant.id,
+        bankName: 'Wells Fargo',
+        accountNumber: '****5678',
+        provider: 'plaid',
+        accountType: 'savings',
+        status: 'ACTIVE',
+        lastSyncAt: new Date(),
+      },
+    ]
 
-  for (const conn of bankingConnections) {
-    await prisma.bankingConnection.upsert({
-      where: { id: conn.id },
-      update: { ...conn, id: undefined },
-      create: conn,
-    })
-  }
+    for (const conn of bankingConnections) {
+      await prisma.bankingConnection.upsert({
+        where: { id: conn.id },
+        update: { ...conn, id: undefined },
+        create: conn,
+      })
+    }
 
-  console.log('✅ Banking connections created')
+    console.log('✅ Banking connections created')
 
-  // Banking Transactions
-  const bankingTransactions = [
-    {
-      id: 'bt_1',
-      tenantId: defaultTenant.id,
-      bankingConnectionId: 'bc_1',
-      transactionDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 10),
-      amount: 5000.00,
-      type: 'DEPOSIT' as const,
-      description: 'Client payment for bookkeeping services',
-      referenceNumber: 'CK-001234',
-      status: 'CLEARED' as const,
-      category: 'INCOME' as const,
-    },
-    {
-      id: 'bt_2',
-      tenantId: defaultTenant.id,
-      bankingConnectionId: 'bc_1',
-      transactionDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 8),
-      amount: 850.00,
-      type: 'WITHDRAWAL' as const,
-      description: 'Office supplies purchase',
-      referenceNumber: 'CHK-005678',
-      status: 'CLEARED' as const,
-      category: 'EXPENSE' as const,
-    },
-    {
-      id: 'bt_3',
-      tenantId: defaultTenant.id,
-      bankingConnectionId: 'bc_1',
-      transactionDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 5),
-      amount: 3200.00,
-      type: 'DEPOSIT' as const,
-      description: 'Client payment for tax preparation',
-      referenceNumber: 'ACH-009012',
-      status: 'CLEARED' as const,
-      category: 'INCOME' as const,
-    },
-    {
-      id: 'bt_4',
-      tenantId: defaultTenant.id,
-      bankingConnectionId: 'bc_2',
-      transactionDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 3),
-      amount: 500.00,
-      type: 'DEPOSIT' as const,
-      description: 'Interest earned',
-      referenceNumber: 'INT-001',
-      status: 'CLEARED' as const,
-      category: 'INCOME' as const,
-    },
-  ]
+    // Banking Transactions
+    const bankingTransactions = [
+      {
+        id: 'bt_1',
+        tenantId: defaultTenant.id,
+        connectionId: 'bc_1',
+        date: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 10),
+        amount: 5000.00,
+        description: 'Client Payment - Invoice #1001',
+        type: 'credit',
+        currency: 'USD',
+      },
+      {
+        id: 'bt_2',
+        tenantId: defaultTenant.id,
+        connectionId: 'bc_1',
+        date: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 5),
+        amount: 120.50,
+        description: 'Office Supplies',
+        type: 'debit',
+        currency: 'USD',
+      },
+    ]
 
-  for (const trans of bankingTransactions) {
-    await prisma.bankingTransaction.upsert({
-      where: { id: trans.id },
-      update: { ...trans, id: undefined },
-      create: trans,
-    })
-  }
 
-  console.log('✅ Banking transactions created')
+    for (const trans of bankingTransactions) {
+      await prisma.bankingTransaction.upsert({
+        where: { id: trans.id },
+        update: { ...trans, id: undefined },
+        create: trans,
+      })
+    }
 
-  // Tax Filings
-  const taxFilings = [
-    {
-      id: 'tf_1',
-      tenantId: defaultTenant.id,
-      entityId: null,
-      filingType: '1040' as const,
-      taxYear: 2024,
-      status: 'DRAFT' as const,
-      dueDate: new Date('2025-04-15'),
-      submittedDate: null,
-      estimatedRefund: 2500.00,
-    },
-    {
-      id: 'tf_2',
-      tenantId: defaultTenant.id,
-      entityId: null,
-      filingType: 'QUARTERLY_ES' as const,
-      taxYear: 2024,
-      status: 'FILED' as const,
-      dueDate: new Date('2024-09-16'),
-      submittedDate: new Date('2024-09-10'),
-      estimatedTax: 5000.00,
-    },
-    {
-      id: 'tf_3',
-      tenantId: defaultTenant.id,
-      entityId: null,
-      filingType: 'STATE_RETURN' as const,
-      taxYear: 2024,
-      status: 'FILED' as const,
-      dueDate: new Date('2025-04-15'),
-      submittedDate: new Date('2025-01-20'),
-    },
-  ]
+    console.log('✅ Banking transactions created')
 
-  for (const filing of taxFilings) {
-    await prisma.taxFiling.upsert({
-      where: { id: filing.id },
-      update: { ...filing, id: undefined },
-      create: filing,
-    })
-  }
+    // Tax Filings
+    const taxFilings = [
+      {
+        id: 'tf_1',
+        tenantId: defaultTenant.id,
+        entityId: 'entity_1',
+        country: 'US',
+        taxType: 'INCOME_TAX',
+        periodStartDate: new Date('2024-01-01'),
+        periodEndDate: new Date('2024-12-31'),
+        status: 'DRAFT',
+        data: JSON.stringify({ form: '1040', estimatedRefund: 2500.00 }),
+        submittedAt: null,
+      },
+      {
+        id: 'tf_2',
+        tenantId: defaultTenant.id,
+        entityId: 'entity_1',
+        country: 'US',
+        taxType: 'ESTIMATED_TAX',
+        periodStartDate: new Date('2024-07-01'),
+        periodEndDate: new Date('2024-09-30'),
+        status: 'SUBMITTED',
+        data: JSON.stringify({ form: '1040-ES', estimatedTax: 5000.00 }),
+        submittedAt: new Date('2024-09-10'),
+      },
+      {
+        id: 'tf_3',
+        tenantId: defaultTenant.id,
+        entityId: 'entity_1',
+        country: 'US',
+        taxType: 'STATE_TAX',
+        periodStartDate: new Date('2024-01-01'),
+        periodEndDate: new Date('2024-12-31'),
+        status: 'ACCEPTED',
+        data: JSON.stringify({ form: 'State Return', taxYear: 2024 }),
+        submittedAt: new Date('2025-01-20'),
+      },
+    ]
 
-  console.log('✅ Tax filings created')
+    for (const filing of taxFilings) {
+      await prisma.taxFiling.upsert({
+        where: { id: filing.id },
+        update: { ...filing, id: undefined },
+        create: filing,
+      })
+    }
 
-  // Bills
-  const bills = [
-    {
-      id: 'bill_1',
-      tenantId: defaultTenant.id,
-      vendorName: 'Software Solutions Inc',
-      vendorId: null,
-      billNumber: 'BILL-001',
-      description: 'Annual software license subscription',
-      amountCents: 120000,
-      dueDate: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 15),
-      billDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 5),
-      status: 'PENDING' as const,
-      currency: 'USD',
-    },
-    {
-      id: 'bill_2',
-      tenantId: defaultTenant.id,
-      vendorName: 'Office Supplies Co',
-      vendorId: null,
-      billNumber: 'BILL-002',
-      description: 'Monthly office supply order',
-      amountCents: 45000,
-      dueDate: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
-      billDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 2),
-      status: 'APPROVED' as const,
-      currency: 'USD',
-    },
-    {
-      id: 'bill_3',
-      tenantId: defaultTenant.id,
-      vendorName: 'Professional Services LLC',
-      vendorId: null,
-      billNumber: 'BILL-003',
-      description: 'Consulting services for system implementation',
-      amountCents: 350000,
-      dueDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 5),
-      billDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 25),
-      status: 'PAID' as const,
-      currency: 'USD',
-      paidDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 3),
-    },
-  ]
+    console.log('✅ Tax filings created')
 
-  for (const bill of bills) {
-    await prisma.bill.upsert({
-      where: { id: bill.id },
-      update: { ...bill, id: undefined },
-      create: bill,
-    })
-  }
+    // Bills
+    const bills = [
+      {
+        id: 'bill_1',
+        tenantId: defaultTenant.id,
+        vendorName: 'Software Solutions Inc',
+        vendorId: null,
+        billNumber: 'BILL-001',
+        description: 'Annual software license subscription',
+        amountCents: 120000,
+        dueDate: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 15),
+        billDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 5),
+        status: 'PENDING' as const,
+        currency: 'USD',
+      },
+      {
+        id: 'bill_2',
+        tenantId: defaultTenant.id,
+        vendorName: 'Office Supplies Co',
+        vendorId: null,
+        billNumber: 'BILL-002',
+        description: 'Monthly office supply order',
+        amountCents: 45000,
+        dueDate: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
+        billDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 2),
+        status: 'APPROVED' as const,
+        currency: 'USD',
+      },
+      {
+        id: 'bill_3',
+        tenantId: defaultTenant.id,
+        vendorName: 'Professional Services LLC',
+        vendorId: null,
+        billNumber: 'BILL-003',
+        description: 'Consulting services for system implementation',
+        amountCents: 350000,
+        dueDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 5),
+        billDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 25),
+        status: 'PAID' as const,
+        currency: 'USD',
+        paidDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 3),
+      },
+    ]
 
-  console.log('✅ Bills created')
+    for (const bill of bills) {
+      await prisma.bill.upsert({
+        where: { id: bill.id },
+        update: { ...bill, id: undefined },
+        create: bill,
+      })
+    }
 
-  // Party (Master Data for vendors, customers, employees)
-  const parties = [
-    {
-      id: 'party_1',
-      tenantId: defaultTenant.id,
-      name: 'Tech Solutions Ltd',
-      type: 'VENDOR' as const,
-      email: 'contact@techsolutions.com',
-      phone: '+1-555-0200',
-      category: 'Software Provider',
-      status: 'ACTIVE' as const,
-      taxId: '12-3456789',
-    },
-    {
-      id: 'party_2',
-      tenantId: defaultTenant.id,
-      name: 'Wilson Consulting Group',
-      type: 'CUSTOMER' as const,
-      email: 'info@wilsongroup.com',
-      phone: '+1-555-0300',
-      category: 'Corporate Client',
-      status: 'ACTIVE' as const,
-      taxId: '98-7654321',
-    },
-    {
-      id: 'party_3',
-      tenantId: defaultTenant.id,
-      name: 'Office Supplies Depot',
-      type: 'VENDOR' as const,
-      email: 'sales@osdepot.com',
-      phone: '+1-555-0400',
-      category: 'Supplies',
-      status: 'ACTIVE' as const,
-    },
-    {
-      id: 'party_4',
-      tenantId: defaultTenant.id,
-      name: 'Digital Marketing Pro',
-      type: 'CUSTOMER' as const,
-      email: 'hello@digitalmarketingpro.com',
-      phone: '+1-555-0500',
-      category: 'Service Client',
-      status: 'ACTIVE' as const,
-      taxId: '55-1234567',
-    },
-  ]
+    console.log('✅ Bills created')
 
-  for (const party of parties) {
-    await prisma.party.upsert({
-      where: { id: party.id },
-      update: { ...party, id: undefined },
-      create: party,
-    })
-  }
+    // Party (Master Data for vendors, customers, employees)
+    const parties = [
+      {
+        id: 'party_1',
+        tenantId: defaultTenant.id,
+        name: 'Tech Solutions Ltd',
+        type: 'VENDOR' as const,
+        email: 'contact@techsolutions.com',
+        phone: '+1-555-0200',
+        category: 'Software Provider',
+        status: 'ACTIVE' as const,
+        taxId: '12-3456789',
+      },
+      {
+        id: 'party_2',
+        tenantId: defaultTenant.id,
+        name: 'Wilson Consulting Group',
+        type: 'CUSTOMER' as const,
+        email: 'info@wilsongroup.com',
+        phone: '+1-555-0300',
+        category: 'Corporate Client',
+        status: 'ACTIVE' as const,
+        taxId: '98-7654321',
+      },
+      {
+        id: 'party_3',
+        tenantId: defaultTenant.id,
+        name: 'Office Supplies Depot',
+        type: 'VENDOR' as const,
+        email: 'sales@osdepot.com',
+        phone: '+1-555-0400',
+        category: 'Supplies',
+        status: 'ACTIVE' as const,
+      },
+      {
+        id: 'party_4',
+        tenantId: defaultTenant.id,
+        name: 'Digital Marketing Pro',
+        type: 'CUSTOMER' as const,
+        email: 'hello@digitalmarketingpro.com',
+        phone: '+1-555-0500',
+        category: 'Service Client',
+        status: 'ACTIVE' as const,
+        taxId: '55-1234567',
+      },
+    ]
 
-  console.log('✅ Parties (vendors/customers) created')
+    for (const party of parties) {
+      await prisma.party.upsert({
+        where: { id: party.id },
+        update: { ...party, id: undefined },
+        create: party,
+      })
+    }
 
-  // Products
-  const products = [
-    {
-      id: 'prod_1',
-      tenantId: defaultTenant.id,
-      name: 'Bookkeeping Service - Monthly',
-      sku: 'BOOK-MONTHLY-001',
-      description: 'Monthly bookkeeping service package including transaction recording and reconciliation',
-      category: 'Services',
-      unitPrice: 29900,
-      taxable: true,
-      status: 'ACTIVE' as const,
-    },
-    {
-      id: 'prod_2',
-      tenantId: defaultTenant.id,
-      name: 'Tax Preparation Service',
-      sku: 'TAX-PREP-001',
-      description: 'Comprehensive tax preparation and filing service',
-      category: 'Services',
-      unitPrice: 45000,
-      taxable: true,
-      status: 'ACTIVE' as const,
-    },
-    {
-      id: 'prod_3',
-      tenantId: defaultTenant.id,
-      name: 'Payroll Processing - Per Employee',
-      sku: 'PAYROLL-EMP-001',
-      description: 'Monthly payroll processing per employee',
-      category: 'Services',
-      unitPrice: 5000,
-      taxable: true,
-      status: 'ACTIVE' as const,
-    },
-    {
-      id: 'prod_4',
-      tenantId: defaultTenant.id,
-      name: 'Financial Consultation Hour',
-      sku: 'CONSULT-HOUR-001',
-      description: 'One hour of professional financial consultation',
-      category: 'Services',
-      unitPrice: 15000,
-      taxable: true,
-      status: 'ACTIVE' as const,
-    },
-  ]
+    console.log('✅ Parties (vendors/customers) created')
 
-  for (const product of products) {
-    await prisma.product.upsert({
-      where: { id: product.id },
-      update: { ...product, id: undefined },
-      create: product,
-    })
-  }
+    // Products
+    const products = [
+      {
+        id: 'prod_1',
+        tenantId: defaultTenant.id,
+        name: 'Bookkeeping Service - Monthly',
+        sku: 'BOOK-MONTHLY-001',
+        description: 'Monthly bookkeeping service package including transaction recording and reconciliation',
+        category: 'Services',
+        unitPrice: 29900,
+        taxable: true,
+        status: 'ACTIVE' as const,
+      },
+      {
+        id: 'prod_2',
+        tenantId: defaultTenant.id,
+        name: 'Tax Preparation Service',
+        sku: 'TAX-PREP-001',
+        description: 'Comprehensive tax preparation and filing service',
+        category: 'Services',
+        unitPrice: 45000,
+        taxable: true,
+        status: 'ACTIVE' as const,
+      },
+      {
+        id: 'prod_3',
+        tenantId: defaultTenant.id,
+        name: 'Payroll Processing - Per Employee',
+        sku: 'PAYROLL-EMP-001',
+        description: 'Monthly payroll processing per employee',
+        category: 'Services',
+        unitPrice: 5000,
+        taxable: true,
+        status: 'ACTIVE' as const,
+      },
+      {
+        id: 'prod_4',
+        tenantId: defaultTenant.id,
+        name: 'Financial Consultation Hour',
+        sku: 'CONSULT-HOUR-001',
+        description: 'One hour of professional financial consultation',
+        category: 'Services',
+        unitPrice: 15000,
+        taxable: true,
+        status: 'ACTIVE' as const,
+      },
+    ]
+
+    for (const product of products) {
+      await prisma.product.upsert({
+        where: { id: product.id },
+        update: { ...product, id: undefined },
+        create: product,
+      })
+    }
 
     console.log('✅ Products created')
   } catch (e) {
