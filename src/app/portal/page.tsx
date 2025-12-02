@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useSession } from "next-auth/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Search } from "lucide-react";
-// TEMPORARILY DISABLED - causing infinite loop
+// TEST 1: Tabs enabled, but Zustand subscription DISABLED (hardcoded)
 // import { usePortalActiveTab, usePortalLayoutActions } from "@/stores/portal/layout.store";
 // import SetupWizard from "@/components/portal/business-setup/core/SetupOrchestrator";
 // import EntitySwitcher from "@/components/portal/layout/EntitySwitcher";
@@ -12,20 +15,41 @@ import { useModal } from "@/components/providers/ModalProvider";
 // import { toast } from "sonner";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
-/**
- * Portal Dashboard Page - SIMPLIFIED VERSION
- * Temporarily removed complex components to fix infinite loop
- * 
- * Disabled:
- * - Zustand store subscriptions (usePortalActiveTab, usePortalLayoutActions)
- * - EntitySwitcher (has Zustand + localStorage useEffect)
- * - SetupWizard modal
- * - Lazy-loaded tabs (use Zustand subscriptions)
- */
+// TEST 1: Re-enable lazy-loaded tabs
+const OverviewTab = lazy(() => import("@/components/portal/dashboard/tabs/OverviewTab"));
+const TasksTab = lazy(() => import("@/components/portal/dashboard/tabs/TasksTab"));
+const ComplianceTab = lazy(() => import("@/components/portal/dashboard/tabs/ComplianceTab"));
+const FinancialTab = lazy(() => import("@/components/portal/dashboard/tabs/FinancialTab"));
+const ActivityTab = lazy(() => import("@/components/portal/dashboard/tabs/ActivityTab"));
+
+// Loading skeleton for tabs
+function TabLoadingSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map((i) => (
+          <Card key={i}>
+            <CardContent className="p-6">
+              <Skeleton className="h-8 w-24 mb-2" />
+              <Skeleton className="h-12 w-16 mb-2" />
+              <Skeleton className="h-4 w-32" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <Skeleton className="h-96 w-full" />
+    </div>
+  );
+}
 
 export default function PortalDashboardPage() {
   const { data: session } = useSession();
   const { openModal } = useModal();
+
+  // TEST 1: Hardcode activeTab instead of using Zustand
+  const [activeTab, setActiveTab] = useState("overview");
+  // const activeTab = usePortalActiveTab();
+  // const { setActiveTab } = usePortalLayoutActions();
 
   // Global search keyboard shortcut (Cmd+K / Ctrl+K)
   useKeyboardShortcut({
@@ -55,7 +79,7 @@ export default function PortalDashboardPage() {
 
           {/* Quick Actions */}
           <div className="flex items-center gap-3 animate-slide-in-left" style={{ animationDelay: '100ms' }}>
-            {/* TEMPORARILY DISABLED - Causing infinite loop
+            {/* STILL DISABLED - Test 1 focuses on tabs only
             <EntitySwitcher />
             */}
             <Button
@@ -74,31 +98,43 @@ export default function PortalDashboardPage() {
         </div>
       </div>
 
-      {/* Simplified content - tabs disabled temporarily */}
-      <div className="space-y-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Welcome to TaxHub Portal
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Your professional dashboard is temporarily running in simplified mode while we fix the infinite loop issue.
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500">
-            <strong>Temporarily disabled components:</strong>
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-500 dark:text-gray-500 mt-2">
-            <li>Entity Switcher (Zustand subscriptions + localStorage causing loops)</li>
-            <li>Dashboard tabs (Overview, Tasks, Compliance, Financial, Activity)</li>
-            <li>Business Setup Wizard</li>
-          </ul>
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded">
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              ✅ If you can see this page without errors, the portal layout is fixed!
-              The next step is to identify which component was causing the infinite loop.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* TEST 1: Tabs re-enabled with hardcoded state */}
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
+        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="compliance">Compliance</TabsTrigger>
+          <TabsTrigger value="financial">Financial</TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
+        </TabsList>
+
+        {/* Tab Content with Lazy Loading */}
+        <Suspense fallback={<TabLoadingSkeleton />}>
+          <TabsContent value="overview" className="mt-6">
+            <OverviewTab />
+          </TabsContent>
+
+          <TabsContent value="tasks" className="mt-6">
+            <TasksTab />
+          </TabsContent>
+
+          <TabsContent value="compliance" className="mt-6">
+            <ComplianceTab />
+          </TabsContent>
+
+          <TabsContent value="financial" className="mt-6">
+            <FinancialTab />
+          </TabsContent>
+
+          <TabsContent value="activity" className="mt-6">
+            <ActivityTab />
+          </TabsContent>
+        </Suspense>
+      </Tabs>
     </div>
   );
 }
