@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, lazy, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -8,8 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Search } from "lucide-react";
-import { usePortalActiveTab, usePortalLayoutActions } from "@/stores/portal/layout.store";
-import SetupWizard from "@/components/portal/business-setup/core/SetupOrchestrator";
+// TEMPORARILY DISABLED - Debugging infinite loop
+// import { usePortalActiveTab, usePortalLayoutActions } from "@/stores/portal/layout.store";
+// import SetupWizard from "@/components/portal/business-setup/core/SetupOrchestrator";
 // EntitySwitcher is in Header now
 // import EntitySwitcher from "@/components/portal/layout/EntitySwitcher";
 import { useModal } from "@/components/providers/ModalProvider";
@@ -48,9 +47,10 @@ export default function PortalDashboardPage() {
   const { data: session } = useSession();
   const { openModal } = useModal();
 
-  // Tab state from Zustand store
-  const activeTab = usePortalActiveTab();
-  const { setActiveTab } = usePortalLayoutActions();
+  // Tab state - LOCAL STATE for debugging
+  const [activeTab, setActiveTab] = useState("overview");
+  // const activeTab = usePortalActiveTab();
+  // const { setActiveTab } = usePortalLayoutActions();
 
   // Modal states
   const [setupWizardOpen, setSetupWizardOpen] = useState(false);
@@ -81,11 +81,13 @@ export default function PortalDashboardPage() {
   return (
     <>
       {/* Modals */}
+      {/* TEMPORARILY DISABLED - Debugging infinite loop
       <SetupWizard
         open={setupWizardOpen}
         onOpenChange={setSetupWizardOpen}
         onComplete={handleSetupComplete}
       />
+      */}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
