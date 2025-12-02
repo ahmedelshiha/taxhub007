@@ -57,16 +57,20 @@ export default function PortalDashboardLayout({
         if (!isClient) return;
 
         const isSmallScreen = responsive.isMobile || responsive.isTablet;
+        const wasSmallScreen = prevIsSmallScreenRef.current;
 
-        // Check if we just transitioned to small screen or it's the first check
-        const shouldCheck = prevIsSmallScreenRef.current === null || (!prevIsSmallScreenRef.current && isSmallScreen);
-
-        if (shouldCheck && isSmallScreen && !collapsed) {
-            setSidebarCollapsed(true);
+        // Only act when transitioning to small screen for the first time
+        if (wasSmallScreen === null || (!wasSmallScreen && isSmallScreen)) {
+            // Guard: only set if not already collapsed (prevents unnecessary updates)
+            if (!collapsed) {
+                setSidebarCollapsed(true);
+            }
         }
 
         prevIsSmallScreenRef.current = isSmallScreen;
-    }, [responsive.isMobile, responsive.isTablet, collapsed, setSidebarCollapsed, isClient])
+    }, [responsive.isMobile, responsive.isTablet, setSidebarCollapsed, isClient])
+    // NOTE: Intentionally removed 'collapsed' from dependencies to prevent infinite loop
+    // The effect should only respond to screen size changes, not the state it's setting
 
     // Close mobile menu on route change
     useEffect(() => {
@@ -75,11 +79,11 @@ export default function PortalDashboardLayout({
 
     const handleMenuToggle = useCallback(() => {
         if (responsive.isMobile) {
-            setMobileMenuOpen(!mobileMenuOpen)
+            setMobileMenuOpen(prev => !prev)
         } else {
-            setSidebarCollapsed(!collapsed)
+            usePortalLayoutStore.getState().toggleSidebar()
         }
-    }, [responsive.isMobile, mobileMenuOpen, collapsed, setSidebarCollapsed])
+    }, [responsive.isMobile])
 
     const handleMobileMenuClose = useCallback(() => {
         setMobileMenuOpen(false)
