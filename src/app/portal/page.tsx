@@ -111,7 +111,9 @@ export default function PortalDashboardPage() {
 
             {/* Quick Actions */}
             <div className="flex items-center gap-3 animate-slide-in-left" style={{ animationDelay: '100ms' }}>
+              {/* TEMPORARILY DISABLED - EntitySwitcher causing infinite loop
               <EntitySwitcher />
+              */}
               <Button
                 variant="outline"
                 size="sm"
