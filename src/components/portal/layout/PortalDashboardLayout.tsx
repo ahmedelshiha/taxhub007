@@ -46,3 +46,36 @@ export default function PortalDashboardLayout({
                 onClose={() => setMobileMenuOpen(false)}
             />
 
+            {/* Main content area - CSS handles margin on desktop */}
+            <div className="md:ml-64 min-h-screen flex flex-col">
+                {/* Header */}
+                <PortalHeader onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
+
+                {/* Breadcrumbs */}
+                <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                        <Breadcrumbs />
+                    </div>
+                </div>
+
+                {/* Scrollable content */}
+                <main
+                    id="portal-main-content"
+                    tabIndex={-1}
+                    className="flex-1 focus:outline-none overflow-y-auto bg-gray-50 dark:bg-gray-900"
+                    role="main"
+                    aria-label="Portal content"
+                >
+                    <div className="min-h-full">
+                        {children}
+                    </div>
+                </main>
+
+                {/* Footer */}
+                <PortalFooter />
+            </div>
+
+            <OfflineIndicator />
+        </div>
+    )
+}
