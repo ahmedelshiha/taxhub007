@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import VerificationPending from "@/components/portal/business-setup/VerificationPending";
 import { logger } from "@/lib/logger";
+import { useBusinessContext } from "@/stores/business-context.store";
 
 interface EntitySetupStatusPageProps {
   params: Promise<{ entityId: string }>;
@@ -45,6 +46,15 @@ export default function EntitySetupStatusPage() {
     fetchEntity();
   }, [entityId]);
 
+  const { setActiveBusiness } = useBusinessContext();
+
+  const handleSuccess = () => {
+    // Set the new business as active
+    setActiveBusiness(entityId);
+    // Redirect to business list
+    router.push("/portal/businesses");
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -75,16 +85,11 @@ export default function EntitySetupStatusPage() {
             estimatedTime="~5 minutes"
             onStatusChange={(status) => {
               if (status === "verified") {
-                // Redirect to dashboard after a short delay
-                setTimeout(() => {
-                  router.push("/portal");
-                }, 2000);
+                // Redirect to businesses page after a short delay
+                setTimeout(handleSuccess, 2000);
               }
             }}
-            onContinue={() => {
-              // Navigate to dashboard
-              router.push("/portal");
-            }}
+            onContinue={handleSuccess}
             onManualReview={() => {
               // Open messaging/support
               router.push("/portal/messages?case=setup-review");
