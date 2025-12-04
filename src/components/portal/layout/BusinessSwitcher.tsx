@@ -40,11 +40,14 @@ export function BusinessSwitcher() {
   const { data, isLoading } = useSWR("/api/portal/businesses", fetcher);
 
   // Sync data with store
+  // Note: setBusinesses is a Zustand store function and should NOT be in dependencies
+  // as it has a stable reference and including it can cause infinite loops
   useEffect(() => {
     if (data?.data?.businesses) {
       setBusinesses(data.data.businesses);
     }
-  }, [data, setBusinesses]);
+     
+  }, [data]);
 
   const handleSwitch = (businessId: string) => {
     setActiveBusiness(businessId);
