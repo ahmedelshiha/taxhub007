@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, Suspense, useEffect, useRef } from 'react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { X } from 'lucide-react'
 import { CountryFlagSelector, type Country } from '../fields/CountryFlagSelector'
@@ -8,6 +8,7 @@ import { ExistingEntityTab } from '../tabs/ExistingEntityTab'
 import { NewEntityTab } from '../tabs/NewEntityTab'
 import { SetupErrorBoundary } from '../components/SetupErrorBoundary'
 import { SetupModalSkeleton } from '../components/LoadingStates'
+import { analytics } from '../services/analytics'
 import type { SetupFormData } from '../types/setup'
 
 export interface SetupModalProps {
@@ -28,6 +29,7 @@ type TabType = 'existing' | 'new'
  * - Searchable department dropdown
  * - Dark theme with mobile optimization
  * - Error boundary for graceful failures
+ * - Analytics tracking
  */
 export function SetupModal({ open, onOpenChange, onComplete }: SetupModalProps) {
     const [selectedCountry, setSelectedCountry] = useState<Country['code']>('AE')
@@ -37,26 +39,51 @@ export function SetupModal({ open, onOpenChange, onComplete }: SetupModalProps) 
         businessType: 'existing'
     })
 
+    // Track when modal was opened for duration calculation
+    const openTimeRef = useRef<number | null>(null)
+
+    // Track modal open/close
+    useEffect(() => {
+        if (open) {
+            openTimeRef.current = Date.now()
+            analytics.modalOpened('dashboard')
+        }
+    }, [open])
+
     const handleCountryChange = (country: Country['code']) => {
         setSelectedCountry(country)
         setFormData(prev => ({ ...prev, country }))
+        analytics.countrySelected(country)
     }
 
     const handleTabChange = (tab: TabType) => {
         setActiveTab(tab)
         setFormData(prev => ({ ...prev, businessType: tab }))
+        analytics.tabSwitched(tab)
     }
 
     const handleSubmit = async (data: SetupFormData) => {
+        const duration = openTimeRef.current
+            ? Math.round((Date.now() - openTimeRef.current) / 1000)
+            : 0
+
         if (onComplete) {
             await onComplete(data)
         }
+
+        analytics.setupCompleted(data.businessType || 'new', data.country || 'AE', duration)
         onOpenChange(false)
     }
 
     const handleClose = () => {
+        // Track abandonment if closed without completing
+        if (openTimeRef.current) {
+            const duration = Math.round((Date.now() - openTimeRef.current) / 1000)
+            analytics.flowAbandoned(activeTab, duration)
+        }
         onOpenChange(false)
     }
+
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
