@@ -2,37 +2,113 @@
  * Entity Setup API
  * POST /api/portal/entities/setup
  * Creates a new business entity for the authenticated user
+ * 
+ * Security:
+ * - Rate limiting: 3 requests per hour per user
+ * - CSRF validation via origin check
+ * - Input sanitization for XSS prevention
+ * - Audit logging for compliance
  */
 
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { withTenantContext } from '@/lib/api-wrapper'
 import { requireTenantContext } from '@/lib/tenant-utils'
 import { respond, zodDetails } from '@/lib/api-response'
 import prisma from '@/lib/prisma'
-import { 
-  EntitySetupRequestSchema, 
+import { applyRateLimit, getClientIp } from '@/lib/rate-limit'
+import { isSameOrigin } from '@/lib/security/csrf'
+import { logAudit } from '@/lib/audit'
+import {
+  EntitySetupRequestSchema,
   ERROR_CODES,
-  type EntitySetupResponse 
+  type EntitySetupResponse
 } from '@/lib/api/contracts/business-setup'
 
 export const runtime = 'nodejs'
 
+// Sanitize business name to prevent XSS
+function sanitizeBusinessName(name: string): string {
+  return name
+    .replace(/<[^>]*>/g, '')
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+=/gi, '')
+    .trim()
+}
+
 export const POST = withTenantContext(async (request: NextRequest) => {
   const ctx = requireTenantContext()
-  
+
   if (!ctx.userId) {
     return respond.unauthorized()
+  }
+
+  // CSRF Protection - validate origin
+  if (!isSameOrigin(request as unknown as Request)) {
+    try {
+      await logAudit({
+        action: 'security.csrf.rejected',
+        actorId: ctx.userId,
+        details: {
+          origin: request.headers.get('origin'),
+          route: '/api/portal/entities/setup',
+        },
+      })
+    } catch { }
+    return respond.forbidden('Invalid request origin')
+  }
+
+  // Rate Limiting - 3 entity setups per hour per user
+  const ip = getClientIp(request as unknown as Request)
+  const rateLimitKey = `business-setup:entity:${ctx.userId}:${ip}`
+  const rateLimit = await applyRateLimit(rateLimitKey, 3, 60 * 60 * 1000)
+
+  if (!rateLimit.allowed) {
+    try {
+      await logAudit({
+        action: 'security.ratelimit.blocked',
+        actorId: ctx.userId,
+        details: {
+          route: '/api/portal/entities/setup',
+          ip,
+          limit: 3,
+          window: '1 hour',
+        },
+      })
+    } catch { }
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: ERROR_CODES.TOO_MANY_REQUESTS,
+          message: 'Too many setup attempts. Please try again later.'
+        }
+      },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rateLimit.resetAt - Date.now()) / 1000)),
+          'X-RateLimit-Limit': '3',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': String(Math.floor(rateLimit.resetAt / 1000)),
+        }
+      }
+    )
   }
 
   // Parse and validate request body
   const body = await request.json().catch(() => null)
   const parsed = EntitySetupRequestSchema.safeParse(body)
-  
+
   if (!parsed.success) {
     return respond.badRequest('Invalid request data', zodDetails(parsed.error))
   }
 
-  const data = parsed.data
+  // Sanitize inputs
+  const data = {
+    ...parsed.data,
+    businessName: sanitizeBusinessName(parsed.data.businessName),
+  }
 
   try {
     // Create the entity in database
@@ -72,13 +148,13 @@ export const POST = withTenantContext(async (request: NextRequest) => {
           entityId: entity.id,
           country: data.country,
           authority: data.economicDepartment,
-          licenseNumber: data.licenseNumber,
+          licenseNumber: data.licenseNumber.toUpperCase().replace(/[^A-Z0-9\-]/g, ''),
           status: 'ACTIVE',
         },
       })
     }
 
-    // Log audit trail
+    // Audit logging
     try {
       await prisma.entitySetupAuditLog.create({
         data: {
@@ -86,13 +162,18 @@ export const POST = withTenantContext(async (request: NextRequest) => {
           userId: ctx.userId as string,
           tenantId: ctx.tenantId as string,
           action: 'ENTITY_CREATED',
-          requestData: data,
-          ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+          requestData: {
+            businessType: data.businessType,
+            country: data.country,
+            department: data.economicDepartment,
+            // Don't log sensitive data like full license number
+            hasLicense: !!data.licenseNumber,
+          },
+          ipAddress: ip,
           userAgent: request.headers.get('user-agent') || 'unknown',
         },
       })
     } catch (auditError) {
-      // Don't fail the request if audit logging fails
       console.error('Failed to create audit log:', auditError)
     }
 
