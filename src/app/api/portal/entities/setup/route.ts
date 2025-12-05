@@ -177,13 +177,56 @@ export const POST = withTenantContext(async (request: NextRequest) => {
       console.error('Failed to create audit log:', auditError)
     }
 
+    // Create approval request for admin review
+    let approvalId: string | null = null
+    try {
+      const approval = await prisma.entityApproval.create({
+        data: {
+          entityId: entity.id,
+          requestedBy: ctx.userId as string,
+          status: 'PENDING',
+          submittedAt: new Date(),
+          metadata: {
+            entityName: data.businessName,
+            country: data.country,
+            legalForm: data.businessType === 'existing' ? 'LLC' : 'PENDING',
+            setupType: data.businessType,
+            economicDepartment: data.economicDepartment,
+          },
+        },
+      })
+      approvalId = approval.id
+
+      // Update entity status to pending approval
+      await prisma.entity.update({
+        where: { id: entity.id },
+        data: { status: 'PENDING_APPROVAL' },
+      })
+
+      // Log approval submission in audit
+      await prisma.entitySetupAuditLog.create({
+        data: {
+          entityId: entity.id,
+          userId: ctx.userId as string,
+          tenantId: ctx.tenantId as string,
+          action: 'APPROVAL_SUBMITTED',
+          requestData: { approvalId },
+          ipAddress: ip,
+          userAgent: request.headers.get('user-agent') || 'unknown',
+        },
+      })
+    } catch (approvalError) {
+      console.error('Failed to create approval request:', approvalError)
+      // Don't fail the whole request if approval creation fails
+    }
+
     const response: EntitySetupResponse = {
       success: true,
       data: {
         entityId: entity.id,
         setupJobId: `job-${Date.now()}`,
-        status: 'PENDING_VERIFICATION',
-        verificationEstimate: '~5 minutes',
+        status: approvalId ? 'PENDING_APPROVAL' : 'PENDING_VERIFICATION',
+        verificationEstimate: '~24 hours',
         createdAt: entity.createdAt.toISOString(),
       },
     }

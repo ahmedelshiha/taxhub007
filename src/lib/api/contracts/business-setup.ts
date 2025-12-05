@@ -22,6 +22,7 @@ export type BusinessType = z.infer<typeof BusinessTypeSchema>
 
 export const EntityStatusSchema = z.enum([
     'PENDING_VERIFICATION',
+    'PENDING_APPROVAL',
     'APPROVED',
     'REJECTED',
     'ADDITIONAL_INFO_REQUIRED'

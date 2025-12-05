@@ -143,7 +143,7 @@ function AdminSidebar(props: AdminSidebarProps) {
     {
       section: 'system',
       items: [
-        { name: 'Business Approvals', href: '/admin/approvals/businesses', icon: Building, permission: PERMISSIONS.USERS_MANAGE },
+        { name: 'Business Approvals', href: '/admin/approvals/businesses', icon: Building, badge: counts?.pendingBusinessApprovals, permission: PERMISSIONS.USERS_MANAGE },
         { name: 'User Management', href: '/admin/users', icon: Users, permission: PERMISSIONS.USERS_MANAGE },
         { name: 'Audits', href: '/admin/audits', icon: FileText, permission: PERMISSIONS.ANALYTICS_VIEW },
         { name: 'Compliance', href: '/admin/compliance', icon: CheckSquare, permission: PERMISSIONS.SECURITY_COMPLIANCE_SETTINGS_VIEW },
