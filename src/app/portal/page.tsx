@@ -66,11 +66,28 @@ export default function PortalDashboardPage() {
     openModal('global-search');
   }, [openModal]);
 
-  // Handle setup completion
-  const handleSetupComplete = useCallback((data: any) => {
-    toast.success('Business added successfully!');
-    // Refresh entities list to show new entity
-    refreshEntities();
+  // Handle setup completion - call API to create entity
+  const handleSetupComplete = useCallback(async (data: any) => {
+    try {
+      const response = await fetch('/api/portal/entities/setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success('Business added successfully!');
+        // Refresh entities list to show new entity
+        refreshEntities();
+      } else {
+        toast.error(result.error?.message || 'Failed to add business');
+      }
+    } catch (error) {
+      console.error('Setup error:', error);
+      toast.error('Failed to add business. Please try again.');
+    }
   }, [refreshEntities]);
 
   // Global search keyboard shortcut (Cmd+K / Ctrl+K)

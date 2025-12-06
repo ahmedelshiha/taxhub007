@@ -203,17 +203,17 @@ export function SetupModal({ open, onOpenChange, onComplete }: SetupModalProps) 
                     bg-gray-900 text-white
                     border border-gray-800
                     shadow-2xl
-                    max-h-[90vh] sm:max-h-[85vh]
+                    max-h-[95vh]
                     overflow-hidden
                 "
                 onInteractOutside={(e) => e.preventDefault()}
             >
-                <div className="flex flex-col lg:flex-row min-h-[500px] max-h-[85vh]">
+                <div className="flex flex-col lg:flex-row min-h-[600px] h-[90vh] lg:h-auto lg:min-h-[650px]">
                     {/* Left: LEDGERS-style Branding Panel */}
                     <SetupModalBranding />
 
                     {/* Right: Form Panel */}
-                    <div className="flex-1 flex flex-col overflow-hidden">
+                    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
                         <SetupErrorBoundary>
                             {/* Header with Country Selector */}
                             <div className="
