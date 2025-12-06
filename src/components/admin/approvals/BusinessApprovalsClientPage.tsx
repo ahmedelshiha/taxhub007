@@ -1,11 +1,16 @@
+/**
+ * Business Approvals Client Page
+ * 
+ * Refactored to use new modal components.
+ */
+
 "use client";
 
 import { useState } from "react";
 import useSWR from "swr";
-import { CheckCircle, XCircle, Clock, AlertCircle } from "lucide-react";
+import { CheckCircle, XCircle, Clock, AlertCircle, FileEdit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
     Select,
     SelectContent,
@@ -15,8 +20,13 @@ import {
 } from "@/components/ui/select";
 import { fetcher } from "@/lib/api-client";
 import { formatDate } from "@/lib/date-utils";
-import { useToast } from "@/hooks/use-toast";
 import { ApprovalDetailModal } from "./ApprovalDetailModal";
+import {
+    ApproveEntityModal,
+    RejectEntityModal,
+    RequestChangesModal
+} from "@/components/admin/entities/modals";
+import { EntityStatusBadge } from "@/components/admin/entities/EntityStatusBadge";
 
 interface EntityApproval {
     id: string;
@@ -37,10 +47,14 @@ interface EntityApproval {
     rejectionReason?: string;
 }
 
+type ModalState = {
+    type: 'approve' | 'reject' | 'request-changes' | 'detail' | null;
+    approval: EntityApproval | null;
+};
+
 export default function BusinessApprovalsClientPage() {
     const [statusFilter, setStatusFilter] = useState("PENDING");
-    const [selectedApproval, setSelectedApproval] = useState<EntityApproval | null>(null);
-    const { toast } = useToast();
+    const [modalState, setModalState] = useState<ModalState>({ type: null, approval: null });
 
     const { data, error, isLoading, mutate } = useSWR(
         `/api/admin/entities/pending?status=${statusFilter}`,
@@ -49,54 +63,17 @@ export default function BusinessApprovalsClientPage() {
 
     const approvals = data?.data?.approvals || [];
 
-    const handleApprove = async (entityId: string) => {
-        try {
-            const response = await fetch(`/api/admin/entities/${entityId}/approve`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ notes: "Approved by admin" }),
-            });
-
-            if (!response.ok) throw new Error("Failed to approve");
-
-            toast({
-                title: "Business Approved",
-                description: "The business has been approved successfully.",
-            });
-
-            mutate();
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Failed to approve business. Please try again.",
-                variant: "destructive",
-            });
-        }
+    const openModal = (type: ModalState['type'], approval: EntityApproval) => {
+        setModalState({ type, approval });
     };
 
-    const handleReject = async (entityId: string, reason: string) => {
-        try {
-            const response = await fetch(`/api/admin/entities/${entityId}/reject`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ reason }),
-            });
+    const closeModal = () => {
+        setModalState({ type: null, approval: null });
+    };
 
-            if (!response.ok) throw new Error("Failed to reject");
-
-            toast({
-                title: "Business Rejected",
-                description: "The business has been rejected.",
-            });
-
-            mutate();
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Failed to reject business. Please try again.",
-                variant: "destructive",
-            });
-        }
+    const handleSuccess = () => {
+        mutate();
+        closeModal();
     };
 
     if (error) {
@@ -188,7 +165,7 @@ export default function BusinessApprovalsClientPage() {
                                                 <h3 className="font-semibold text-lg">
                                                     {approval.entity.name}
                                                 </h3>
-                                                <StatusBadge status={approval.status} />
+                                                <EntityStatusBadge status={approval.status} />
                                             </div>
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                                 <div>
@@ -213,7 +190,7 @@ export default function BusinessApprovalsClientPage() {
                                             <Button
                                                 variant="outline"
                                                 size="sm"
-                                                onClick={() => setSelectedApproval(approval)}
+                                                onClick={() => openModal('detail', approval)}
                                             >
                                                 View Details
                                             </Button>
@@ -222,19 +199,25 @@ export default function BusinessApprovalsClientPage() {
                                                     <Button
                                                         variant="default"
                                                         size="sm"
-                                                        onClick={() => handleApprove(approval.entity.id)}
+                                                        onClick={() => openModal('approve', approval)}
                                                         className="gap-1"
                                                     >
                                                         <CheckCircle className="h-4 w-4" />
                                                         Approve
                                                     </Button>
                                                     <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => openModal('request-changes', approval)}
+                                                        className="gap-1"
+                                                    >
+                                                        <FileEdit className="h-4 w-4" />
+                                                        Request Changes
+                                                    </Button>
+                                                    <Button
                                                         variant="destructive"
                                                         size="sm"
-                                                        onClick={() => {
-                                                            const reason = prompt("Rejection reason:");
-                                                            if (reason) handleReject(approval.entity.id, reason);
-                                                        }}
+                                                        onClick={() => openModal('reject', approval)}
                                                         className="gap-1"
                                                     >
                                                         <XCircle className="h-4 w-4" />
@@ -251,27 +234,50 @@ export default function BusinessApprovalsClientPage() {
                 </CardContent>
             </Card>
 
-            {/* Detail Modal */}
-            {selectedApproval && (
-                <ApprovalDetailModal
-                    approval={selectedApproval}
-                    isOpen={!!selectedApproval}
-                    onClose={() => setSelectedApproval(null)}
-                    onApprove={handleApprove}
-                    onReject={handleReject}
-                />
+            {/* Modals */}
+            {modalState.approval && (
+                <>
+                    <ApprovalDetailModal
+                        approval={modalState.approval}
+                        isOpen={modalState.type === 'detail'}
+                        onClose={closeModal}
+                        onApprove={(entityId) => {
+                            closeModal();
+                            const approval = approvals.find((a: EntityApproval) => a.entity.id === entityId);
+                            if (approval) openModal('approve', approval);
+                        }}
+                        onReject={(entityId) => {
+                            closeModal();
+                            const approval = approvals.find((a: EntityApproval) => a.entity.id === entityId);
+                            if (approval) openModal('reject', approval);
+                        }}
+                    />
+
+                    <ApproveEntityModal
+                        isOpen={modalState.type === 'approve'}
+                        onClose={closeModal}
+                        entityId={modalState.approval.entity.id}
+                        entityName={modalState.approval.entity.name}
+                        onSuccess={handleSuccess}
+                    />
+
+                    <RejectEntityModal
+                        isOpen={modalState.type === 'reject'}
+                        onClose={closeModal}
+                        entityId={modalState.approval.entity.id}
+                        entityName={modalState.approval.entity.name}
+                        onSuccess={handleSuccess}
+                    />
+
+                    <RequestChangesModal
+                        isOpen={modalState.type === 'request-changes'}
+                        onClose={closeModal}
+                        entityId={modalState.approval.entity.id}
+                        entityName={modalState.approval.entity.name}
+                        onSuccess={handleSuccess}
+                    />
+                </>
             )}
         </div>
     );
-}
-
-function StatusBadge({ status }: { status: string }) {
-    const config = {
-        PENDING: { label: "Pending", className: "bg-yellow-100 text-yellow-700" },
-        APPROVED: { label: "Approved", className: "bg-green-100 text-green-700" },
-        REJECTED: { label: "Rejected", className: "bg-red-100 text-red-700" },
-        REQUIRES_CHANGES: { label: "Requires Changes", className: "bg-orange-100 text-orange-700" },
-    }[status] || { label: status, className: "bg-gray-100 text-gray-700" };
-
-    return <Badge className={config.className}>{config.label}</Badge>;
 }
